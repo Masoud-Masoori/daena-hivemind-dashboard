@@ -1,0 +1,16 @@
+[
+  {
+    "agent": "scraper001",
+    "task": "scrape_latest_ai_news",
+    "user_rating": 4.5,
+    "notes": "Efficient but missed one source",
+    "timestamp": "2025-06-01T11:00:00"
+  },
+  {
+    "agent": "daena",
+    "task": "summarize_llm_outputs",
+    "user_rating": 5,
+    "notes": "Perfect aggregation of R2/Yi/Qwen",
+    "timestamp": "2025-06-01T09:45:00"
+  }
+]

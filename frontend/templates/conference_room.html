@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Room - Daena AI VP System</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a0f',
+                        'cyber-purple': '#8b5cf6',
+                        'neon-cyan': '#00d4ff',
+                        'sunbeam': '#fbbf24',
+                        'electric-blue': '#3b82f6',
+                        'plasma-green': '#10b981',
+                        'crimson-red': '#ef4444',
+                        'cosmic-gray': '#374151'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'typing': 'typing 1s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        typing: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.5' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.05); }
+        .neon-border { border: 1px solid rgba(0, 212, 255, 0.3); }
+        .cyber-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #00d4ff 100%); }
+        .message-bubble { animation: float 0.3s ease-out; }
+        .typing-indicator { animation: typing 1s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-midnight text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-black/50 backdrop-blur-sm border-b border-neon-cyan/20 sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-2xl font-bold text-sunbeam">Conference Room</h1>
+                <span class="text-sm text-gray-400" x-text="conference.title || 'New Conference'"></span>
+            </div>
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="text-gray-300 hover:text-sunbeam transition-colors">Dashboard</a>
+                <a href="/council-dashboard" class="text-gray-300 hover:text-sunbeam transition-colors">Council</a>
+                <a href="/strategic-meetings" class="text-gray-300 hover:text-sunbeam transition-colors">Meetings</a>
+                <a href="/voice-panel" class="text-gray-300 hover:text-sunbeam transition-colors">Voice</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8" x-data="conferenceRoom()" x-init="init()">
+        <!-- Conference Setup -->
+        <div x-show="!conference.started" class="glass-effect rounded-lg p-8 mb-8 neon-border">
+            <h2 class="text-3xl font-bold text-sunbeam mb-6">Start New Conference</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sunbeam font-semibold mb-2">Conference Name</label>
+                    <input x-model="conference.title" type="text" 
+                           class="w-full bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none"
+                           placeholder="e.g., Q4 Strategy Planning">
+                </div>
+                
+                <div>
+                    <label class="block text-sunbeam font-semibold mb-2">Focus Area</label>
+                    <select x-model="conference.focus" 
+                            class="w-full bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none">
+                        <option value="strategy">Strategic Planning</option>
+                        <option value="crisis">Crisis Management</option>
+                        <option value="innovation">Innovation Discussion</option>
+                        <option value="operations">Operational Review</option>
+                        <option value="finance">Financial Planning</option>
+                        <option value="custom">Custom Topic</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sunbeam font-semibold mb-2">Participants</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" x-model="conference.participants.daena" class="mr-2">
+                            <span>Daena AI VP</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" x-model="conference.participants.councilors" class="mr-2">
+                            <span>Expert Councilors</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" x-model="conference.participants.departments" class="mr-2">
+                            <span>Department Heads</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" x-model="conference.participants.founder" class="mr-2">
+                            <span>Founder</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sunbeam font-semibold mb-2">Issue Tracking</label>
+                    <textarea x-model="conference.issues" 
+                              class="w-full bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none h-24"
+                              placeholder="List key issues to address..."></textarea>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex space-x-4">
+                <button @click="startConference()" 
+                        class="cyber-gradient text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                    Start Conference
+                </button>
+                <button @click="loadTemplate()" 
+                        class="bg-electric-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                    Load Template
+                </button>
+            </div>
+        </div>
+
+        <!-- Conference Interface -->
+        <div x-show="conference.started" class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Main Chat Area -->
+            <div class="lg:col-span-3">
+                <div class="glass-effect rounded-lg p-6 neon-border h-[600px] flex flex-col">
+                    <!-- Chat Header -->
+                    <div class="flex justify-between items-center mb-4 pb-4 border-b border-neon-cyan/20">
+                        <div>
+                            <h3 class="text-xl font-bold text-sunbeam" x-text="conference.title"></h3>
+                            <p class="text-sm text-gray-400" x-text="conference.focus"></p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-400">Participants:</span>
+                            <span class="text-sm text-neon-cyan" x-text="activeParticipants.length"></span>
+                        </div>
+                    </div>
+
+                    <!-- Messages Area -->
+                    <div class="flex-1 overflow-y-auto mb-4 space-y-4" id="messages-container">
+                        <template x-for="message in messages" :key="message.id">
+                            <div class="message-bubble" :class="getMessageClass(message)">
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                             :class="getAvatarClass(message.sender)">
+                                            <span x-text="getInitials(message.sender)"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center space-x-2 mb-1">
+                                            <span class="font-semibold text-sunbeam" x-text="message.sender"></span>
+                                            <span class="text-xs text-gray-400" x-text="formatTime(message.timestamp)"></span>
+                                            <span x-show="message.type === 'ai'" class="text-xs bg-neon-cyan/20 text-neon-cyan px-2 py-1 rounded">AI</span>
+                                        </div>
+                                        <div class="text-gray-200" x-text="message.content"></div>
+                                        <div x-show="message.issues && message.issues.length > 0" class="mt-2">
+                                            <div class="text-xs text-gray-400 mb-1">Issues identified:</div>
+                                            <div class="flex flex-wrap gap-1">
+                                                <template x-for="issue in message.issues" :key="issue">
+                                                    <span class="text-xs bg-crimson-red/20 text-crimson-red px-2 py-1 rounded" x-text="issue"></span>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        
+                        <!-- Typing Indicator -->
+                        <div x-show="isTyping" class="typing-indicator flex items-center space-x-2 text-gray-400">
+                            <div class="flex space-x-1">
+                                <div class="w-2 h-2 bg-neon-cyan rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-neon-cyan rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                <div class="w-2 h-2 bg-neon-cyan rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                            </div>
+                            <span class="text-sm">AI is thinking...</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="flex space-x-2">
+                        <input x-model="newMessage" @keyup.enter="sendMessage()" 
+                               type="text" 
+                               class="flex-1 bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none"
+                               placeholder="Type your message...">
+                        <button @click="sendMessage()" 
+                                class="cyber-gradient text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                            Send
+                        </button>
+                        <button @click="toggleVoice()" 
+                                :class="voiceActive ? 'bg-crimson-red' : 'bg-plasma-green'"
+                                class="text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Participants -->
+                <div class="glass-effect rounded-lg p-4 neon-border">
+                    <h4 class="text-lg font-semibold text-sunbeam mb-3">Participants</h4>
+                    <div class="space-y-2">
+                        <template x-for="participant in activeParticipants" :key="participant.id">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full" :class="participant.status === 'online' ? 'bg-plasma-green' : 'bg-gray-500'"></div>
+                                <span class="text-sm" x-text="participant.name"></span>
+                                <span class="text-xs text-gray-400" x-text="participant.role"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Issues Tracker -->
+                <div class="glass-effect rounded-lg p-4 neon-border">
+                    <h4 class="text-lg font-semibold text-sunbeam mb-3">Issues Tracker</h4>
+                    <div class="space-y-2">
+                        <template x-for="issue in trackedIssues" :key="issue.id">
+                            <div class="bg-midnight rounded p-2">
+                                <div class="text-sm font-medium" x-text="issue.title"></div>
+                                <div class="text-xs text-gray-400" x-text="issue.description"></div>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-xs" :class="getIssueStatusClass(issue.status)" x-text="issue.status"></span>
+                                    <button @click="resolveIssue(issue.id)" class="text-xs text-plasma-green hover:underline">Resolve</button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-effect rounded-lg p-4 neon-border">
+                    <h4 class="text-lg font-semibold text-sunbeam mb-3">Quick Actions</h4>
+                    <div class="space-y-2">
+                        <button @click="askDaena()" class="w-full bg-electric-blue text-white px-3 py-2 rounded text-sm hover:bg-blue-600 transition-colors">
+                            Ask Daena
+                        </button>
+                        <button @click="consultCouncil()" class="w-full bg-cyber-purple text-white px-3 py-2 rounded text-sm hover:bg-purple-600 transition-colors">
+                            Consult Council
+                        </button>
+                        <button @click="saveNotes()" class="w-full bg-plasma-green text-white px-3 py-2 rounded text-sm hover:bg-green-600 transition-colors">
+                            Save Notes
+                        </button>
+                        <button @click="endConference()" class="w-full bg-crimson-red text-white px-3 py-2 rounded text-sm hover:bg-red-600 transition-colors">
+                            End Conference
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function conferenceRoom() {
+            return {
+                conference: {
+                    title: '',
+                    focus: 'strategy',
+                    participants: {
+                        daena: true,
+                        councilors: true,
+                        departments: true,
+                        founder: true
+                    },
+                    issues: '',
+                    started: false
+                },
+                messages: [],
+                newMessage: '',
+                isTyping: false,
+                voiceActive: false,
+                activeParticipants: [],
+                trackedIssues: [],
+                messageId: 0,
+                issueId: 0,
+
+                init() {
+                    this.loadParticipants();
+                    this.loadIssues();
+                },
+
+                startConference() {
+                    if (!this.conference.title) {
+                        alert('Please enter a conference name');
+                        return;
+                    }
+                    
+                    this.conference.started = true;
+                    this.addSystemMessage(`Conference "${this.conference.title}" started. Focus: ${this.conference.focus}`);
+                    
+                    // Auto-add initial participants
+                    if (this.conference.participants.daena) {
+                        this.addParticipant('Daena AI VP', 'ai', 'online');
+                    }
+                    if (this.conference.participants.councilors) {
+                        this.addParticipant('Steve Jobs', 'councilor', 'online');
+                        this.addParticipant('Satya Nadella', 'councilor', 'online');
+                        this.addParticipant('Sheryl Sandberg', 'councilor', 'online');
+                    }
+                    if (this.conference.participants.founder) {
+                        this.addParticipant('Founder', 'founder', 'online');
+                    }
+                },
+
+                loadTemplate() {
+                    this.conference.title = 'Q4 Strategy Planning';
+                    this.conference.focus = 'strategy';
+                    this.conference.issues = '1. Market expansion strategy\n2. Resource allocation\n3. Technology roadmap\n4. Team scaling';
+                },
+
+                sendMessage() {
+                    if (!this.newMessage.trim()) return;
+                    
+                    const message = {
+                        id: ++this.messageId,
+                        sender: 'You',
+                        content: this.newMessage,
+                        timestamp: new Date(),
+                        type: 'user'
+                    };
+                    
+                    this.messages.push(message);
+                    this.newMessage = '';
+                    this.scrollToBottom();
+                    
+                    // Simulate AI response
+                    this.simulateAIResponse(message.content);
+                },
+
+                simulateAIResponse(userMessage) {
+                    this.isTyping = true;
+                    
+                    setTimeout(() => {
+                        const aiResponse = this.generateAIResponse(userMessage);
+                        const message = {
+                            id: ++this.messageId,
+                            sender: 'Daena AI VP',
+                            content: aiResponse.content,
+                            timestamp: new Date(),
+                            type: 'ai',
+                            issues: aiResponse.issues
+                        };
+                        
+                        this.messages.push(message);
+                        this.isTyping = false;
+                        this.scrollToBottom();
+                        
+                        // Track issues if found
+                        if (aiResponse.issues && aiResponse.issues.length > 0) {
+                            aiResponse.issues.forEach(issue => this.trackIssue(issue));
+                        }
+                    }, 2000);
+                },
+
+                generateAIResponse(userMessage) {
+                    const responses = [
+                        {
+                            content: "I understand your concern about " + userMessage.toLowerCase() + ". Let me analyze this from multiple perspectives and consult our expert council.",
+                            issues: []
+                        },
+                        {
+                            content: "This is an important point. Based on our analysis, I recommend we focus on the core issue while keeping other concerns documented for later review.",
+                            issues: ["Scope creep detected", "Multiple priorities identified"]
+                        },
+                        {
+                            content: "Excellent observation. This aligns with our strategic objectives. Let me gather insights from our department heads.",
+                            issues: []
+                        }
+                    ];
+                    
+                    return responses[Math.floor(Math.random() * responses.length)];
+                },
+
+                addSystemMessage(content) {
+                    const message = {
+                        id: ++this.messageId,
+                        sender: 'System',
+                        content: content,
+                        timestamp: new Date(),
+                        type: 'system'
+                    };
+                    this.messages.push(message);
+                    this.scrollToBottom();
+                },
+
+                addParticipant(name, role, status) {
+                    this.activeParticipants.push({
+                        id: Date.now() + Math.random(),
+                        name: name,
+                        role: role,
+                        status: status
+                    });
+                },
+
+                trackIssue(issueTitle) {
+                    this.trackedIssues.push({
+                        id: ++this.issueId,
+                        title: issueTitle,
+                        description: 'Identified during conference discussion',
+                        status: 'open',
+                        timestamp: new Date()
+                    });
+                },
+
+                resolveIssue(issueId) {
+                    const issue = this.trackedIssues.find(i => i.id === issueId);
+                    if (issue) {
+                        issue.status = 'resolved';
+                    }
+                },
+
+                getMessageClass(message) {
+                    const baseClass = 'p-3 rounded-lg';
+                    switch (message.type) {
+                        case 'ai': return baseClass + ' bg-neon-cyan/10 border border-neon-cyan/20';
+                        case 'system': return baseClass + ' bg-gray-600/20 border border-gray-500/20';
+                        default: return baseClass + ' bg-electric-blue/10 border border-electric-blue/20';
+                    }
+                },
+
+                getAvatarClass(sender) {
+                    if (sender === 'Daena AI VP') return 'bg-neon-cyan text-black';
+                    if (sender === 'System') return 'bg-gray-500 text-white';
+                    if (sender === 'You') return 'bg-electric-blue text-white';
+                    return 'bg-cyber-purple text-white';
+                },
+
+                getInitials(sender) {
+                    return sender.split(' ').map(n => n[0]).join('').toUpperCase();
+                },
+
+                getIssueStatusClass(status) {
+                    return status === 'open' ? 'text-crimson-red' : 'text-plasma-green';
+                },
+
+                formatTime(timestamp) {
+                    return timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                },
+
+                scrollToBottom() {
+                    setTimeout(() => {
+                        const container = document.getElementById('messages-container');
+                        container.scrollTop = container.scrollHeight;
+                    }, 100);
+                },
+
+                toggleVoice() {
+                    this.voiceActive = !this.voiceActive;
+                    // Voice functionality would be implemented here
+                },
+
+                askDaena() {
+                    this.addSystemMessage('Daena AI VP is analyzing the current discussion...');
+                    setTimeout(() => {
+                        this.simulateAIResponse('Please provide strategic insights on our current discussion.');
+                    }, 1000);
+                },
+
+                consultCouncil() {
+                    this.addSystemMessage('Consulting expert council for insights...');
+                    setTimeout(() => {
+                        const councilors = ['Steve Jobs', 'Satya Nadella', 'Sheryl Sandberg'];
+                        const councilor = councilors[Math.floor(Math.random() * councilors.length)];
+                        const message = {
+                            id: ++this.messageId,
+                            sender: councilor,
+                            content: `From my perspective, we should focus on ${this.conference.focus} with a clear vision and execution plan.`,
+                            timestamp: new Date(),
+                            type: 'councilor'
+                        };
+                        this.messages.push(message);
+                        this.scrollToBottom();
+                    }, 2000);
+                },
+
+                saveNotes() {
+                    const notes = {
+                        conference: this.conference,
+                        messages: this.messages,
+                        issues: this.trackedIssues,
+                        timestamp: new Date()
+                    };
+                    
+                    localStorage.setItem('conference_notes', JSON.stringify(notes));
+                    this.addSystemMessage('Conference notes saved successfully.');
+                },
+
+                endConference() {
+                    this.addSystemMessage(`Conference "${this.conference.title}" ended. All issues and solutions have been documented.`);
+                    setTimeout(() => {
+                        this.conference.started = false;
+                        this.messages = [];
+                        this.trackedIssues = [];
+                    }, 2000);
+                },
+
+                loadParticipants() {
+                    // Load from API or localStorage
+                },
+
+                loadIssues() {
+                    // Load from API or localStorage
+                }
+            }
+        }
+        
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('conferenceRoom', conferenceRoom);
+        });
+    </script>
+</body>
+</html> 

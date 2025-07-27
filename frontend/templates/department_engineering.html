@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Department - Daena AI VP</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'tech-blue': '#3b82f6',
+                        'electric-blue': '#1e40af',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .cosmic-background {
+            background: radial-gradient(circle at 20% 80%, #1e40af 0%, #1a1a3e 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 80% 20%, #3b82f6 0%, #1e40af 25%, #0a0a1e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 20s ease infinite;
+        }
+        
+        @keyframes cosmic-drift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen">
+    
+    <!-- Header -->
+    <header class="bg-midnight/95 backdrop-blur-md border-b-2 border-tech-blue/30 p-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <button onclick="window.location.href='/'" 
+                        class="w-10 h-10 bg-tech-blue/20 hover:bg-tech-blue/30 rounded-lg flex items-center justify-center transition-colors">
+                    <i class="fas fa-arrow-left text-tech-blue"></i>
+                </button>
+                <div class="text-4xl">⚙️</div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Engineering Department</h1>
+                    <p class="text-gray-400">Software Development & Technical Innovation</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="text-center p-3 bg-tech-blue/10 border border-tech-blue/30 rounded-lg">
+                    <div class="text-2xl font-bold text-tech-blue">94%</div>
+                    <div class="text-xs text-gray-400">Performance</div>
+                </div>
+                <div class="text-center p-3 bg-tech-blue/10 border border-tech-blue/30 rounded-lg">
+                    <div class="text-2xl font-bold text-tech-blue">8</div>
+                    <div class="text-xs text-gray-400">Agents</div>
+                </div>
+                <div class="text-center p-3 bg-tech-blue/10 border border-tech-blue/30 rounded-lg">
+                    <div class="text-2xl font-bold text-tech-blue">12</div>
+                    <div class="text-xs text-gray-400">Projects</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="engineeringDepartment()" x-init="initialize()" class="p-6">
+        
+        <!-- Quick Actions -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-white mb-4">Quick Actions</h2>
+            <div class="grid grid-cols-4 gap-4">
+                <button @click="startGroupChat()" 
+                        class="p-4 bg-gradient-to-br from-tech-blue to-electric-blue rounded-lg hover:from-tech-blue/80 hover:to-electric-blue/80 transition-all">
+                    <i class="fas fa-users text-2xl mb-2"></i>
+                    <div class="font-semibold">Team Chat</div>
+                    <div class="text-xs opacity-80">All Agents + Daena</div>
+                </button>
+                <button @click="viewCodeReviews()" 
+                        class="p-4 bg-gradient-to-br from-cyber-purple to-tech-blue rounded-lg hover:from-cyber-purple/80 hover:to-tech-blue/80 transition-all">
+                    <i class="fas fa-code text-2xl mb-2"></i>
+                    <div class="font-semibold">Code Reviews</div>
+                    <div class="text-xs opacity-80">5 Pending</div>
+                </button>
+                <button @click="deploymentStatus()" 
+                        class="p-4 bg-gradient-to-br from-organic-green to-tech-blue rounded-lg hover:from-organic-green/80 hover:to-tech-blue/80 transition-all">
+                    <i class="fas fa-rocket text-2xl mb-2"></i>
+                    <div class="font-semibold">Deployments</div>
+                    <div class="text-xs opacity-80">3 Active</div>
+                </button>
+                <button @click="systemMetrics()" 
+                        class="p-4 bg-gradient-to-br from-sunbeam to-tech-blue rounded-lg hover:from-sunbeam/80 hover:to-tech-blue/80 transition-all text-midnight">
+                    <i class="fas fa-chart-line text-2xl mb-2"></i>
+                    <div class="font-semibold">Metrics</div>
+                    <div class="text-xs opacity-80">Real-time</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Engineering Agents Grid -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-white mb-4">Engineering Team</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <template x-for="agent in agents" :key="agent.name">
+                    <div class="bg-midnight/60 border border-tech-blue/30 rounded-lg p-4 hover:bg-midnight/80 transition-all cursor-pointer"
+                         @click="chatWithAgent(agent)">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-tech-blue to-electric-blue rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-semibold text-white" x-text="agent.name"></div>
+                                <div class="text-xs text-gray-400" x-text="agent.speciality"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm">
+                                <span class="text-gray-400">Status:</span>
+                                <span class="text-organic-green font-semibold" x-text="agent.status"></span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">Efficiency:</span>
+                                <span class="text-tech-blue font-bold" x-text="agent.efficiency + '%'"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3 text-xs text-gray-300" x-text="agent.currentTask"></div>
+                        
+                        <div class="mt-3 flex justify-between items-center">
+                            <div class="text-xs">
+                                <i class="fas fa-microphone text-organic-green mr-1"></i>
+                                <span class="text-gray-400">Voice Chat</span>
+                            </div>
+                            <button class="px-3 py-1 bg-tech-blue/20 text-tech-blue rounded text-xs hover:bg-tech-blue/30">
+                                Chat
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- Project Status -->
+        <div class="mb-8">
+            <h2 class="text-xl font-bold text-white mb-4">Active Projects</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <template x-for="project in projects" :key="project.id">
+                    <div class="bg-midnight/60 border border-tech-blue/30 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-semibold text-white" x-text="project.name"></h3>
+                            <span class="px-2 py-1 text-xs rounded-full"
+                                  :class="project.status === 'on-track' ? 'bg-organic-green/20 text-organic-green' : 
+                                          project.status === 'at-risk' ? 'bg-yellow-500/20 text-yellow-500' : 
+                                          'bg-red-500/20 text-red-500'"
+                                  x-text="project.status"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-400">Progress</span>
+                                <span class="text-white" x-text="project.progress + '%'"></span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="bg-tech-blue h-2 rounded-full" :style="'width: ' + project.progress + '%'"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-sm text-gray-400 mb-3" x-text="project.description"></div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="text-xs text-gray-400">
+                                <i class="fas fa-users mr-1"></i>
+                                <span x-text="project.teamSize + ' agents'"></span>
+                            </div>
+                            <div class="text-xs text-gray-400" x-text="'Due: ' + project.deadline"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- Chat with Daena -->
+        <div class="bg-gradient-to-r from-sunbeam/10 to-neon-cyan/10 border border-sunbeam/30 rounded-lg p-6">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-sunbeam to-neon-cyan rounded-full flex items-center justify-center text-3xl">🧠</div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Chat with Daena AI VP</h3>
+                    <p class="text-gray-400">Get strategic guidance and coordination support</p>
+                </div>
+            </div>
+            
+            <div class="flex space-x-3">
+                <input type="text" 
+                       x-model="daenaMessage"
+                       @keydown.enter="sendToDaena()"
+                       class="flex-1 bg-midnight/60 border border-tech-blue/30 rounded-lg px-4 py-3 
+                              text-white placeholder-gray-400 focus:outline-none focus:border-tech-blue"
+                       placeholder="Ask Daena about engineering strategy, resource allocation, or coordination...">
+                <button @click="sendToDaena()" 
+                        class="px-6 py-3 bg-gradient-to-r from-sunbeam to-neon-cyan text-midnight 
+                               rounded-lg hover:from-sunbeam/80 hover:to-neon-cyan/80 transition-all font-bold">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function engineeringDepartment() {
+            return {
+                agents: [
+                    {
+                        name: 'CodeMaster AI',
+                        speciality: 'Full-stack Development',
+                        status: 'active',
+                        efficiency: 95,
+                        currentTask: 'Implementing microservices architecture'
+                    },
+                    {
+                        name: 'DevOps Agent',
+                        speciality: 'CI/CD & Infrastructure',
+                        status: 'active',
+                        efficiency: 92,
+                        currentTask: 'Optimizing deployment pipeline'
+                    },
+                    {
+                        name: 'QA Tester',
+                        speciality: 'Test Automation',
+                        status: 'active',
+                        efficiency: 89,
+                        currentTask: 'Running integration test suite'
+                    },
+                    {
+                        name: 'Architecture AI',
+                        speciality: 'System Design',
+                        status: 'active',
+                        efficiency: 96,
+                        currentTask: 'Designing scalable database schema'
+                    },
+                    {
+                        name: 'Security Scanner',
+                        speciality: 'Vulnerability Assessment',
+                        status: 'active',
+                        efficiency: 88,
+                        currentTask: 'Security audit of API endpoints'
+                    },
+                    {
+                        name: 'Performance Monitor',
+                        speciality: 'System Optimization',
+                        status: 'active',
+                        efficiency: 91,
+                        currentTask: 'Monitoring application performance'
+                    },
+                    {
+                        name: 'API Designer',
+                        speciality: 'RESTful Services',
+                        status: 'active',
+                        efficiency: 93,
+                        currentTask: 'Designing new API endpoints'
+                    },
+                    {
+                        name: 'Database Expert',
+                        speciality: 'Data Architecture',
+                        status: 'active',
+                        efficiency: 90,
+                        currentTask: 'Optimizing query performance'
+                    }
+                ],
+                
+                projects: [
+                    {
+                        id: 'proj1',
+                        name: 'Microservices Migration',
+                        status: 'on-track',
+                        progress: 75,
+                        description: 'Migrating monolithic architecture to microservices',
+                        teamSize: 5,
+                        deadline: 'Mar 15, 2024'
+                    },
+                    {
+                        id: 'proj2',
+                        name: 'AI Integration Platform',
+                        status: 'on-track',
+                        progress: 60,
+                        description: 'Building unified AI agent management platform',
+                        teamSize: 6,
+                        deadline: 'Apr 1, 2024'
+                    },
+                    {
+                        id: 'proj3',
+                        name: 'Performance Optimization',
+                        status: 'ahead',
+                        progress: 90,
+                        description: 'System-wide performance improvements',
+                        teamSize: 3,
+                        deadline: 'Feb 28, 2024'
+                    },
+                    {
+                        id: 'proj4',
+                        name: 'Security Enhancement',
+                        status: 'on-track',
+                        progress: 45,
+                        description: 'Enhanced security protocols and monitoring',
+                        teamSize: 4,
+                        deadline: 'May 1, 2024'
+                    }
+                ],
+                
+                daenaMessage: '',
+                
+                initialize() {
+                    console.log('Engineering Department initialized');
+                },
+                
+                startGroupChat() {
+                    alert('Starting group chat with all 8 engineering agents and Daena AI VP...\n\nFeatures:\n• Real-time voice and text chat\n• Code collaboration tools\n• Project coordination\n• Strategic technical guidance');
+                },
+                
+                chatWithAgent(agent) {
+                    alert(`Starting chat with ${agent.name}\n\nSpecialty: ${agent.speciality}\nCurrent Task: ${agent.currentTask}\nEfficiency: ${agent.efficiency}%\n\nVoice and text chat available!`);
+                },
+                
+                viewCodeReviews() {
+                    alert('Code Reviews Dashboard\n\n• 5 pending reviews\n• 3 approved today\n• Average review time: 2.5 hours\n• Quality score: 94%');
+                },
+                
+                deploymentStatus() {
+                    alert('Deployment Status\n\n• 3 active deployments\n• 12 successful deploys today\n• 99.7% deployment success rate\n• Next scheduled: 15:30 UTC');
+                },
+                
+                systemMetrics() {
+                    alert('Engineering Metrics\n\n• Code quality: 96%\n• Test coverage: 89%\n• Build success rate: 98%\n• Performance: 94%\n• Security score: 92%');
+                },
+                
+                sendToDaena() {
+                    if (!this.daenaMessage.trim()) return;
+                    
+                    const message = this.daenaMessage;
+                    this.daenaMessage = '';
+                    
+                    // Simulate Daena response
+                    setTimeout(() => {
+                        alert(`Daena AI VP Response:\n\n"Regarding '${message}' - As your AI VP, I'm analyzing this from an engineering perspective. Based on current team performance (94% efficiency) and project pipeline, I recommend coordinating with the Architecture AI and DevOps Agent for optimal implementation. I'll ensure resource allocation aligns with our Q1 technical objectives."`);
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

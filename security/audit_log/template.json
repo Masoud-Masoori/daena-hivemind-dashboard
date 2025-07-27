@@ -1,0 +1,12 @@
+{
+  "log_id": "audit_2025_0601_0001",
+  "actions": [],
+  "log_format": {
+    "timestamp": "ISO8601",
+    "agent": "string",
+    "action": "string",
+    "llm_used": "string",
+    "justification": "string",
+    "override": "optional"
+  }
+}

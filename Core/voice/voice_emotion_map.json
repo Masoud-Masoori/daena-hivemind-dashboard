@@ -1,0 +1,6 @@
+{
+  "happy": {"pitch": "+2", "rate": "fast", "style": "upbeat"},
+  "calm": {"pitch": "0", "rate": "slow", "style": "soothing"},
+  "urgent": {"pitch": "+3", "rate": "very_fast", "style": "sharp"},
+  "neutral": {"pitch": "0", "rate": "normal", "style": "plain"}
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "GmailTrigger",
+    "type": "email",
+    "function": "send_alert"
+  },
+  {
+    "name": "ZapierWebhook",
+    "type": "webhook",
+    "url": "https://hooks.zapier.com/hooks/catch/123456"
+  }
+]

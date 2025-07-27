@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 Founder Command Center | MAS-AI Executive Control</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'cosmic-void': '#0a0a1a',
+                        'stellar-purple': '#1a1a3a',
+                        'nebula-blue': '#1e2a5e',
+                        'plasma-cyan': '#00d4ff',
+                        'solar-gold': '#ffb800',
+                        'void-purple': '#6b46c1',
+                        'matrix-green': '#00ff88',
+                        'cosmic-blue': '#4338ca',
+                        'nova-pink': '#f472b6',
+                        'fire-red': '#ef4444',
+                        'royal-amber': '#f59e0b',
+                        'danger-crimson': '#dc2626',
+                        'command-indigo': '#3730a3'
+                    },
+                    animation: {
+                        'cosmic-pulse': 'cosmic-pulse 3s ease-in-out infinite',
+                        'stellar-drift': 'stellar-drift 20s ease infinite',
+                        'crown-glow': 'crown-glow 2s ease-in-out infinite alternate',
+                        'danger-pulse': 'danger-pulse 1.5s ease-in-out infinite',
+                        'system-lock': 'system-lock 0.5s ease-in-out'
+                    },
+                    keyframes: {
+                        'cosmic-pulse': {
+                            '0%, 100%': { 
+                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(0, 212, 255, 0.1)',
+                                borderColor: 'rgba(0, 212, 255, 0.5)'
+                            },
+                            '50%': { 
+                                boxShadow: '0 0 40px rgba(0, 212, 255, 0.8), inset 0 0 30px rgba(0, 212, 255, 0.2)',
+                                borderColor: 'rgba(0, 212, 255, 0.8)'
+                            }
+                        },
+                        'crown-glow': {
+                            '0%': { 
+                                filter: 'drop-shadow(0 0 10px rgba(255, 184, 0, 0.6))',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                filter: 'drop-shadow(0 0 25px rgba(255, 184, 0, 1)) drop-shadow(0 0 35px rgba(220, 38, 38, 0.3))',
+                                transform: 'scale(1.05)'
+                            }
+                        },
+                        'danger-pulse': {
+                            '0%, 100%': { 
+                                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                                borderColor: 'rgba(239, 68, 68, 0.4)'
+                            },
+                            '50%': { 
+                                backgroundColor: 'rgba(239, 68, 68, 0.4)',
+                                borderColor: 'rgba(239, 68, 68, 0.8)'
+                            }
+                        },
+                        'system-lock': {
+                            '0%': { transform: 'scale(1) rotate(0deg)' },
+                            '50%': { transform: 'scale(1.1) rotate(5deg)' },
+                            '100%': { transform: 'scale(1) rotate(0deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Cosmic command center background */
+        .cosmic-command-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(67, 56, 202, 0.4) 0%, rgba(10, 10, 26, 0.8) 40%),
+                radial-gradient(circle at 80% 20%, rgba(239, 68, 68, 0.3) 0%, rgba(26, 26, 58, 0.8) 40%),
+                radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.2) 0%, rgba(10, 10, 26, 0.9) 50%),
+                linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            background-size: 400% 400%;
+            animation: stellar-drift 30s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Enhanced command panel styling */
+        .command-panel {
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.08), rgba(107, 70, 193, 0.12));
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .command-panel:hover {
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(107, 70, 193, 0.2));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Lock status indicators */
+        .system-locked {
+            background: linear-gradient(145deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3));
+            border-color: rgba(239, 68, 68, 0.5);
+            animation: danger-pulse 2s ease-in-out infinite;
+        }
+        
+        .system-unlocked {
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.1), rgba(16, 185, 129, 0.2));
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+        
+        /* Button styling */
+        .cosmic-btn {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(67, 56, 202, 0.2));
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .cosmic-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(67, 56, 202, 0.35));
+            border-color: rgba(0, 212, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+        
+        .danger-btn {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.2));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .danger-btn:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.35));
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        /* Executive alert styling */
+        .executive-alert {
+            background: linear-gradient(90deg, rgba(255, 184, 0, 0.2), rgba(239, 68, 68, 0.15));
+            border-left: 4px solid #ffb800;
+            animation: cosmic-pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="cosmic-command-bg min-h-screen text-white font-mono">
+    
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-xl font-bold animate-crown-glow shadow-lg shadow-amber-500/30"
+                     title="👑 Founder Command Center">
+                    👑
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                        FOUNDER COMMAND CENTER
+                    </div>
+                    <p class="text-xs text-blue-200/80">Ultimate Executive Authority</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container mx-auto px-6 py-8 pt-24" x-data="founderCommand()">
+        
+        <!-- System Status Dashboard -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">System Override Control</h1>
+                <p class="text-blue-200/80 mt-2">Full system access and executive control panel</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm text-blue-200/60">Active Overrides</div>
+                <div class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent" x-text="activeOverrides">3</div>
+            </div>
+        </div>
+        
+        <!-- System Lock Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="command-panel rounded-xl p-4" :class="systemLocks.ai ? 'system-locked' : 'system-unlocked'">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-robot text-lg" :class="systemLocks.ai ? 'text-fire-red' : 'text-matrix-green'"></i>
+                        <span class="font-medium">AI Systems</span>
+                    </div>
+                    <i :class="systemLocks.ai ? 'fas fa-lock text-fire-red' : 'fas fa-lock-open text-matrix-green'"></i>
+                </div>
+                <button @click="toggleSystemLock('ai')" 
+                        class="w-full py-2 rounded-lg transition-all"
+                        :class="systemLocks.ai ? 'danger-btn text-fire-red' : 'cosmic-btn text-matrix-green'">
+                    <span x-text="systemLocks.ai ? 'UNLOCK AI' : 'LOCK AI'"></span>
+                </button>
+            </div>
+            
+            <div class="command-panel rounded-xl p-4" :class="systemLocks.blockchain ? 'system-locked' : 'system-unlocked'">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-link text-lg" :class="systemLocks.blockchain ? 'text-fire-red' : 'text-matrix-green'"></i>
+                        <span class="font-medium">Blockchain</span>
+                    </div>
+                    <i :class="systemLocks.blockchain ? 'fas fa-lock text-fire-red' : 'fas fa-lock-open text-matrix-green'"></i>
+                </div>
+                <button @click="toggleSystemLock('blockchain')" 
+                        class="w-full py-2 rounded-lg transition-all"
+                        :class="systemLocks.blockchain ? 'danger-btn text-fire-red' : 'cosmic-btn text-matrix-green'">
+                    <span x-text="systemLocks.blockchain ? 'UNLOCK CHAIN' : 'LOCK CHAIN'"></span>
+                </button>
+            </div>
+            
+            <div class="command-panel rounded-xl p-4" :class="systemLocks.decisions ? 'system-locked' : 'system-unlocked'">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-gavel text-lg" :class="systemLocks.decisions ? 'text-fire-red' : 'text-matrix-green'"></i>
+                        <span class="font-medium">Decisions</span>
+                    </div>
+                    <i :class="systemLocks.decisions ? 'fas fa-lock text-fire-red' : 'fas fa-lock-open text-matrix-green'"></i>
+                </div>
+                <button @click="toggleSystemLock('decisions')" 
+                        class="w-full py-2 rounded-lg transition-all"
+                        :class="systemLocks.decisions ? 'danger-btn text-fire-red' : 'cosmic-btn text-matrix-green'">
+                    <span x-text="systemLocks.decisions ? 'UNLOCK VOTES' : 'LOCK VOTES'"></span>
+                </button>
+            </div>
+            
+            <div class="command-panel rounded-xl p-4" :class="systemLocks.financial ? 'system-locked' : 'system-unlocked'">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-dollar-sign text-lg" :class="systemLocks.financial ? 'text-fire-red' : 'text-matrix-green'"></i>
+                        <span class="font-medium">Financial</span>
+                    </div>
+                    <i :class="systemLocks.financial ? 'fas fa-lock text-fire-red' : 'fas fa-lock-open text-matrix-green'"></i>
+                </div>
+                <button @click="toggleSystemLock('financial')" 
+                        class="w-full py-2 rounded-lg transition-all"
+                        :class="systemLocks.financial ? 'danger-btn text-fire-red' : 'cosmic-btn text-matrix-green'">
+                    <span x-text="systemLocks.financial ? 'UNLOCK FUNDS' : 'LOCK FUNDS'"></span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Executive Control Dashboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            
+            <!-- Daena Control Panel -->
+            <div class="command-panel rounded-xl p-6">
+                <h3 class="text-xl font-bold text-solar-gold mb-6">
+                    <i class="fas fa-crown mr-2"></i>Daena VP Control
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-cosmic-void/40 rounded-lg border border-plasma-cyan/20">
+                        <div>
+                            <div class="font-medium text-white">Daena Status</div>
+                            <div class="text-sm text-gray-400" x-text="daenaStatus">Active - Managing 8 departments</div>
+                        </div>
+                        <div class="w-3 h-3 bg-matrix-green rounded-full animate-pulse" x-show="!daenaPaused"></div>
+                        <div class="w-3 h-3 bg-fire-red rounded-full animate-pulse" x-show="daenaPaused"></div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <button @click="pauseDaena()" 
+                                class="w-full px-4 py-2 cosmic-btn text-solar-gold hover:text-white rounded-lg transition-colors">
+                            <i class="fas fa-pause mr-2"></i>
+                            <span x-text="daenaPaused ? 'Resume Daena' : 'Pause Daena'"></span>
+                        </button>
+                        <button @click="overrideDaenaDecision()" 
+                                class="w-full px-4 py-2 danger-btn text-fire-red hover:text-white rounded-lg transition-colors">
+                            <i class="fas fa-times mr-2"></i>Override Last Decision
+                        </button>
+                        <button @click="setDaenaInstructions()" 
+                                class="w-full px-4 py-2 cosmic-btn text-cosmic-blue hover:text-white rounded-lg transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Set New Instructions
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Override Panel -->
+            <div class="command-panel rounded-xl p-6">
+                <h3 class="text-xl font-bold text-fire-red mb-6">
+                    <i class="fas fa-shield-alt mr-2"></i>System Overrides
+                </h3>
+                
+                <div class="space-y-4">
+                    <button @click="forceDecision()" 
+                            class="w-full p-3 danger-btn text-fire-red hover:text-white rounded-lg transition-colors text-left">
+                        <div class="font-medium">Force Decision</div>
+                        <div class="text-sm opacity-75">Bypass all voting systems</div>
+                    </button>
+                    <button @click="overrideAgentTasks()" 
+                            class="w-full p-3 cosmic-btn text-royal-amber hover:text-white rounded-lg transition-colors text-left">
+                        <div class="font-medium">Override Agent Tasks</div>
+                        <div class="text-sm opacity-75">Reassign or cancel any task</div>
+                    </button>
+                    <button @click="emergencyMeeting()" 
+                            class="w-full p-3 cosmic-btn text-nova-pink hover:text-white rounded-lg transition-colors text-left">
+                        <div class="font-medium">Emergency Meeting</div>
+                        <div class="text-sm opacity-75">Alert all departments immediately</div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Executive Intelligence -->
+            <div class="command-panel rounded-xl p-6">
+                <h3 class="text-xl font-bold text-plasma-cyan mb-6">
+                    <i class="fas fa-eye mr-2"></i>Executive Intelligence
+                </h3>
+                
+                <div class="space-y-3">
+                    <div class="p-3 bg-cosmic-void/40 rounded-lg border border-plasma-cyan/20">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-300">Active Agents</span>
+                            <span class="text-sm font-bold text-matrix-green" x-text="intelligence.agents">25</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-cosmic-void/40 rounded-lg border border-plasma-cyan/20">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-300">Pending Decisions</span>
+                            <span class="text-sm font-bold text-solar-gold" x-text="intelligence.decisions">7</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-cosmic-void/40 rounded-lg border border-plasma-cyan/20">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-300">System Alerts</span>
+                            <span class="text-sm font-bold text-fire-red" x-text="intelligence.alerts">2</span>
+                        </div>
+                    </div>
+                    <button @click="viewDetailedReport()" 
+                            class="w-full px-4 py-2 cosmic-btn text-plasma-cyan hover:text-white rounded-lg transition-colors">
+                        <i class="fas fa-chart-line mr-2"></i>Detailed Report
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Executive Actions Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <button @click="accessAllSystems()" 
+                    class="command-panel rounded-lg p-4 text-center hover:scale-105 transition-transform">
+                <div class="text-2xl mb-2">🔓</div>
+                <div class="text-sm font-medium text-matrix-green">Access All Systems</div>
+            </button>
+            <button @click="viewAllConversations()" 
+                    class="command-panel rounded-lg p-4 text-center hover:scale-105 transition-transform">
+                <div class="text-2xl mb-2">💬</div>
+                <div class="text-sm font-medium text-plasma-cyan">All Conversations</div>
+            </button>
+            <button @click="financialOverride()" 
+                    class="command-panel rounded-lg p-4 text-center hover:scale-105 transition-transform">
+                <div class="text-2xl mb-2">💰</div>
+                <div class="text-sm font-medium text-solar-gold">Financial Override</div>
+            </button>
+            <button @click="strategicControl()" 
+                    class="command-panel rounded-lg p-4 text-center hover:scale-105 transition-transform">
+                <div class="text-2xl mb-2">🎯</div>
+                <div class="text-sm font-medium text-void-purple">Strategic Control</div>
+            </button>
+        </div>
+        
+        <!-- Emergency Controls -->
+        <div class="command-panel rounded-xl p-6 mb-8">
+            <h3 class="text-xl font-bold text-fire-red mb-6">
+                <i class="fas fa-exclamation-triangle mr-2"></i>Emergency Controls
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button @click="emergencyStopAll()" 
+                        class="danger-btn p-4 rounded-lg text-center hover:scale-105 transition-all">
+                    <div class="text-2xl mb-2">🛑</div>
+                    <div class="text-sm font-medium">Emergency Stop All</div>
+                </button>
+                <button @click="freezeBlockchain()" 
+                        class="danger-btn p-4 rounded-lg text-center hover:scale-105 transition-all">
+                    <div class="text-2xl mb-2">❄️</div>
+                    <div class="text-sm font-medium">Freeze Blockchain</div>
+                </button>
+                <button @click="systemLockdown()" 
+                        class="danger-btn p-4 rounded-lg text-center hover:scale-105 transition-all">
+                    <div class="text-2xl mb-2">🔒</div>
+                    <div class="text-sm font-medium">System Lockdown</div>
+                </button>
+                <button @click="overrideAllDecisions()" 
+                        class="danger-btn p-4 rounded-lg text-center hover:scale-105 transition-all">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <div class="text-sm font-medium">Override All</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Recent Override History -->
+        <div class="command-panel rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-6">
+                <i class="fas fa-history mr-2"></i>Executive Override History
+            </h3>
+            
+            <div class="space-y-3" x-show="overrideHistory.length > 0">
+                <template x-for="override in overrideHistory" :key="override.id">
+                    <div class="flex items-center justify-between p-3 bg-cosmic-void/40 rounded-lg border border-plasma-cyan/20">
+                        <div>
+                            <div class="font-medium text-white text-sm" x-text="override.action"></div>
+                            <div class="text-xs text-gray-400" x-text="override.timestamp"></div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs px-2 py-1 rounded-full"
+                                  :class="override.status === 'executed' ? 'bg-matrix-green/20 text-matrix-green border border-matrix-green/30' : 'bg-solar-gold/20 text-solar-gold border border-solar-gold/30'"
+                                  x-text="override.status"></span>
+                            <button @click="revertOverride(override.id)" 
+                                    class="text-xs text-fire-red hover:text-fire-red/80 p-1 rounded">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div x-show="overrideHistory.length === 0" class="text-center text-gray-400 py-8">
+                No overrides recorded yet
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function founderCommand() {
+            return {
+                // UI State
+                emergencyMode: false,
+                activeOverrides: 3,
+                systemHealth: 100,
+                
+                // System Lock States
+                systemLocks: {
+                    ai: false,
+                    blockchain: false,
+                    decisions: false,
+                    financial: false
+                },
+                
+                // Daena Control
+                daenaStatus: 'Active - Managing 8 departments',
+                daenaPaused: false,
+                
+                // Intelligence Data
+                intelligence: {
+                    agents: 25,
+                    decisions: 7,
+                    alerts: 2
+                },
+                
+                // Override History
+                overrideHistory: [
+                    {
+                        id: 1,
+                        action: 'Overrode CMP Voting Decision',
+                        timestamp: '10 minutes ago',
+                        status: 'executed'
+                    },
+                    {
+                        id: 2,
+                        action: 'Paused Daena for Strategic Review',
+                        timestamp: '1 hour ago',
+                        status: 'executed'
+                    },
+                    {
+                        id: 3,
+                        action: 'Emergency Budget Approval',
+                        timestamp: '2 hours ago',
+                        status: 'executed'
+                    }
+                ],
+                
+                // System Lock Functions
+                async toggleSystemLock(system) {
+                    this.systemLocks[system] = !this.systemLocks[system];
+                    const action = this.systemLocks[system] ? 'lock' : 'unlock';
+                    const systemName = system.charAt(0).toUpperCase() + system.slice(1);
+                    
+                    try {
+                        const response = await fetch('/api/v1/founder-panel/system/lock', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                system: system,
+                                action: action,
+                                reason: `Founder ${action} of ${systemName} system`
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.addOverride(`${action.toUpperCase()} ${systemName} System`);
+                            this.showNotification(`${systemName} system ${action}ed successfully`, 'success');
+                        }
+                    } catch (error) {
+                        console.error('System lock error:', error);
+                        this.showNotification(`Failed to ${action} ${systemName} system`, 'error');
+                        // Revert state on error
+                        this.systemLocks[system] = !this.systemLocks[system];
+                    }
+                },
+                
+                // Emergency Controls
+                async emergencyStopAll() {
+                    const confirmed = confirm('🚨 EMERGENCY STOP ALL SYSTEMS?\n\nThis will immediately halt all AI operations.\nType "EMERGENCY" to confirm:');
+                    if (confirmed) {
+                        const verification = prompt('Type "EMERGENCY" to confirm:');
+                        if (verification === 'EMERGENCY') {
+                            try {
+                                const response = await fetch('/api/v1/founder-panel/system/emergency/stop-all', {
+                                    method: 'POST'
+                                });
+                                
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    this.showNotification('🛑 ALL SYSTEMS HALTED', 'warning');
+                                    this.addOverride('Emergency Stop - All Systems');
+                                    // Lock all systems
+                                    Object.keys(this.systemLocks).forEach(key => {
+                                        this.systemLocks[key] = true;
+                                    });
+                                }
+                            } catch (error) {
+                                console.error('Emergency stop error:', error);
+                                this.showNotification('Emergency stop failed', 'error');
+                            }
+                        }
+                    }
+                },
+                
+                async freezeBlockchain() {
+                    const confirmed = confirm('❄️ FREEZE BLOCKCHAIN OPERATIONS?\n\nThis will halt all blockchain transactions.');
+                    if (confirmed) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/system/emergency/freeze-blockchain', {
+                                method: 'POST'
+                            });
+                            
+                            if (response.ok) {
+                                this.systemLocks.blockchain = true;
+                                this.showNotification('❄️ Blockchain Operations Frozen', 'warning');
+                                this.addOverride('Freeze Blockchain Operations');
+                            }
+                        } catch (error) {
+                            console.error('Blockchain freeze error:', error);
+                            this.showNotification('Failed to freeze blockchain', 'error');
+                        }
+                    }
+                },
+                
+                async systemLockdown() {
+                    const confirmed = confirm('🔒 COMPLETE SYSTEM LOCKDOWN?\n\nThis will lock all systems immediately.\nType "LOCKDOWN" to confirm:');
+                    if (confirmed) {
+                        const verification = prompt('Type "LOCKDOWN" to confirm:');
+                        if (verification === 'LOCKDOWN') {
+                            try {
+                                const response = await fetch('/api/v1/founder-panel/system/emergency/lockdown', {
+                                    method: 'POST'
+                                });
+                                
+                                if (response.ok) {
+                                    // Lock all systems
+                                    Object.keys(this.systemLocks).forEach(key => {
+                                        this.systemLocks[key] = true;
+                                    });
+                                    this.showNotification('🔒 COMPLETE SYSTEM LOCKDOWN ACTIVE', 'error');
+                                    this.addOverride('Complete System Lockdown');
+                                }
+                            } catch (error) {
+                                console.error('System lockdown error:', error);
+                                this.showNotification('System lockdown failed', 'error');
+                            }
+                        }
+                    }
+                },
+                
+                async overrideAllDecisions() {
+                    const confirmed = confirm('⚡ OVERRIDE ALL PENDING DECISIONS?\n\nThis will cancel all pending votes and decisions.');
+                    if (confirmed) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/system/emergency/override-all', {
+                                method: 'POST'
+                            });
+                            
+                            if (response.ok) {
+                                this.intelligence.decisions = 0;
+                                this.showNotification('⚡ ALL DECISIONS OVERRIDDEN', 'success');
+                                this.addOverride('Mass Decision Override');
+                            }
+                        } catch (error) {
+                            console.error('Override all error:', error);
+                            this.showNotification('Failed to override decisions', 'error');
+                        }
+                    }
+                },
+                
+                // Daena Controls
+                async pauseDaena() {
+                    const action = this.daenaPaused ? 'resume' : 'pause';
+                    const confirmed = confirm(`${action === 'pause' ? '⏸️ Pause' : '▶️ Resume'} Daena VP?\n\nThis will ${action === 'pause' ? 'temporarily halt' : 'restart'} Daena's operations.`);
+                    
+                    if (confirmed) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/daena/control', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    action: action,
+                                    reason: `Founder ${action} command`
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.daenaPaused = !this.daenaPaused;
+                                this.daenaStatus = this.daenaPaused ? 'PAUSED BY FOUNDER' : 'Active - Managing 8 departments';
+                                this.showNotification(`${action === 'pause' ? '⏸️ Daena VP Paused' : '▶️ Daena VP Resumed'}`, 'success');
+                                this.addOverride(`${action === 'pause' ? 'Paused' : 'Resumed'} Daena VP`);
+                            }
+                        } catch (error) {
+                            console.error('Daena control error:', error);
+                            this.showNotification(`Failed to ${action} Daena`, 'error');
+                        }
+                    }
+                },
+                
+                async overrideDaenaDecision() {
+                    const lastDecision = prompt('Enter the decision to override:') || 'Last strategic decision';
+                    if (lastDecision) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/override/execute', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    action: 'override_decision',
+                                    target: 'daena_decision',
+                                    reason: `Override: ${lastDecision}`,
+                                    impact_level: 'high'
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.showNotification(`❌ DECISION OVERRIDDEN: "${lastDecision}"`, 'success');
+                                this.addOverride(`Overrode Decision: ${lastDecision.substring(0, 30)}...`);
+                            }
+                        } catch (error) {
+                            console.error('Decision override error:', error);
+                            this.showNotification('Failed to override decision', 'error');
+                        }
+                    }
+                },
+                
+                async setDaenaInstructions() {
+                    const instructions = prompt('Enter new instructions for Daena:');
+                    if (instructions) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/daena/instructions', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    instructions: instructions,
+                                    priority: 'high'
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.showNotification(`📝 NEW INSTRUCTIONS SET: "${instructions}"`, 'success');
+                                this.addOverride(`Set New Instructions: ${instructions.substring(0, 30)}...`);
+                            }
+                        } catch (error) {
+                            console.error('Instructions error:', error);
+                            this.showNotification('Failed to set instructions', 'error');
+                        }
+                    }
+                },
+                
+                // System Overrides
+                async forceDecision() {
+                    const decision = prompt('Force which decision?\n\nEnter decision details:');
+                    if (decision) {
+                        try {
+                            const response = await fetch('/api/v1/founder-panel/decision/execute', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    decision: decision,
+                                    target: 'all_systems',
+                                    priority: 'critical',
+                                    reasoning: 'Founder forced decision'
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.showNotification(`⚡ DECISION FORCED: "${decision}"`, 'success');
+                                this.addOverride(`Forced Decision: ${decision.substring(0, 30)}...`);
+                            }
+                        } catch (error) {
+                            console.error('Force decision error:', error);
+                            this.showNotification('Failed to force decision', 'error');
+                        }
+                    }
+                },
+                
+                overrideAgentTasks() {
+                    window.location.href = '/agents';
+                },
+                
+                emergencyMeeting() {
+                    const confirmed = confirm('📢 EMERGENCY MEETING ALERT?\n\nThis will immediately notify all departments of an emergency meeting.');
+                    if (confirmed) {
+                        this.showNotification('🚨 EMERGENCY MEETING CALLED', 'warning');
+                        window.location.href = '/strategic-meetings';
+                    }
+                },
+                
+                // Executive Actions
+                accessAllSystems() {
+                    this.showNotification('🔓 FULL SYSTEM ACCESS GRANTED', 'success');
+                },
+                
+                viewAllConversations() {
+                    window.location.href = '/daena-office';
+                },
+                
+                async financialOverride() {
+                    const amount = prompt('Financial Override Amount:') || '$100,000';
+                    try {
+                        const response = await fetch('/api/v1/founder-panel/financial/override', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                amount: amount,
+                                reason: 'Founder financial override'
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.showNotification(`💰 FINANCIAL OVERRIDE: ${amount}`, 'success');
+                            this.addOverride(`Financial Override: ${amount}`);
+                        }
+                    } catch (error) {
+                        console.error('Financial override error:', error);
+                        this.showNotification('Failed to execute financial override', 'error');
+                    }
+                },
+                
+                strategicControl() {
+                    window.location.href = '/strategic-meetings';
+                },
+                
+                viewDetailedReport() {
+                    const report = `👑 EXECUTIVE INTELLIGENCE REPORT\n\n` +
+                        `🤖 Active Agents: ${this.intelligence.agents}\n` +
+                        `⚖️ Pending Decisions: ${this.intelligence.decisions}\n` +
+                        `🚨 System Alerts: ${this.intelligence.alerts}\n` +
+                        `📊 System Health: ${this.systemHealth}%\n` +
+                        `⚡ Active Overrides: ${this.activeOverrides}\n\n` +
+                        `🔒 System Locks:\n` +
+                        `   AI: ${this.systemLocks.ai ? 'LOCKED' : 'UNLOCKED'}\n` +
+                        `   Blockchain: ${this.systemLocks.blockchain ? 'LOCKED' : 'UNLOCKED'}\n` +
+                        `   Decisions: ${this.systemLocks.decisions ? 'LOCKED' : 'UNLOCKED'}\n` +
+                        `   Financial: ${this.systemLocks.financial ? 'LOCKED' : 'UNLOCKED'}\n\n` +
+                        `Status: All systems under founder control\n` +
+                        `Authority Level: MAXIMUM\n` +
+                        `Emergency Powers: ACTIVE`;
+                        
+                    alert(report);
+                },
+                
+                // Utility Functions
+                addOverride(action) {
+                    this.overrideHistory.unshift({
+                        id: Date.now(),
+                        action: action,
+                        timestamp: 'Just now',
+                        status: 'executed'
+                    });
+                    this.activeOverrides++;
+                },
+                
+                async revertOverride(id) {
+                    const confirmed = confirm('Revert this override?');
+                    if (confirmed) {
+                        this.overrideHistory = this.overrideHistory.filter(o => o.id !== id);
+                        this.activeOverrides = Math.max(0, this.activeOverrides - 1);
+                        this.showNotification('Override reverted successfully', 'success');
+                    }
+                },
+                
+                showNotification(message, type) {
+                    // Update the system status indicator
+                    const statusEl = document.getElementById('system-status');
+                    if (statusEl) {
+                        statusEl.textContent = message;
+                        statusEl.className = type === 'error' ? 'text-red-400 font-bold animate-pulse' : 
+                                            type === 'warning' ? 'text-yellow-400 font-bold animate-pulse' :
+                                            'text-green-400 font-bold animate-pulse';
+                        
+                        setTimeout(() => {
+                            statusEl.textContent = 'FULL SYSTEM ACCESS GRANTED';
+                            statusEl.className = 'text-sm text-cyan-300 font-bold';
+                        }, 3000);
+                    }
+                },
+                
+                loadSystemStatus() {
+                    console.log('Loading executive intelligence...');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

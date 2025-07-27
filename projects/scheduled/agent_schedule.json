@@ -1,0 +1,18 @@
+[
+  {
+    "project": "LLM Router Upgrade",
+    "agent": "daena",
+    "start_time": "2025-06-01T08:00:00",
+    "end_time": "2025-06-01T10:00:00",
+    "deadline": "2025-06-01T12:00:00",
+    "status": "scheduled"
+  },
+  {
+    "project": "XTTS Auto-Calibrator",
+    "agent": "voice001",
+    "start_time": "2025-06-01T13:00:00",
+    "end_time": "2025-06-01T15:00:00",
+    "deadline": "2025-06-01T16:00:00",
+    "status": "scheduled"
+  }
+]

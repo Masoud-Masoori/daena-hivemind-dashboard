@@ -1,0 +1,26 @@
+{
+  "synthesis_id": "synth-20250724094255",
+  "debate_id": "debate-20250724094253",
+  "summary": "Synthesized summary for topic 'Should Daena prioritize AI agent development or human-AI collaboration tools?' based on advisor arguments and scout findings.",
+  "confidence_scores": {
+    "Steve Jobs": 0.9,
+    "Satya Nadella": 0.9,
+    "Sheryl Sandberg": 0.9,
+    "Elon Musk": 0.9,
+    "Indra Nooyi": 0.9
+  },
+  "followup_questions": [
+    "What is the main risk in 'Should Daena prioritize AI agent development or human-AI collaboration tools?'?",
+    "What would be the impact of a different approach?",
+    "How can we measure success for 'Should Daena prioritize AI agent development or human-AI collaboration tools?'?"
+  ],
+  "participants": [
+    "Steve Jobs",
+    "Satya Nadella",
+    "Sheryl Sandberg",
+    "Elon Musk",
+    "Indra Nooyi"
+  ],
+  "timestamp": "2025-07-24T09:42:55.667216",
+  "outcome": null
+}

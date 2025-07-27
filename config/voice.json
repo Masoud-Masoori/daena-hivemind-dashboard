@@ -1,0 +1,91 @@
+{
+    "voice_profiles": {
+        "default": {
+            "name": "en-US-JennyNeural",
+            "style": "neutral",
+            "rate": "+0%",
+            "pitch": "+0Hz",
+            "volume": "+0%",
+            "team_usage": ["general", "meetings", "presentations"]
+        },
+        "professional": {
+            "name": "en-US-GuyNeural",
+            "style": "professional",
+            "rate": "-10%",
+            "pitch": "-10Hz",
+            "volume": "+0%",
+            "team_usage": ["executive", "client_meetings", "formal_presentations"]
+        },
+        "friendly": {
+            "name": "en-US-AriaNeural",
+            "style": "friendly",
+            "rate": "+5%",
+            "pitch": "+5Hz",
+            "volume": "+0%",
+            "team_usage": ["team_meetings", "training", "casual_presentations"]
+        },
+        "empathetic": {
+            "name": "en-US-JennyNeural",
+            "style": "empathetic",
+            "rate": "-5%",
+            "pitch": "+10Hz",
+            "volume": "+0%",
+            "team_usage": ["one_on_one", "feedback_sessions", "emotional_support"]
+        }
+    },
+    "pod_voices": {
+        "apollo_creative": {
+            "voice_profile": "friendly",
+            "emotion": "excited",
+            "team_context": "creative_sessions"
+        },
+        "athena_strategy": {
+            "voice_profile": "professional",
+            "emotion": "calm",
+            "team_context": "strategy_meetings"
+        },
+        "hermes_communication": {
+            "voice_profile": "empathetic",
+            "emotion": "neutral",
+            "team_context": "client_interactions"
+        }
+    },
+    "emotion_mapping": {
+        "happy": {
+            "style": "cheerful",
+            "rate": "+10%",
+            "pitch": "+15Hz",
+            "team_context": ["celebrations", "achievements", "positive_feedback"]
+        },
+        "sad": {
+            "style": "sad",
+            "rate": "-10%",
+            "pitch": "-10Hz",
+            "team_context": ["sympathy", "acknowledgment", "support"]
+        },
+        "angry": {
+            "style": "angry",
+            "rate": "+15%",
+            "pitch": "+20Hz",
+            "team_context": ["urgent_matters", "critical_feedback", "important_announcements"]
+        },
+        "calm": {
+            "style": "calm",
+            "rate": "-5%",
+            "pitch": "-5Hz",
+            "team_context": ["mediation", "conflict_resolution", "stressful_situations"]
+        },
+        "excited": {
+            "style": "excited",
+            "rate": "+20%",
+            "pitch": "+25Hz",
+            "team_context": ["motivation", "team_building", "innovative_ideas"]
+        }
+    },
+    "output_settings": {
+        "format": "mp3",
+        "sample_rate": 24000,
+        "channels": 1,
+        "bit_depth": 16
+    }
+} 

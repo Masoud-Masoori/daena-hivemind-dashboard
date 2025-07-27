@@ -1,0 +1,6 @@
+{
+  "clusters": {
+    "A": ["lang_ops", "qa_ops"],
+    "B": ["planning", "voice_sync"]
+  }
+}

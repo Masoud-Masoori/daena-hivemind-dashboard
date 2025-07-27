@@ -1,0 +1,128 @@
+{
+  "refresh_interval": 30,
+  "log_limit": 100,
+  "performance_period": 24,
+  "alerts": {
+    "cpu": {
+      "warning": 70,
+      "critical": 90,
+      "temperature_warning": 70,
+      "temperature_critical": 85
+    },
+    "memory": {
+      "warning": 75,
+      "critical": 90,
+      "swap_warning": 80,
+      "swap_critical": 90
+    },
+    "disk": {
+      "warning": 80,
+      "critical": 95,
+      "io_warning": 1000000,
+      "io_critical": 5000000
+    },
+    "gpu": {
+      "warning": 80,
+      "critical": 95,
+      "temperature_warning": 75,
+      "temperature_critical": 85,
+      "memory_warning": 80,
+      "memory_critical": 90
+    },
+    "network": {
+      "connections_warning": 1000,
+      "connections_critical": 5000,
+      "bandwidth_warning": 1000000,
+      "bandwidth_critical": 5000000
+    }
+  },
+  "retention": {
+    "logs": {
+      "days": 30,
+      "max_size_mb": 100
+    },
+    "metrics": {
+      "days": 7,
+      "max_size_mb": 50
+    }
+  },
+  "export": {
+    "formats": ["json", "csv"],
+    "schedule": "0 0 * * *",
+    "destination": "exports/monitoring",
+    "compression": true,
+    "max_files": 30
+  },
+  "security": {
+    "rate_limit": {
+      "requests": 100,
+      "period": 60
+    },
+    "authentication": true,
+    "ssl_required": true,
+    "allowed_ips": ["127.0.0.1", "::1"]
+  },
+  "notifications": {
+    "email": {
+      "enabled": true,
+      "recipients": ["admin@daena.ai"],
+      "smtp_server": "smtp.daena.ai",
+      "port": 587,
+      "use_tls": true,
+      "username": "monitoring@daena.ai",
+      "password": "your-smtp-password"
+    },
+    "webhook": {
+      "enabled": true,
+      "url": "https://api.daena.ai/webhooks/monitoring",
+      "secret": "your-webhook-secret",
+      "timeout": 5,
+      "retry_attempts": 3
+    },
+    "slack": {
+      "enabled": true,
+      "webhook_url": "https://hooks.slack.com/services/your-webhook-url",
+      "channel": "#monitoring",
+      "username": "Daena Monitor",
+      "icon_emoji": ":robot_face:"
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": "logs/monitoring.log",
+    "max_size_mb": 10,
+    "backup_count": 5,
+    "json_format": true
+  },
+  "dashboard": {
+    "refresh_interval": 5,
+    "max_data_points": 1000,
+    "charts": {
+      "cpu": {
+        "enabled": true,
+        "type": "line",
+        "title": "CPU Usage",
+        "y_axis_label": "Usage (%)"
+      },
+      "memory": {
+        "enabled": true,
+        "type": "line",
+        "title": "Memory Usage",
+        "y_axis_label": "Usage (%)"
+      },
+      "gpu": {
+        "enabled": true,
+        "type": "line",
+        "title": "GPU Usage",
+        "y_axis_label": "Usage (%)"
+      },
+      "network": {
+        "enabled": true,
+        "type": "line",
+        "title": "Network Traffic",
+        "y_axis_label": "Bytes"
+      }
+    }
+  }
+} 

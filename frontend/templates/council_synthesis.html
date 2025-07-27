@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Council Synthesis - Daena AI VP System</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0f0f23',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'fire-orange': '#f97316',
+                        'electric-blue': '#3b82f6',
+                        'plasma-green': '#10b981'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'synthesis-pulse': 'synthesis-pulse 3s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { boxShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' },
+                            '100%': { boxShadow: '0 0 20px #00ffff, 0 0 40px #00ffff' }
+                        },
+                        'synthesis-pulse': {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
+                            '50%': { transform: 'scale(1.05)', opacity: '1' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .background-alive {
+            background: linear-gradient(45deg, #0f0f23, #1a1a3a, #0f0f23);
+            background-size: 400% 400%;
+            animation: gradient-alive 12s ease infinite;
+        }
+        
+        @keyframes gradient-alive {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .neon-border {
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .synthesis-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .synthesis-card:hover {
+            transform: scale(1.02) translateY(-2px);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body class="bg-midnight text-white min-h-screen background-alive">
+    
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-green-500/30"
+                     title="🧠 Council Synthesis">
+                    🧠
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        COUNCIL SYNTHESIS
+                    </div>
+                    <p class="text-xs text-blue-200/80">AI-Powered Decision Synthesis</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8 pt-24" x-data="councilSynthesis()" x-init="init()">
+        
+        <!-- Page Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-sunbeam mb-2">
+                <i class="fas fa-brain text-sunbeam mr-3 animate-synthesis-pulse"></i>
+                Council Synthesis Center
+            </h1>
+            <p class="text-gray-400">Transform AI advisor debates into actionable decisions</p>
+        </div>
+
+        <!-- Department Selector -->
+        <div class="glass-effect rounded-xl p-6 mb-8 neon-border">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <label class="text-sunbeam font-semibold">Select Department:</label>
+                    <select x-model="selectedDepartment" @change="fetchSynthesis()" 
+                            class="bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none">
+                        <option value="engineering">Engineering</option>
+                        <option value="product">Product</option>
+                        <option value="sales">Sales</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="finance">Finance</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="operations">Operations</option>
+                        <option value="legal">Legal</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="generateSynthesis()" 
+                            class="bg-organic-green text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                        <i class="fas fa-magic mr-2"></i>Generate Synthesis
+                    </button>
+                    <button @click="refreshSynthesis()" 
+                            class="bg-electric-blue text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Synthesis Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            
+            <!-- Key Insights -->
+            <div class="glass-effect rounded-xl p-6 neon-border synthesis-card">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-lightbulb text-sunbeam mr-2"></i>
+                    Key Insights
+                </h3>
+                <div class="space-y-3">
+                    <template x-for="insight in synthesis.key_insights" :key="insight">
+                        <div class="bg-midnight/60 rounded-lg p-3 border border-neon-cyan/20">
+                            <p class="text-sm text-gray-300" x-text="insight"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="glass-effect rounded-xl p-6 neon-border synthesis-card">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-check-circle text-organic-green mr-2"></i>
+                    Recommendations
+                </h3>
+                <div class="space-y-3">
+                    <template x-for="(rec, index) in synthesis.recommendations" :key="index">
+                        <div class="bg-midnight/60 rounded-lg p-3 border border-organic-green/20">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-organic-green font-bold" x-text="`${index + 1}.`"></span>
+                                <p class="text-sm text-gray-300" x-text="rec"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Risk Assessment -->
+            <div class="glass-effect rounded-xl p-6 neon-border synthesis-card">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-shield-alt text-fire-orange mr-2"></i>
+                    Risk Assessment
+                </h3>
+                <div class="space-y-4">
+                    <div class="bg-midnight/60 rounded-lg p-3 border border-fire-orange/20">
+                        <p class="text-sm text-gray-300" x-text="synthesis.risk_assessment"></p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-400">Risk Level:</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold"
+                              :class="conclusion.risk_level === 'low' ? 'bg-green-500/20 text-green-400' : 
+                                      conclusion.risk_level === 'medium' ? 'bg-yellow-500/20 text-yellow-400' : 
+                                      'bg-red-500/20 text-red-400'"
+                              x-text="conclusion.risk_level.toUpperCase()"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Panel -->
+        <div class="glass-effect rounded-xl p-6 mb-8 neon-border">
+            <h3 class="text-2xl font-semibold mb-6 text-sunbeam">
+                <i class="fas fa-gavel text-sunbeam mr-2"></i>
+                Final Decision
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Decision Summary -->
+                <div class="space-y-4">
+                    <div class="bg-midnight/60 rounded-lg p-4 border border-neon-cyan/20">
+                        <h4 class="text-lg font-semibold text-neon-cyan mb-2">Decision Summary</h4>
+                        <p class="text-gray-300" x-text="conclusion.reasoning"></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-midnight/60 rounded-lg p-3 border border-cyber-purple/20 text-center">
+                            <div class="text-2xl font-bold text-cyber-purple" x-text="conclusion.approval_score + '%'"></div>
+                            <div class="text-xs text-gray-400">Approval Score</div>
+                        </div>
+                        <div class="bg-midnight/60 rounded-lg p-3 border border-organic-green/20 text-center">
+                            <div class="text-2xl font-bold text-organic-green" x-text="conclusion.confidence + '%'"></div>
+                            <div class="text-xs text-gray-400">Confidence</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-neon-cyan">Next Steps</h4>
+                    <div class="space-y-2">
+                        <template x-for="(step, index) in conclusion.next_steps" :key="index">
+                            <div class="flex items-center space-x-3 bg-midnight/60 rounded-lg p-3 border border-organic-green/20">
+                                <span class="text-organic-green font-bold" x-text="`${index + 1}.`"></span>
+                                <p class="text-sm text-gray-300" x-text="step"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="glass-effect rounded-xl p-6 neon-border">
+            <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                <i class="fas fa-cogs text-sunbeam mr-2"></i>
+                Synthesis Actions
+            </h3>
+            
+            <div class="flex flex-wrap gap-4">
+                <button @click="approveSynthesis()" 
+                        class="bg-organic-green text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                    <i class="fas fa-check mr-2"></i>Approve Synthesis
+                </button>
+                <button @click="pinSynthesis()" 
+                        class="bg-sunbeam text-midnight px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition-colors">
+                    <i class="fas fa-thumbtack mr-2"></i>Pin for Review
+                </button>
+                <button @click="overrideSynthesis()" 
+                        class="bg-fire-orange text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Override Decision
+                </button>
+                <button @click="requestRevision()" 
+                        class="bg-cyber-purple text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-600 transition-colors">
+                    <i class="fas fa-edit mr-2"></i>Request Revision
+                </button>
+                <button @click="exportSynthesis()" 
+                        class="bg-electric-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Export Results
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Syntheses -->
+        <div class="glass-effect rounded-xl p-6 neon-border mt-8">
+            <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                <i class="fas fa-history text-sunbeam mr-2"></i>
+                Recent Syntheses
+            </h3>
+            
+            <div class="space-y-3">
+                <template x-for="(synth, index) in recentSyntheses" :key="index">
+                    <div class="flex items-center justify-between bg-midnight/60 rounded-lg p-3 border border-neon-cyan/20 hover:border-neon-cyan/40 transition-all duration-300">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-cyber-purple/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-brain text-cyber-purple text-sm"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-white" x-text="synth.department"></div>
+                                <div class="text-xs text-gray-400" x-text="synth.timestamp"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 rounded-full text-xs font-bold"
+                                  :class="synth.status === 'approved' ? 'bg-green-500/20 text-green-400' : 
+                                          synth.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' : 
+                                          'bg-red-500/20 text-red-400'"
+                                  x-text="synth.status.toUpperCase()"></span>
+                            <button @click="loadSynthesis(synth.id)" 
+                                    class="text-neon-cyan hover:text-cyan-300 transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function councilSynthesis() {
+            return {
+                selectedDepartment: 'engineering',
+                synthesis: {
+                    key_insights: [
+                        "The proposed initiative shows strong technical feasibility with moderate market risk",
+                        "Key success factors include proper resource allocation and stakeholder alignment",
+                        "Data quality supports the decision with 89% confidence level",
+                        "Implementation timeline is realistic with proper planning"
+                    ],
+                    recommendations: [
+                        "Proceed with Phase 1 implementation",
+                        "Establish weekly progress reviews",
+                        "Allocate additional budget for contingency",
+                        "Set up cross-functional team",
+                        "Implement monitoring and feedback loops"
+                    ],
+                    risk_assessment: "Medium risk profile with high potential reward. Primary risks include timeline delays and resource constraints. Mitigation strategies are in place."
+                },
+                conclusion: {
+                    approval_score: 87.5,
+                    risk_level: "medium",
+                    confidence: 89.2,
+                    decision: "approve",
+                    reasoning: "Strong technical foundation with manageable risks. The benefits outweigh the identified risks, and proper mitigation strategies are in place.",
+                    next_steps: [
+                        "Finalize project charter",
+                        "Assign team members",
+                        "Set up project tracking",
+                        "Schedule kickoff meeting",
+                        "Establish success metrics"
+                    ]
+                },
+                recentSyntheses: [
+                    {
+                        id: 1,
+                        department: "Engineering",
+                        timestamp: "2 hours ago",
+                        status: "approved"
+                    },
+                    {
+                        id: 2,
+                        department: "Marketing",
+                        timestamp: "1 day ago",
+                        status: "pending"
+                    },
+                    {
+                        id: 3,
+                        department: "Finance",
+                        timestamp: "2 days ago",
+                        status: "approved"
+                    }
+                ],
+
+                init() {
+                    this.fetchSynthesis();
+                },
+
+                async fetchSynthesis() {
+                    try {
+                        const response = await fetch(`/api/v1/council/${this.selectedDepartment}/synthesis-panel`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            // Update synthesis data
+                            this.synthesis = data.synthesis || this.synthesis;
+                            this.conclusion = data.conclusion || this.conclusion;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching synthesis:', error);
+                    }
+                },
+
+                async generateSynthesis() {
+                    try {
+                        const response = await fetch(`/api/v1/council/${this.selectedDepartment}/synthesis`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ department: this.selectedDepartment })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.synthesis = data.synthesis;
+                            this.conclusion = data.conclusion;
+                            this.showNotification('Synthesis generated successfully!', 'success');
+                        }
+                    } catch (error) {
+                        console.error('Error generating synthesis:', error);
+                        this.showNotification('Failed to generate synthesis', 'error');
+                    }
+                },
+
+                async refreshSynthesis() {
+                    await this.fetchSynthesis();
+                    this.showNotification('Synthesis refreshed!', 'success');
+                },
+
+                async approveSynthesis() {
+                    try {
+                        const response = await fetch('/api/v1/council/approve-synthesis', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                department: this.selectedDepartment,
+                                synthesis_id: Date.now()
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.showNotification('Synthesis approved!', 'success');
+                        }
+                    } catch (error) {
+                        console.error('Error approving synthesis:', error);
+                        this.showNotification('Failed to approve synthesis', 'error');
+                    }
+                },
+
+                async pinSynthesis() {
+                    try {
+                        const response = await fetch('/api/v1/council/pin-synthesis', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                department: this.selectedDepartment,
+                                synthesis_id: Date.now()
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.showNotification('Synthesis pinned for review!', 'success');
+                        }
+                    } catch (error) {
+                        console.error('Error pinning synthesis:', error);
+                        this.showNotification('Failed to pin synthesis', 'error');
+                    }
+                },
+
+                async overrideSynthesis() {
+                    const confirmed = confirm('Are you sure you want to override this synthesis decision?');
+                    if (confirmed) {
+                        try {
+                            const response = await fetch('/api/v1/council/override-synthesis', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    department: this.selectedDepartment,
+                                    synthesis_id: Date.now(),
+                                    reason: 'Manual override by user'
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.showNotification('Synthesis overridden!', 'warning');
+                            }
+                        } catch (error) {
+                            console.error('Error overriding synthesis:', error);
+                            this.showNotification('Failed to override synthesis', 'error');
+                        }
+                    }
+                },
+
+                async requestRevision() {
+                    const reason = prompt('Enter revision reason:');
+                    if (reason) {
+                        try {
+                            const response = await fetch('/api/v1/council/request-revision', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    department: this.selectedDepartment,
+                                    synthesis_id: Date.now(),
+                                    reason: reason
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                this.showNotification('Revision requested!', 'success');
+                            }
+                        } catch (error) {
+                            console.error('Error requesting revision:', error);
+                            this.showNotification('Failed to request revision', 'error');
+                        }
+                    }
+                },
+
+                exportSynthesis() {
+                    const data = {
+                        department: this.selectedDepartment,
+                        synthesis: this.synthesis,
+                        conclusion: this.conclusion,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `synthesis_${this.selectedDepartment}_${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    this.showNotification('Synthesis exported!', 'success');
+                },
+
+                loadSynthesis(id) {
+                    // Load specific synthesis by ID
+                    console.log('Loading synthesis:', id);
+                    this.showNotification('Loading synthesis...', 'info');
+                },
+
+                showNotification(message, type) {
+                    // Create notification element
+                    const notification = document.createElement('div');
+                    notification.className = `fixed top-20 right-6 px-4 py-2 rounded-lg z-50 ${
+                        type === 'success' ? 'bg-green-500/90 text-white' :
+                        type === 'error' ? 'bg-red-500/90 text-white' :
+                        type === 'warning' ? 'bg-yellow-500/90 text-black' :
+                        'bg-blue-500/90 text-white'
+                    }`;
+                    notification.textContent = message;
+                    
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

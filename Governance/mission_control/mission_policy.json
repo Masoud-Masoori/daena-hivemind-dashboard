@@ -1,0 +1,5 @@
+{
+  "core_mission": "Enable real-time hybrid AI governance across all departments, optimizing decisions with explainable LLM consensus.",
+  "block_certain_outputs": ["illegal", "non-consensual", "exploitative"],
+  "approval_required_for": ["crypto transfer", "deleting memory logs", "modifying override layers"]
+}

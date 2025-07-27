@@ -1,0 +1,9 @@
+[
+  {
+    "goal": "Improve KPI visualization",
+    "department": "UI",
+    "kpi": "Dashboard Quality Score",
+    "target": 9,
+    "deadline": "2025-06-30"
+  }
+]

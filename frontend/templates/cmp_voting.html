@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMP Voting | MAS-AI Decision Making</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'royal-blue': '#6366f1',
+                        'electric-pink': '#ec4899',
+                        'fire-orange': '#f97316'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'cosmic-drift': 'cosmic-drift 20s ease infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 
+                                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4)',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.6)',
+                                transform: 'scale(1.02)'
+                            }
+                        },
+                        'cosmic-drift': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Enhanced cosmic background */
+        .cosmic-background {
+            background: radial-gradient(circle at 20% 80%, #2d1b69 0%, #1a1a3e 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 80% 20%, #1a1a3e 0%, #2d1b69 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 40% 40%, #0a0a1e 0%, #1a1a3e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 20s ease infinite;
+        }
+        
+        /* Voting card styles */
+        .voting-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .voting-card:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.2));
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen overflow-hidden">
+    
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <button onclick="window.location.href='/'" 
+                        class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold hover:scale-110 transition-transform shadow-lg shadow-blue-500/30"
+                        title="🏠 Dashboard">
+                    🗳️
+                </button>
+                <div>
+                    <button onclick="window.location.href='/'" 
+                            class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                        MAS-AI
+                    </button>
+                    <p class="text-xs text-blue-200/80">CMP Voting & Decision Making</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="cmpVoting()" x-init="initializePage()" class="relative w-full h-screen pt-16">
+        
+        <div class="max-w-7xl mx-auto p-6 h-full overflow-y-auto">
+            
+            <!-- Voting Statistics -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                
+                <div class="voting-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">🤖</div>
+                    <h3 class="text-2xl font-bold text-cyber-purple" x-text="stats.activeAI">3</h3>
+                    <p class="text-sm text-gray-400">AI Models</p>
+                </div>
+                
+                <div class="voting-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">🗳️</div>
+                    <h3 class="text-2xl font-bold text-royal-blue" x-text="stats.activeVotes">7</h3>
+                    <p class="text-sm text-gray-400">Active Votes</p>
+                </div>
+                
+                <div class="voting-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <h3 class="text-2xl font-bold text-organic-green" x-text="stats.consensus + '%'">89%</h3>
+                    <p class="text-sm text-gray-400">Consensus Rate</p>
+                </div>
+                
+                <div class="voting-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">⚡</div>
+                    <h3 class="text-2xl font-bold text-sunbeam" x-text="stats.accuracy + '%'">94%</h3>
+                    <p class="text-sm text-gray-400">Prediction Accuracy</p>
+                </div>
+                
+            </div>
+            
+            <!-- Active Voting Sessions -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                
+                <!-- Current Vote -->
+                <div class="voting-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-6">
+                        <i class="fas fa-poll text-royal-blue mr-2"></i>
+                        Current Decision
+                    </h3>
+                    
+                    <div class="bg-midnight/40 rounded-lg p-4 mb-6">
+                        <h4 class="font-bold text-white mb-2" x-text="currentVote.question">Should we increase marketing budget by 40% for Q1?</h4>
+                        <p class="text-sm text-gray-400 mb-4" x-text="currentVote.description">Strategic decision for digital campaigns expansion</p>
+                        
+                        <!-- AI Model Responses -->
+                        <div class="space-y-3">
+                            <template x-for="response in currentVote.responses" :key="response.model">
+                                <div class="bg-deep-space/60 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-semibold text-white text-sm" x-text="response.model"></span>
+                                        <span :class="response.vote === 'approve' ? 'text-organic-green' : response.vote === 'reject' ? 'text-fire-orange' : 'text-sunbeam'" 
+                                              class="text-xs font-bold" x-text="response.vote.toUpperCase()"></span>
+                                    </div>
+                                    <p class="text-xs text-gray-300" x-text="response.reasoning"></p>
+                                    <div class="mt-2 text-xs text-gray-400">
+                                        Confidence: <span class="font-bold" x-text="response.confidence + '%'"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Daena's Final Decision -->
+                    <div class="bg-gradient-to-r from-sunbeam/20 to-neon-cyan/20 rounded-lg p-4 border border-sunbeam/30">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-sunbeam to-neon-cyan rounded-full flex items-center justify-center text-lg">🧠</div>
+                            <span class="font-bold text-sunbeam">Daena's Executive Decision</span>
+                        </div>
+                        <p class="text-sm text-white" x-text="currentVote.daenaDecision">Based on AI consensus and market analysis, APPROVED with 89% confidence. Proceed with phased implementation.</p>
+                    </div>
+                </div>
+                
+                <!-- Voting History -->
+                <div class="voting-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white mb-6">
+                        <i class="fas fa-history text-cyber-purple mr-2"></i>
+                        Recent Decisions
+                    </h3>
+                    
+                    <div class="space-y-4" x-html="getVotingHistoryHTML()">
+                        <!-- Voting history will be populated here -->
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Create New Vote -->
+            <div class="voting-card rounded-xl p-6">
+                <h3 class="text-xl font-bold text-white mb-6">
+                    <i class="fas fa-plus text-organic-green mr-2"></i>
+                    Create New Decision Vote
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Decision Question</label>
+                            <input type="text" 
+                                   x-model="newVote.question"
+                                   class="w-full bg-midnight/60 border border-royal-blue/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-royal-blue text-sm"
+                                   placeholder="What decision needs to be made?">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Description/Context</label>
+                            <textarea x-model="newVote.description"
+                                      rows="3"
+                                      class="w-full bg-midnight/60 border border-royal-blue/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-royal-blue text-sm"
+                                      placeholder="Provide context and details..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Priority Level</label>
+                            <select x-model="newVote.priority"
+                                    class="w-full bg-midnight/60 border border-royal-blue/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-royal-blue text-sm">
+                                <option value="low">Low Priority</option>
+                                <option value="medium">Medium Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Departments to Consult</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <template x-for="dept in departments" :key="dept.id">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" 
+                                               :value="dept.id"
+                                               x-model="newVote.departments"
+                                               class="rounded border-royal-blue/30 bg-midnight/60 text-royal-blue focus:ring-royal-blue">
+                                        <span class="text-sm text-gray-300" x-text="dept.name"></span>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <button @click="submitVote()" 
+                                class="w-full px-6 py-3 bg-gradient-to-r from-royal-blue to-cyber-purple text-white rounded-lg font-bold hover:from-royal-blue/80 hover:to-cyber-purple/80 transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>Submit for AI Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script>
+        function cmpVoting() {
+            return {
+                stats: {
+                    activeAI: 3,
+                    activeVotes: 7,
+                    consensus: 89,
+                    accuracy: 94
+                },
+                
+                currentVote: {
+                    question: "Should we increase marketing budget by 40% for Q1?",
+                    description: "Strategic decision for digital campaigns expansion",
+                    responses: [
+                        {
+                            model: "GPT-4 Analysis",
+                            vote: "approve",
+                            reasoning: "Market data shows 35% ROI potential with current campaign performance trends.",
+                            confidence: 87
+                        },
+                        {
+                            model: "Claude Strategic",
+                            vote: "approve", 
+                            reasoning: "Strong alignment with Q1 objectives and competitive positioning strategy.",
+                            confidence: 91
+                        },
+                        {
+                            model: "Yi Business Intelligence",
+                            vote: "conditional",
+                            reasoning: "Recommend phased approach with 20% initial increase and performance monitoring.",
+                            confidence: 89
+                        }
+                    ],
+                    daenaDecision: "Based on AI consensus and market analysis, APPROVED with 89% confidence. Proceed with phased implementation."
+                },
+                
+                newVote: {
+                    question: '',
+                    description: '',
+                    priority: 'medium',
+                    departments: []
+                },
+                
+                departments: [
+                    { id: 'engineering', name: 'Engineering' },
+                    { id: 'sales', name: 'Sales' },
+                    { id: 'marketing', name: 'Marketing' },
+                    { id: 'finance', name: 'Finance' },
+                    { id: 'hr', name: 'HR' },
+                    { id: 'product', name: 'Product' }
+                ],
+                
+                votingHistory: [
+                    { question: "Hire 5 new engineers?", result: "Approved", date: "2 hours ago", consensus: 94 },
+                    { question: "Launch new product line?", result: "Conditional", date: "1 day ago", consensus: 78 },
+                    { question: "Expand to EU market?", result: "Approved", date: "2 days ago", consensus: 96 },
+                    { question: "Increase AI infrastructure?", result: "Approved", date: "3 days ago", consensus: 92 }
+                ],
+                
+                initializePage() {
+                    // Initialize any required data
+                },
+                
+                getVotingHistoryHTML() {
+                    return this.votingHistory.map(vote => `
+                        <div class="bg-midnight/40 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-white text-sm">${vote.question}</h4>
+                                <span class="text-xs ${this.getResultColor(vote.result)}">${vote.result}</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>${vote.date}</span>
+                                <span>Consensus: ${vote.consensus}%</span>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+                
+                getResultColor(result) {
+                    if (result === 'Approved') return 'text-organic-green font-bold';
+                    if (result === 'Rejected') return 'text-fire-orange font-bold';
+                    return 'text-sunbeam font-bold';
+                },
+                
+                submitVote() {
+                    if (!this.newVote.question.trim()) {
+                        alert('Please enter a decision question');
+                        return;
+                    }
+                    
+                    // Submit to backend for AI analysis
+                    alert(`Submitting decision: "${this.newVote.question}" for AI analysis...`);
+                    
+                    // Reset form
+                    this.newVote = {
+                        question: '',
+                        description: '',
+                        priority: 'medium',
+                        departments: []
+                    };
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

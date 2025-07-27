@@ -1,0 +1,101 @@
+{
+    "pods": {
+        "apollo_creative": {
+            "type": "creative",
+            "personality": "innovative",
+            "techniques": ["brainstorming", "lateral_thinking", "mind_mapping"],
+            "voice_profile": "professional",
+            "team_context": "creative_team"
+        },
+        "athena_strategy": {
+            "type": "strategic",
+            "personality": "analytical",
+            "techniques": ["swot_analysis", "scenario_planning", "root_cause"],
+            "voice_profile": "professional",
+            "team_context": "strategy_team"
+        },
+        "hermes_communication": {
+            "type": "communication",
+            "personality": "diplomatic",
+            "techniques": ["active_listening", "conflict_resolution", "feedback"],
+            "voice_profile": "friendly",
+            "team_context": "communication_team"
+        }
+    },
+    "techniques": {
+        "brainstorming": {
+            "category": "creative",
+            "description": "Generate creative ideas through group collaboration",
+            "implementation": "facilitate_group_session",
+            "metrics": ["idea_count", "quality_score", "team_engagement"]
+        },
+        "lateral_thinking": {
+            "category": "creative",
+            "description": "Approach problems from new perspectives",
+            "implementation": "guide_thought_process",
+            "metrics": ["novelty_score", "applicability", "insight_count"]
+        },
+        "mind_mapping": {
+            "category": "creative",
+            "description": "Visual organization of ideas and concepts",
+            "implementation": "create_visual_map",
+            "metrics": ["connection_count", "clarity_score", "completion_rate"]
+        },
+        "swot_analysis": {
+            "category": "strategic",
+            "description": "Analyze strengths, weaknesses, opportunities, threats",
+            "implementation": "conduct_analysis",
+            "metrics": ["completeness", "insight_quality", "action_items"]
+        },
+        "scenario_planning": {
+            "category": "strategic",
+            "description": "Plan for multiple future scenarios",
+            "implementation": "develop_scenarios",
+            "metrics": ["scenario_count", "realism", "preparedness"]
+        },
+        "root_cause": {
+            "category": "strategic",
+            "description": "Identify underlying causes of problems",
+            "implementation": "analyze_causes",
+            "metrics": ["depth_analysis", "solution_quality", "prevention_measures"]
+        },
+        "active_listening": {
+            "category": "communication",
+            "description": "Fully engage with and understand others",
+            "implementation": "practice_listening",
+            "metrics": ["comprehension", "response_quality", "engagement"]
+        },
+        "conflict_resolution": {
+            "category": "communication",
+            "description": "Resolve conflicts through effective communication",
+            "implementation": "mediate_conflict",
+            "metrics": ["resolution_rate", "satisfaction", "relationship_improvement"]
+        },
+        "feedback": {
+            "category": "communication",
+            "description": "Provide constructive feedback",
+            "implementation": "deliver_feedback",
+            "metrics": ["clarity", "actionability", "reception"]
+        }
+    },
+    "team_integration": {
+        "creative_team": {
+            "collaboration_type": "brainstorming",
+            "meeting_frequency": "weekly",
+            "tools": ["whiteboard", "mind_mapping_software"],
+            "metrics": ["idea_generation", "team_synergy"]
+        },
+        "strategy_team": {
+            "collaboration_type": "planning",
+            "meeting_frequency": "biweekly",
+            "tools": ["strategy_software", "analytics_tools"],
+            "metrics": ["plan_quality", "execution_rate"]
+        },
+        "communication_team": {
+            "collaboration_type": "feedback",
+            "meeting_frequency": "weekly",
+            "tools": ["communication_platform", "feedback_system"],
+            "metrics": ["message_clarity", "team_alignment"]
+        }
+    }
+} 

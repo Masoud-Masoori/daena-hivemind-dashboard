@@ -1,0 +1,312 @@
+<nav class="bg-midnight/90 backdrop-blur-sm border-b border-organic-green/20 sticky top-0 z-50">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo/Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-8 h-8 bg-gradient-to-br from-sunbeam to-fire-orange rounded-lg flex items-center justify-center">
+                    <span class="text-midnight font-bold text-sm">D</span>
+                </div>
+                <span class="text-xl font-bold text-sunbeam">Daena</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="/" class="nav-link {{ 'active' if request.path == '/' else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/daena-office" class="nav-link {{ 'active' if request.path == '/daena-office' else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Daena
+                </a>
+                <a href="/founder-panel" class="nav-link {{ 'active' if request.path == '/founder-panel' else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Founder
+                </a>
+                <a href="/strategic-room" class="nav-link {{ 'active' if request.path == '/strategic-room' else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Strategic
+                </a>
+                <a href="/council-dashboard" class="nav-link {{ 'active' if request.path.startswith('/council') else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Council
+                </a>
+                <a href="/departments" class="nav-link {{ 'active' if request.path.startswith('/department') else '' }}">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Departments
+                </a>
+            </div>
+
+            <!-- Right side - User menu and logout -->
+            <div class="flex items-center space-x-4">
+                <!-- Voice Bot Toggle -->
+                <button id="voice-toggle" class="p-2 text-organic-green hover:text-sunbeam transition-colors" onclick="toggleVoiceBot()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                    </svg>
+                </button>
+
+                <!-- User Menu -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center space-x-2 text-white hover:text-sunbeam transition-colors">
+                        <div class="w-8 h-8 bg-gradient-to-br from-organic-green to-sunbeam rounded-full flex items-center justify-center">
+                            <span class="text-midnight font-bold text-sm">F</span>
+                        </div>
+                        <span class="hidden md:block">Founder</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-midnight border border-organic-green/20 rounded-lg shadow-lg py-2">
+                        <a href="/profile" class="block px-4 py-2 text-white hover:bg-organic-green/20 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Profile
+                        </a>
+                        <a href="/settings" class="block px-4 py-2 text-white hover:bg-organic-green/20 transition-colors">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            Settings
+                        </a>
+                        <hr class="border-organic-green/20 my-2">
+                        <a href="/logout" class="block px-4 py-2 text-fire-orange hover:bg-fire-orange/20 transition-colors" onclick="logout()">
+                            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button class="md:hidden p-2 text-white hover:text-sunbeam transition-colors" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden pb-4">
+            <div class="space-y-2">
+                <a href="/" class="mobile-nav-link {{ 'active' if request.path == '/' else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/daena-office" class="mobile-nav-link {{ 'active' if request.path == '/daena-office' else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    Daena
+                </a>
+                <a href="/founder-panel" class="mobile-nav-link {{ 'active' if request.path == '/founder-panel' else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Founder
+                </a>
+                <a href="/strategic-room" class="mobile-nav-link {{ 'active' if request.path == '/strategic-room' else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Strategic
+                </a>
+                <a href="/council-dashboard" class="mobile-nav-link {{ 'active' if request.path.startswith('/council') else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Council
+                </a>
+                <a href="/departments" class="mobile-nav-link {{ 'active' if request.path.startswith('/department') else '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Departments
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+.nav-link {
+    @apply flex items-center px-3 py-2 text-white/80 hover:text-sunbeam hover:bg-organic-green/10 rounded-lg transition-colors;
+}
+
+.nav-link.active {
+    @apply text-sunbeam bg-organic-green/20;
+}
+
+.mobile-nav-link {
+    @apply flex items-center px-4 py-3 text-white/80 hover:text-sunbeam hover:bg-organic-green/10 rounded-lg transition-colors;
+}
+
+.mobile-nav-link.active {
+    @apply text-sunbeam bg-organic-green/20;
+}
+</style>
+
+<script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+}
+
+function toggleVoiceBot() {
+    // Toggle voice bot visibility and functionality
+    const voiceBot = document.getElementById('daena-voice-bot');
+    if (voiceBot) {
+        voiceBot.classList.toggle('hidden');
+    }
+    
+    // Start voice recognition if enabled
+    if (window.voiceEnabled) {
+        startVoiceRecognition();
+    }
+}
+
+function logout() {
+    // Clear any stored tokens
+    localStorage.removeItem('auth_token');
+    sessionStorage.clear();
+    
+    // Redirect to login page
+    window.location.href = '/login';
+}
+
+// Voice recognition functionality
+let recognition = null;
+
+function startVoiceRecognition() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Speech recognition not supported in this browser');
+        return;
+    }
+
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = function() {
+        console.log('Voice recognition started');
+        document.getElementById('voice-toggle').classList.add('text-fire-orange');
+    };
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        console.log('Heard:', transcript);
+        
+        // Check for wake word
+        if (transcript.toLowerCase().includes('hey daena') || transcript.toLowerCase().includes('daena')) {
+            processVoiceCommand(transcript);
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        document.getElementById('voice-toggle').classList.remove('text-fire-orange');
+    };
+
+    recognition.onend = function() {
+        console.log('Voice recognition ended');
+        document.getElementById('voice-toggle').classList.remove('text-fire-orange');
+    };
+
+    recognition.start();
+}
+
+function processVoiceCommand(transcript) {
+    // Send to backend for processing
+    fetch('/api/v1/daena/voice', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            text: transcript,
+            user_id: 'founder'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.response) {
+            // Play audio response if available
+            if (data.audio_url) {
+                const audio = new Audio(data.audio_url);
+                audio.play();
+            }
+            
+            // Show text response
+            showVoiceResponse(data.response);
+        }
+    })
+    .catch(error => {
+        console.error('Error processing voice command:', error);
+    });
+}
+
+function showVoiceResponse(response) {
+    // Create a temporary notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed bottom-4 right-4 bg-midnight border border-organic-green/30 rounded-lg p-4 text-white max-w-sm z-50';
+    notification.innerHTML = `
+        <div class="flex items-center space-x-2 mb-2">
+            <div class="w-6 h-6 bg-gradient-to-br from-sunbeam to-fire-orange rounded-full flex items-center justify-center">
+                <span class="text-midnight font-bold text-xs">D</span>
+            </div>
+            <span class="font-semibold text-sunbeam">Daena</span>
+        </div>
+        <p class="text-sm">${response}</p>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// Initialize voice recognition on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if voice is enabled
+    window.voiceEnabled = true; // This could be a setting
+    
+    // Add voice bot to page if not already present
+    if (!document.getElementById('daena-voice-bot')) {
+        const voiceBot = document.createElement('div');
+        voiceBot.id = 'daena-voice-bot';
+        voiceBot.className = 'fixed bottom-4 right-4 z-40';
+        voiceBot.innerHTML = `
+            <div class="w-16 h-16 bg-gradient-to-br from-sunbeam to-fire-orange rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:shadow-xl transition-shadow" onclick="toggleVoiceBot()">
+                <svg class="w-8 h-8 text-midnight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                </svg>
+            </div>
+        `;
+        document.body.appendChild(voiceBot);
+    }
+});
+</script> 

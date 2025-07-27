@@ -1,0 +1,77 @@
+<div class="p-4">
+    <h2 class="text-xl font-bold mb-4 text-sunbeam">Council for {{ department|capitalize }}</h2>
+    <div class="grid grid-cols-3 gap-4 mb-6">
+        <div>
+            <h3 class="text-lg font-bold mb-2">Advisors</h3>
+            {% for advisor in council.advisors %}
+                <div class="bg-deep-space rounded-lg p-3 mb-2">
+                    <div class="font-semibold text-sunbeam">{{ advisor.name }}</div>
+                    <div class="text-xs text-gray-400">{{ advisor.persona }}</div>
+                    <div class="text-xs text-gray-300 mt-1">{{ advisor.expertise }}</div>
+                </div>
+            {% else %}
+                <div class="text-gray-400">No advisors yet.</div>
+            {% endfor %}
+        </div>
+        <div>
+            <h3 class="text-lg font-bold mb-2">Scouts</h3>
+            {% for scout in council.scouts %}
+                <div class="bg-deep-space rounded-lg p-3 mb-2">
+                    <div class="font-semibold text-cyber-purple">{{ scout.name }}</div>
+                    <div class="text-xs text-gray-400">{{ scout.focus_area }}</div>
+                    <div class="text-xs text-gray-300 mt-1">Sources: {{ scout.sources|length }}</div>
+                </div>
+            {% else %}
+                <div class="text-gray-400">No scouts yet.</div>
+            {% endfor %}
+        </div>
+        <div>
+            <h3 class="text-lg font-bold mb-2">Synthesizer</h3>
+            {% if council.synthesizer %}
+                <div class="bg-deep-space rounded-lg p-3">
+                    <div class="font-semibold text-neon-cyan">{{ council.synthesizer.name }}</div>
+                    <div class="text-xs text-gray-400">{{ council.synthesizer.model }}</div>
+                    <div class="text-xs text-gray-300 mt-1">Last Synced: {{ council.synthesizer.last_synced or '-' }}</div>
+                </div>
+            {% else %}
+                <div class="text-gray-400">No synthesizer yet.</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="bg-deep-space rounded-lg p-6 mb-6">
+        <h3 class="text-lg font-bold mb-4">Current Debate</h3>
+        {% if council.debate_history and council.debate_history[-1] %}
+            <div class="mb-2 text-sm text-gray-400">Topic: {{ council.debate_history[-1].topic }}</div>
+            <div class="grid grid-cols-2 gap-4">
+                {% for advisor, arg in council.debate_history[-1].arguments.items() %}
+                    <div class="bg-midnight rounded-lg p-3">
+                        <div class="font-semibold text-sunbeam">{{ advisor }}</div>
+                        <div class="text-xs text-gray-300 mt-1">{{ arg }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-gray-400">No debates yet.</div>
+        {% endif %}
+    </div>
+    <div class="bg-organic-green/10 border border-organic-green/30 rounded-lg p-6">
+        <h3 class="text-lg font-bold mb-4 text-organic-green">Synthesizer Summary</h3>
+        {% if council.last_synthesis %}
+            <div class="mb-2 text-sm text-gray-400">Summary: {{ council.last_synthesis.summary }}</div>
+            <div class="mb-2 text-sm text-gray-400">Confidence Scores:</div>
+            <ul class="list-disc ml-6 text-xs text-gray-300">
+                {% for participant, score in council.last_synthesis.confidence_scores.items() %}
+                    <li>{{ participant }}: {{ score }}</li>
+                {% endfor %}
+            </ul>
+            <div class="mb-2 text-sm text-gray-400">Follow-up Questions:</div>
+            <ul class="list-decimal ml-6 text-xs text-gray-300">
+                {% for q in council.last_synthesis.followup_questions %}
+                    <li>{{ q }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="text-gray-400">No synthesis yet.</div>
+        {% endif %}
+    </div>
+</div> 

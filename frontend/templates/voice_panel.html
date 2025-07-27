@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Panel | Daena AI VP | Mas-AI Company</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0f0f23',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'fire-red': '#ef4444'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'daena-speak': 'daena-speak 1s ease-in-out infinite alternate',
+                        'voice-wave': 'voice-wave 1.5s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { boxShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' },
+                            '100%': { boxShadow: '0 0 20px #00ffff, 0 0 40px #00ffff' }
+                        },
+                        'daena-speak': {
+                            '0%': { boxShadow: '0 0 20px #ffd700, 0 0 40px #ffd700' },
+                            '100%': { boxShadow: '0 0 40px #ffd700, 0 0 80px #ffd700' }
+                        },
+                        'voice-wave': {
+                            '0%, 100%': { transform: 'scaleY(0.3)' },
+                            '50%': { transform: 'scaleY(1)' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .background-alive {
+            background: linear-gradient(45deg, #0f0f23, #1a1a3a, #0f0f23);
+            background-size: 400% 400%;
+            animation: gradient-alive 12s ease infinite;
+        }
+        
+        @keyframes gradient-alive {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .voice-visualizer {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            height: 60px;
+            gap: 2px;
+        }
+        
+        .voice-bar {
+            width: 4px;
+            background: linear-gradient(to top, #00ffff, #ffd700);
+            border-radius: 2px;
+            animation: voice-wave 1.5s ease-in-out infinite;
+        }
+        
+        .voice-bar:nth-child(1) { animation-delay: 0s; }
+        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
+        .voice-bar:nth-child(6) { animation-delay: 0.5s; }
+        .voice-bar:nth-child(7) { animation-delay: 0.6s; }
+        .voice-bar:nth-child(8) { animation-delay: 0.7s; }
+        .voice-bar:nth-child(9) { animation-delay: 0.8s; }
+        .voice-bar:nth-child(10) { animation-delay: 0.9s; }
+        
+        .daena-avatar {
+            background: linear-gradient(45deg, #ffd700, #00ffff, #ffd700);
+            background-size: 200% 200%;
+            animation: gradient-alive 4s ease infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-midnight text-white min-h-screen background-alive">
+    
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-green-500/30"
+                     title="🎤 Voice Panel">
+                    🎤
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        VOICE PANEL
+                    </div>
+                    <p class="text-xs text-blue-200/80">AI-Powered Voice Interaction</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="voicePanel()" x-init="init()" class="relative w-full h-screen pt-24">
+        
+        <div class="container mx-auto px-6 py-8">
+            
+            <!-- Voice Control Center -->
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Daena Voice Avatar -->
+                <div class="text-center mb-8">
+                    <div class="relative inline-block">
+                        <div class="w-32 h-32 daena-avatar rounded-full flex items-center justify-center mx-auto mb-4 animate-float"
+                             :class="{ 'animate-daena-speak': isSpeaking }">
+                            <i class="fas fa-brain text-4xl text-midnight"></i>
+                        </div>
+                        
+                        <!-- Voice Status Ring -->
+                        <div class="absolute -inset-4 rounded-full border-2 border-neon-cyan/50 animate-pulse-glow"
+                             :class="{ 'border-sunbeam': isListening, 'border-neon-cyan': !isListening }"></div>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-sunbeam mb-2">Daena AI VP</h2>
+                    <p class="text-gray-400" x-text="voiceStatus">Ready to listen</p>
+                </div>
+                
+                <!-- Voice Visualizer -->
+                <div class="flex justify-center mb-8">
+                    <div class="voice-visualizer" x-show="isListening || isSpeaking">
+                        <div class="voice-bar" style="height: 20px;"></div>
+                        <div class="voice-bar" style="height: 35px;"></div>
+                        <div class="voice-bar" style="height: 50px;"></div>
+                        <div class="voice-bar" style="height: 40px;"></div>
+                        <div class="voice-bar" style="height: 60px;"></div>
+                        <div class="voice-bar" style="height: 45px;"></div>
+                        <div class="voice-bar" style="height: 30px;"></div>
+                        <div class="voice-bar" style="height: 55px;"></div>
+                        <div class="voice-bar" style="height: 25px;"></div>
+                        <div class="voice-bar" style="height: 40px;"></div>
+                    </div>
+                </div>
+                
+                <!-- Voice Controls -->
+                <div class="flex justify-center space-x-6 mb-8">
+                    <button 
+                        @click="toggleListening()"
+                        :disabled="isSpeaking"
+                        class="w-20 h-20 rounded-full transition-all duration-300 flex items-center justify-center text-2xl"
+                        :class="isListening ? 'bg-fire-red hover:bg-fire-red/80 text-white animate-pulse' : 'bg-neon-cyan hover:bg-neon-cyan/80 text-midnight'"
+                    >
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    
+                    <button 
+                        @click="stopListening()"
+                        :disabled="!isListening"
+                        class="w-20 h-20 rounded-full bg-gray-600 hover:bg-gray-500 text-white transition-all duration-300 flex items-center justify-center text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    
+                    <button 
+                        @click="clearTranscript()"
+                        class="w-20 h-20 rounded-full bg-cyber-purple/20 hover:bg-cyber-purple/40 text-cyber-purple transition-all duration-300 flex items-center justify-center text-2xl"
+                    >
+                        <i class="fas fa-eraser"></i>
+                    </button>
+                </div>
+                
+                <!-- Voice Settings -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                        <h3 class="text-lg font-semibold text-sunbeam mb-4">
+                            <i class="fas fa-cog mr-2"></i>
+                            Voice Settings
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Voice Speed</label>
+                                <input 
+                                    x-model="voiceSpeed" 
+                                    type="range" 
+                                    min="0.5" 
+                                    max="2" 
+                                    step="0.1"
+                                    class="w-full"
+                                >
+                                <div class="text-xs text-gray-400 mt-1" x-text="'Speed: ' + voiceSpeed + 'x'"></div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Voice Pitch</label>
+                                <input 
+                                    x-model="voicePitch" 
+                                    type="range" 
+                                    min="0.5" 
+                                    max="2" 
+                                    step="0.1"
+                                    class="w-full"
+                                >
+                                <div class="text-xs text-gray-400 mt-1" x-text="'Pitch: ' + voicePitch + 'x'"></div>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input 
+                                        x-model="autoSpeak" 
+                                        type="checkbox" 
+                                        class="mr-2"
+                                    >
+                                    <span class="text-sm text-gray-300">Auto-speak responses</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                        <h3 class="text-lg font-semibold text-sunbeam mb-4">
+                            <i class="fas fa-brain mr-2"></i>
+                            AI Settings
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Response Mode</label>
+                                <select x-model="responseMode" class="w-full bg-midnight/60 border border-neon-cyan/30 rounded-lg px-3 py-2 text-white">
+                                    <option value="conversational">Conversational</option>
+                                    <option value="executive">Executive Summary</option>
+                                    <option value="detailed">Detailed Analysis</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Context Level</label>
+                                <select x-model="contextLevel" class="w-full bg-midnight/60 border border-neon-cyan/30 rounded-lg px-3 py-2 text-white">
+                                    <option value="minimal">Minimal</option>
+                                    <option value="standard">Standard</option>
+                                    <option value="comprehensive">Comprehensive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                        <h3 class="text-lg font-semibold text-sunbeam mb-4">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Voice Stats
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-400">Total Interactions:</span>
+                                <span class="text-sm text-neon-cyan" x-text="totalInteractions">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-400">Accuracy Rate:</span>
+                                <span class="text-sm text-organic-green" x-text="accuracyRate + '%'">95%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm text-gray-400">Response Time:</span>
+                                <span class="text-sm text-sunbeam" x-text="averageResponseTime + 's'">1.2s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voice Transcript -->
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30 mb-8">
+                    <h3 class="text-lg font-semibold text-sunbeam mb-4">
+                        <i class="fas fa-comments mr-2"></i>
+                        Voice Transcript
+                    </h3>
+                    
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        <template x-for="(message, index) in transcript" :key="index">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                     :class="message.type === 'user' ? 'bg-neon-cyan/20' : 'daena-avatar'">
+                                    <i :class="message.type === 'user' ? 'fas fa-user text-neon-cyan' : 'fas fa-brain text-midnight'"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-gray-400 mb-1" x-text="formatTime(message.timestamp)"></div>
+                                    <div class="text-sm text-gray-200" x-text="message.text"></div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Quick Voice Commands -->
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <h3 class="text-lg font-semibold text-sunbeam mb-4">
+                        <i class="fas fa-magic mr-2"></i>
+                        Quick Voice Commands
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <button 
+                            @click="speakCommand('What is the current status of all departments?')"
+                            class="bg-neon-cyan/20 hover:bg-neon-cyan/40 text-neon-cyan p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Department Status</div>
+                            <div class="text-xs text-gray-400">"Status report"</div>
+                        </button>
+                        
+                        <button 
+                            @click="speakCommand('Show me the latest synthesis from the engineering council')"
+                            class="bg-sunbeam/20 hover:bg-sunbeam/40 text-sunbeam p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Council Synthesis</div>
+                            <div class="text-xs text-gray-400">"Engineering synthesis"</div>
+                        </button>
+                        
+                        <button 
+                            @click="speakCommand('Analyze conflicts between departments')"
+                            class="bg-fire-red/20 hover:bg-fire-red/40 text-fire-red p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Conflict Analysis</div>
+                            <div class="text-xs text-gray-400">"Analyze conflicts"</div>
+                        </button>
+                        
+                        <button 
+                            @click="speakCommand('Create a new project for AI agent development')"
+                            class="bg-cyber-purple/20 hover:bg-cyber-purple/40 text-cyber-purple p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Create Project</div>
+                            <div class="text-xs text-gray-400">"New project"</div>
+                        </button>
+                        
+                        <button 
+                            @click="speakCommand('Schedule a strategic meeting for tomorrow')"
+                            class="bg-organic-green/20 hover:bg-organic-green/40 text-organic-green p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Schedule Meeting</div>
+                            <div class="text-xs text-gray-400">"Schedule meeting"</div>
+                        </button>
+                        
+                        <button 
+                            @click="speakCommand('Generate a comprehensive business report')"
+                            class="bg-royal-blue/20 hover:bg-royal-blue/40 text-royal-blue p-4 rounded-lg transition-colors text-left"
+                        >
+                            <div class="font-semibold mb-1">Business Report</div>
+                            <div class="text-xs text-gray-400">"Generate report"</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function voicePanel() {
+            return {
+                isListening: false,
+                isSpeaking: false,
+                voiceStatus: 'Ready to listen',
+                transcript: [],
+                voiceSpeed: 1.0,
+                voicePitch: 1.0,
+                autoSpeak: true,
+                responseMode: 'conversational',
+                contextLevel: 'standard',
+                totalInteractions: 0,
+                accuracyRate: 95,
+                averageResponseTime: 1.2,
+                recognition: null,
+                synthesis: null,
+                
+                async init() {
+                    this.initSpeechRecognition();
+                    this.initSpeechSynthesis();
+                    this.updateCurrentTime();
+                    setInterval(() => this.updateCurrentTime(), 1000);
+                },
+                
+                initSpeechRecognition() {
+                    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        this.recognition = new SpeechRecognition();
+                        this.recognition.continuous = true;
+                        this.recognition.interimResults = true;
+                        this.recognition.lang = 'en-US';
+                        
+                        this.recognition.onstart = () => {
+                            this.isListening = true;
+                            this.voiceStatus = 'Listening...';
+                        };
+                        
+                        this.recognition.onresult = (event) => {
+                            let finalTranscript = '';
+                            let interimTranscript = '';
+                            
+                            for (let i = event.resultIndex; i < event.results.length; i++) {
+                                const transcript = event.results[i][0].transcript;
+                                if (event.results[i].isFinal) {
+                                    finalTranscript += transcript;
+                                } else {
+                                    interimTranscript += transcript;
+                                }
+                            }
+                            
+                            if (finalTranscript) {
+                                this.addTranscript('user', finalTranscript);
+                                this.processVoiceCommand(finalTranscript);
+                            }
+                        };
+                        
+                        this.recognition.onerror = (event) => {
+                            console.error('Speech recognition error:', event.error);
+                            this.voiceStatus = 'Error: ' + event.error;
+                            this.isListening = false;
+                        };
+                        
+                        this.recognition.onend = () => {
+                            this.isListening = false;
+                            this.voiceStatus = 'Ready to listen';
+                        };
+                    } else {
+                        this.voiceStatus = 'Speech recognition not supported';
+                    }
+                },
+                
+                initSpeechSynthesis() {
+                    if ('speechSynthesis' in window) {
+                        this.synthesis = window.speechSynthesis;
+                    } else {
+                        console.warn('Speech synthesis not supported');
+                    }
+                },
+                
+                toggleListening() {
+                    if (this.isListening) {
+                        this.stopListening();
+                    } else {
+                        this.startListening();
+                    }
+                },
+                
+                startListening() {
+                    if (this.recognition) {
+                        this.recognition.start();
+                    }
+                },
+                
+                stopListening() {
+                    if (this.recognition) {
+                        this.recognition.stop();
+                    }
+                },
+                
+                async processVoiceCommand(command) {
+                    this.totalInteractions++;
+                    
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch('/api/v1/voice/input', {
+                            method: 'POST',
+                            headers: { 
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: command,
+                                context: {
+                                    response_mode: this.responseMode,
+                                    context_level: this.contextLevel
+                                }
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.addTranscript('assistant', data.response);
+                            
+                            if (this.autoSpeak) {
+                                this.speakText(data.response);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Voice command processing error:', error);
+                        this.addTranscript('assistant', 'I apologize, but I encountered an error processing your command.');
+                    }
+                },
+                
+                speakText(text) {
+                    if (this.synthesis) {
+                        this.isSpeaking = true;
+                        
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.rate = this.voiceSpeed;
+                        utterance.pitch = this.voicePitch;
+                        utterance.volume = 1.0;
+                        
+                        utterance.onend = () => {
+                            this.isSpeaking = false;
+                        };
+                        
+                        utterance.onerror = () => {
+                            this.isSpeaking = false;
+                        };
+                        
+                        this.synthesis.speak(utterance);
+                    }
+                },
+                
+                speakCommand(command) {
+                    this.addTranscript('user', command);
+                    this.processVoiceCommand(command);
+                },
+                
+                addTranscript(type, text) {
+                    this.transcript.push({
+                        type: type,
+                        text: text,
+                        timestamp: new Date()
+                    });
+                },
+                
+                clearTranscript() {
+                    this.transcript = [];
+                },
+                
+                formatTime(timestamp) {
+                    return timestamp.toLocaleTimeString();
+                },
+                
+                updateCurrentTime() {
+                    const now = new Date();
+                    document.getElementById('current-time').textContent = now.toLocaleTimeString();
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

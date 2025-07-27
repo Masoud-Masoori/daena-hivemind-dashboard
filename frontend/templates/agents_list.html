@@ -1,0 +1,269 @@
+<!-- Agents List Template for HTMX -->
+<div class="space-y-4">
+    {% if agents %}
+        {% for agent in agents %}
+        <div class="agent-card bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:border-blue-300 transition-all duration-300">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="agent-avatar w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                        {{ agent.name[0] }}
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">{{ agent.name }}</h3>
+                        <p class="text-sm text-gray-600">{{ agent.department|title }} • {{ agent.type|title }}</p>
+                        <p class="text-xs text-gray-500">{{ agent.description[:100] }}{% if agent.description|length > 100 %}...{% endif %}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <!-- Status Badge -->
+                    <span class="px-3 py-1 rounded-full text-xs font-medium 
+                        {% if agent.status == 'active' %}status-active
+                        {% elif agent.status == 'idle' %}status-idle
+                        {% elif agent.status == 'busy' %}status-busy
+                        {% else %}status-offline{% endif %}">
+                        {{ agent.status|title }}
+                    </span>
+                    
+                    <!-- Voice Toggle -->
+                    <button class="voice-toggle w-12 h-6 rounded-full transition-colors duration-300
+                        {% if 'voice' in agent.status %}active bg-green-500{% else %}bg-gray-300{% endif %}"
+                        data-agent-id="{{ agent.id }}"
+                        onclick="AgentManager.toggleVoice({{ agent.id }}, !this.classList.contains('active'))">
+                        <div class="w-5 h-5 bg-white rounded-full transform transition-transform duration-300
+                            {% if 'voice' in agent.status %}translate-x-6{% else %}translate-x-0.5{% endif %}"></div>
+                    </button>
+                    
+                    <!-- Actions Menu -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" 
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <div class="py-1">
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        onclick="openAgentModal({{ agent.id }})">
+                                    <i class="fas fa-eye mr-2"></i>View Details
+                                </button>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        onclick="openTaskModal({{ agent.id }})">
+                                    <i class="fas fa-tasks mr-2"></i>Update Task
+                                </button>
+                                <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        onclick="openChatModal({{ agent.id }})">
+                                    <i class="fas fa-comments mr-2"></i>Chat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Capabilities -->
+            {% if agent.capabilities %}
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <p class="text-xs text-gray-600">
+                    <strong>Capabilities:</strong> {{ agent.capabilities[:150] }}{% if agent.capabilities|length > 150 %}...{% endif %}
+                </p>
+            </div>
+            {% endif %}
+            
+            <!-- Last Updated -->
+            <div class="mt-2 text-xs text-gray-400">
+                Last updated: {{ agent.updated_at.strftime('%Y-%m-%d %H:%M') if agent.updated_at else 'Never' }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="text-center py-8">
+            <i class="fas fa-robot text-4xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500">No agents found</p>
+            <button class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    onclick="openDeployAgentModal()">
+                <i class="fas fa-plus mr-2"></i>Deploy New Agent
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Agent Details Modal -->
+<div id="agent-modal" class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
+        <div class="flex items-center justify-between p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">Agent Details</h3>
+            <button onclick="closeAgentModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="agent-modal-content" class="p-6">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Task Update Modal -->
+<div id="task-modal" class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="flex items-center justify-between p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">Update Agent Task</h3>
+            <button onclick="closeTaskModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form id="task-form" onsubmit="updateAgentTask(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">New Task</label>
+                    <textarea id="task-input" class="form-input w-full" rows="3" placeholder="Enter the new task for this agent..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeTaskModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Deploy Agent Modal -->
+<div id="deploy-modal" class="modal-overlay hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="flex items-center justify-between p-6 border-b">
+            <h3 class="text-lg font-semibold text-gray-800">Deploy New Agent</h3>
+            <button onclick="closeDeployAgentModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form id="deploy-form" onsubmit="deployAgent(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Agent Name</label>
+                    <input type="text" id="agent-name" class="form-input" required placeholder="Enter agent name">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                    <select id="agent-department" class="form-input" required>
+                        <option value="">Select department</option>
+                        <option value="executive">Executive</option>
+                        <option value="finance">Finance</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="sales">Sales</option>
+                        <option value="operations">Operations</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="technology">Technology</option>
+                        <option value="legal">Legal</option>
+                        <option value="research">Research</option>
+                        <option value="customer_success">Customer Success</option>
+                        <option value="product">Product</option>
+                        <option value="analytics">Analytics</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                    <select id="agent-type" class="form-input" required>
+                        <option value="specialist">Specialist</option>
+                        <option value="vp">VP</option>
+                        <option value="manager">Manager</option>
+                        <option value="assistant">Assistant</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea id="agent-description" class="form-input" rows="3" placeholder="Enter agent description"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Capabilities</label>
+                    <textarea id="agent-capabilities" class="form-input" rows="3" placeholder="Enter agent capabilities"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeDeployAgentModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Deploy Agent</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal functions
+function openAgentModal(agentId) {
+    // Load agent details via HTMX
+    htmx.ajax('GET', `/api/v1/agents/${agentId}`, {target: '#agent-modal-content'});
+    document.getElementById('agent-modal').classList.remove('hidden');
+}
+
+function closeAgentModal() {
+    document.getElementById('agent-modal').classList.add('hidden');
+}
+
+function openTaskModal(agentId) {
+    document.getElementById('task-form').dataset.agentId = agentId;
+    document.getElementById('task-modal').classList.remove('hidden');
+}
+
+function closeTaskModal() {
+    document.getElementById('task-modal').classList.add('hidden');
+    document.getElementById('task-input').value = '';
+}
+
+function openDeployAgentModal() {
+    document.getElementById('deploy-modal').classList.remove('hidden');
+}
+
+function closeDeployAgentModal() {
+    document.getElementById('deploy-modal').classList.add('hidden');
+    document.getElementById('deploy-form').reset();
+}
+
+// Form submission functions
+async function updateAgentTask(event) {
+    event.preventDefault();
+    const agentId = event.target.dataset.agentId;
+    const task = document.getElementById('task-input').value;
+    
+    try {
+        await AgentManager.updateTask(agentId, task);
+        closeTaskModal();
+        htmx.trigger('#agents-list', 'refreshAgents');
+    } catch (error) {
+        console.error('Failed to update task:', error);
+    }
+}
+
+async function deployAgent(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('name', document.getElementById('agent-name').value);
+    formData.append('department', document.getElementById('agent-department').value);
+    formData.append('type', document.getElementById('agent-type').value);
+    formData.append('description', document.getElementById('agent-description').value);
+    formData.append('capabilities', document.getElementById('agent-capabilities').value);
+    
+    try {
+        const response = await fetch('/api/v1/agents/deploy', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            closeDeployAgentModal();
+            htmx.trigger('#agents-list', 'refreshAgents');
+            DaenaUtils.showNotification('Agent deployed successfully', 'success');
+        } else {
+            throw new Error('Failed to deploy agent');
+        }
+    } catch (error) {
+        console.error('Failed to deploy agent:', error);
+        DaenaUtils.showNotification('Failed to deploy agent', 'error');
+    }
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.add('hidden');
+    }
+});
+</script> 

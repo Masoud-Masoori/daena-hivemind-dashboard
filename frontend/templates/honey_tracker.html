@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honey Tracker - Daena AI VP</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50" x-data="honeyTracker()">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">Honey Tracker</h1>
+                    <span class="ml-3 px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
+                        Knowledge Accumulation
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="refreshData()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Refresh
+                    </button>
+                    <a href="/" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Analytics Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Total Honey</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="analytics.total_honey">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Growth Rate</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="`${analytics.honey_growth_rate}%`">0%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Efficiency</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="`${analytics.honey_efficiency}%`">0%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-purple-100 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Quality Score</p>
+                        <p class="text-2xl font-bold text-gray-900" x-text="analytics.honey_quality_score">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Department Breakdown Chart -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Department Honey Distribution</h3>
+                <canvas id="departmentChart" width="400" height="300"></canvas>
+            </div>
+            
+            <!-- Timeline Chart -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Honey Accumulation Timeline</h3>
+                <canvas id="timelineChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Department Details -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Department Breakdown</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="dept in departmentBreakdown" :key="dept.department">
+                    <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-medium text-gray-900" x-text="dept.department"></h4>
+                            <span class="text-sm font-bold text-yellow-600" x-text="dept.honey_volume.toFixed(2)"></span>
+                        </div>
+                        
+                        <!-- Efficiency Bar -->
+                        <div class="mb-3">
+                            <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                                <span>Efficiency</span>
+                                <span x-text="`${dept.efficiency}%`"></span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+                                     :style="`width: ${dept.efficiency}%`"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Honey Volume Bar -->
+                        <div class="mb-3">
+                            <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+                                <span>Honey Volume</span>
+                                <span x-text="`${dept.item_count} items`"></span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300" 
+                                     :style="`width: ${Math.min(dept.honey_volume * 10, 100)}%`"></div>
+                            </div>
+                        </div>
+                        
+                        <button @click="viewDepartmentDetails(dept.department)" 
+                                class="w-full px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                            View Details
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Top Generators -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Top Honey Generators</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Honey Volume</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Efficiency</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <template x-for="generator in topGenerators" :key="generator.name">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                            <span class="text-white text-sm font-bold" x-text="generator.name.charAt(0)"></span>
+                                        </div>
+                                        <div class="ml-3">
+                                            <div class="text-sm font-medium text-gray-900" x-text="generator.name"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" x-text="generator.department"></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm font-bold text-yellow-600" x-text="generator.honey_volume.toFixed(2)"></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-sm text-gray-900" x-text="`${generator.efficiency}%`"></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" 
+                                          x-text="generator.status"></span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Honeycomb Visualization -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-6">Honeycomb Knowledge Structure</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="honeycomb-grid">
+                <template x-for="(category, index) in honeyByCategory" :key="category">
+                    <div class="relative group">
+                        <div class="w-20 h-20 bg-yellow-200 border-2 border-yellow-400 rounded-lg flex items-center justify-center transform rotate-45 hover:scale-110 transition-transform cursor-pointer"
+                             @click="viewCategoryDetails(category)">
+                            <div class="transform -rotate-45 text-center">
+                                <div class="text-xs font-bold text-yellow-800" x-text="category"></div>
+                                <div class="text-xs text-yellow-600" x-text="honeyByCategory[category].toFixed(2)"></div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <span class="text-xs font-bold text-white" x-text="index + 1"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Details Modal -->
+    <div x-show="showDepartmentModal" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-gray-900">Department Details</h2>
+                    <button @click="showDepartmentModal = false" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6" x-html="selectedDepartmentDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        function honeyTracker() {
+            return {
+                analytics: {
+                    total_honey: 0,
+                    honey_growth_rate: 0,
+                    honey_efficiency: 0,
+                    honey_quality_score: 0,
+                    average_honey_volume: 0,
+                    verified_items: 0,
+                    total_items: 0
+                },
+                departmentBreakdown: [],
+                topGenerators: [],
+                timeline: [],
+                honeyByCategory: {},
+                showDepartmentModal: false,
+                selectedDepartmentDetails: '',
+                departmentChart: null,
+                timelineChart: null,
+                
+                async init() {
+                    await this.loadData();
+                    this.initializeCharts();
+                    // Auto-refresh every 60 seconds
+                    setInterval(() => this.loadData(), 60000);
+                },
+                
+                async loadData() {
+                    try {
+                        const response = await fetch('/api/v1/honey-knowledge/honey-tracker/visualization');
+                        const data = await response.json();
+                        
+                        this.analytics = data.analytics;
+                        this.departmentBreakdown = data.department_breakdown;
+                        this.topGenerators = data.top_generators;
+                        this.timeline = data.timeline;
+                        this.honeyByCategory = data.honey_by_category;
+                        
+                        this.updateCharts();
+                    } catch (error) {
+                        console.error('Error loading honey data:', error);
+                    }
+                },
+                
+                initializeCharts() {
+                    // Department Chart
+                    const deptCtx = document.getElementById('departmentChart').getContext('2d');
+                    this.departmentChart = new Chart(deptCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: [
+                                    '#FCD34D', '#F59E0B', '#D97706', '#92400E',
+                                    '#FEF3C7', '#FDE68A', '#FBBF24', '#F59E0B'
+                                ],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Timeline Chart
+                    const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+                    this.timelineChart = new Chart(timelineCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Honey Volume',
+                                data: [],
+                                borderColor: '#F59E0B',
+                                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.1)'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.1)'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            }
+                        }
+                    });
+                },
+                
+                updateCharts() {
+                    // Update Department Chart
+                    this.departmentChart.data.labels = this.departmentBreakdown.map(d => d.department);
+                    this.departmentChart.data.datasets[0].data = this.departmentBreakdown.map(d => d.honey_volume);
+                    this.departmentChart.update();
+                    
+                    // Update Timeline Chart
+                    this.timelineChart.data.labels = this.timeline.map(t => t.date);
+                    this.timelineChart.data.datasets[0].data = this.timeline.map(t => t.honey_volume);
+                    this.timelineChart.update();
+                },
+                
+                async viewDepartmentDetails(department) {
+                    try {
+                        const response = await fetch(`/api/v1/honey-knowledge/honey-tracker/department/${department}`);
+                        const data = await response.json();
+                        
+                        this.selectedDepartmentDetails = `
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-lg font-semibold mb-4">Department Overview</h3>
+                                        <div class="space-y-3">
+                                            <div><strong>Department:</strong> ${data.department}</div>
+                                            <div><strong>Total Honey Volume:</strong> ${data.total_honey_volume}</div>
+                                            <div><strong>Item Count:</strong> ${data.item_count}</div>
+                                            <div><strong>Verified Items:</strong> ${data.verified_items}</div>
+                                            <div><strong>Verification Rate:</strong> ${data.verification_rate}%</div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold mb-4">Category Breakdown</h3>
+                                        <div class="space-y-2">
+                                            ${Object.entries(data.category_breakdown).map(([category, volume]) => `
+                                                <div class="flex justify-between">
+                                                    <span class="text-sm">${category}</span>
+                                                    <span class="text-sm font-bold text-yellow-600">${volume.toFixed(2)}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Agent Contributions</h3>
+                                    <div class="space-y-3">
+                                        ${data.agent_contributions.map(agent => `
+                                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                                        <span class="text-white text-sm font-bold">${agent.agent.charAt(0)}</span>
+                                                    </div>
+                                                    <span class="ml-3 text-sm font-medium">${agent.agent}</span>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="text-sm font-bold text-yellow-600">${agent.honey_volume.toFixed(2)}</div>
+                                                    <div class="text-xs text-gray-500">${agent.percentage}%</div>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        this.showDepartmentModal = true;
+                    } catch (error) {
+                        console.error('Error loading department details:', error);
+                    }
+                },
+                
+                viewCategoryDetails(category) {
+                    alert(`Category: ${category}\nHoney Volume: ${this.honeyByCategory[category].toFixed(2)}`);
+                },
+                
+                async refreshData() {
+                    await this.loadData();
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

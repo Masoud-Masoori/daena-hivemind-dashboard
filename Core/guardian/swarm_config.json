@@ -1,0 +1,5 @@
+{
+  "swarm_id": "daena-swarm-001",
+  "agents": ["defense-node", "watchdog", "override-monitor"],
+  "status": "standby"
+}

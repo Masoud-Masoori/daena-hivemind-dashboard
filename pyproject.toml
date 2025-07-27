@@ -1,0 +1,27 @@
+[project]
+name = "daena"
+version = "0.1.0"
+description = "Daena AI Agent Project"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["ai", "agent", "fastapi", "sveltekit"]
+authors = [
+  { name = "Your Name", email = "your.email@example.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["backend", "core"]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+core = "Core"
+backend = "backend" 

@@ -1,0 +1,7 @@
+{
+  "date": "2025-06-04",
+  "objective": "Analyze customer feedback patterns",
+  "department": "ClientOps",
+  "skills": ["text clustering", "sentiment scoring"],
+  "preferred_model": "qwen2.5"
+}

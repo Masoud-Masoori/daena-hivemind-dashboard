@@ -1,0 +1,6 @@
+{
+  "last_failover": "2025-06-01T12:10:47",
+  "failed_model": "yi-6b",
+  "fallback_model": "qwen2.5",
+  "reason": "timeout"
+}

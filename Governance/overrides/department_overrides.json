@@ -1,0 +1,14 @@
+{
+  "finance": {
+    "override": "DeepSeek-R2",
+    "reason": "More accurate with numeric and forecasting logic"
+  },
+  "legal": {
+    "override": "Qwen2.5",
+    "reason": "Stronger policy alignment and law context"
+  },
+  "scraping": {
+    "override": "Yi-6B",
+    "reason": "Performs better under noisy data and regex patterns"
+  }
+}

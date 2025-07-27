@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "agent_id": "finance001",
+      "llm_original": "DeepSeek-R2",
+      "llm_override": "Yi-6B",
+      "reason": "response too verbose",
+      "timestamp": "2025-06-01T13:22:00"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+[
+  {"agent": "researcher_agent", "trust_score": 94},
+  {"agent": "analyst_agent", "trust_score": 87}
+]

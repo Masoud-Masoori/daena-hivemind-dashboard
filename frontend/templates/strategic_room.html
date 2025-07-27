@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Room | Daena AI VP | Mas-AI Company</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0f0f23',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'fire-red': '#ef4444',
+                        'royal-blue': '#3b82f6'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'daena-speak': 'daena-speak 1s ease-in-out infinite alternate',
+                        'hex-pulse': 'hex-pulse 3s ease-in-out infinite',
+                        'spiral-in': 'spiral-in 0.8s ease-out',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { boxShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' },
+                            '100%': { boxShadow: '0 0 20px #00ffff, 0 0 40px #00ffff' }
+                        },
+                        'daena-speak': {
+                            '0%': { boxShadow: '0 0 20px #ffd700, 0 0 40px #ffd700' },
+                            '100%': { boxShadow: '0 0 40px #ffd700, 0 0 80px #ffd700' }
+                        },
+                        'hex-pulse': {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        },
+                        'spiral-in': {
+                            '0%': { transform: 'scale(0) rotate(-180deg)', opacity: '0' },
+                            '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .hex-shape {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+        }
+        
+        .background-alive {
+            background: linear-gradient(45deg, #0f0f23, #1a1a3a, #0f0f23);
+            background-size: 400% 400%;
+            animation: gradient-alive 12s ease infinite;
+        }
+        
+        @keyframes gradient-alive {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .synthesis-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .synthesis-card:hover {
+            transform: scale(1.02) translateY(-2px);
+            filter: brightness(1.1);
+        }
+        
+        .daena-avatar {
+            background: linear-gradient(45deg, #ffd700, #00ffff, #ffd700);
+            background-size: 200% 200%;
+            animation: gradient-alive 4s ease infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-midnight text-white min-h-screen background-alive">
+    
+    <!-- Navigation Header -->
+    <header class="fixed top-0 w-full z-50 bg-midnight/80 backdrop-blur-md border-b border-neon-cyan/30">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="text-neon-cyan hover:text-sunbeam transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Main Dashboard
+                </a>
+                <div class="w-px h-6 bg-gray-600"></div>
+                <i class="fas fa-chess-king text-neon-cyan text-2xl animate-pulse"></i>
+                <div>
+                    <h1 class="text-2xl font-bold text-sunbeam">Strategic Room</h1>
+                    <p class="text-sm text-gray-400">Cross-Department Synthesis & Founder Oversight</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="text-sm text-gray-300">
+                    <i class="fas fa-circle text-organic-green mr-1 animate-pulse"></i>
+                    Strategic Analysis Active
+                </div>
+                <div class="text-sm text-gray-400">
+                    <i class="fas fa-clock mr-1"></i>
+                    <span id="current-time"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="strategicRoom()" x-init="init()" class="relative w-full h-screen pt-20">
+        
+        <!-- Overview Section -->
+        <div class="container mx-auto px-6 py-8">
+            
+            <!-- Header Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold text-sunbeam" x-text="synthesisCount">0</div>
+                            <div class="text-sm text-gray-400">Active Syntheses</div>
+                        </div>
+                        <i class="fas fa-lightbulb text-2xl text-sunbeam"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold text-fire-red" x-text="conflictsCount">0</div>
+                            <div class="text-sm text-gray-400">Conflicts Detected</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle text-2xl text-fire-red"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold text-cyber-purple" x-text="overlapsCount">0</div>
+                            <div class="text-sm text-gray-400">Timeline Overlaps</div>
+                        </div>
+                        <i class="fas fa-clock text-2xl text-cyber-purple"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold text-organic-green" x-text="approvedCount">0</div>
+                            <div class="text-sm text-gray-400">Founder Approved</div>
+                        </div>
+                        <i class="fas fa-check-circle text-2xl text-organic-green"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button 
+                    @click="loadSynthesisSummary()"
+                    :disabled="isLoading"
+                    class="bg-sunbeam hover:bg-sunbeam/80 text-midnight px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                >
+                    <i class="fas fa-sync-alt mr-2"></i>
+                    Refresh Synthesis
+                </button>
+                
+                <button 
+                    @click="analyzeConflicts()"
+                    :disabled="isLoading"
+                    class="bg-fire-red/20 hover:bg-fire-red/40 text-fire-red px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                >
+                    <i class="fas fa-search mr-2"></i>
+                    Analyze Conflicts
+                </button>
+                
+                <button 
+                    @click="generateCrossDepartmentAnalysis()"
+                    :disabled="isLoading"
+                    class="bg-royal-blue/20 hover:bg-royal-blue/40 text-royal-blue px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                >
+                    <i class="fas fa-brain mr-2"></i>
+                    Cross-Department Analysis
+                </button>
+            </div>
+            
+            <!-- Department Syntheses Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                <template x-for="(synthesis, dept) in synthesisData" :key="dept">
+                    <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30 synthesis-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-sunbeam" x-text="getDepartmentDisplayName(dept)"></h3>
+                            <div class="flex items-center space-x-2">
+                                <div x-show="synthesis.status === 'active'" class="w-3 h-3 bg-organic-green rounded-full animate-pulse"></div>
+                                <div x-show="synthesis.status === 'no_synthesis'" class="w-3 h-3 bg-gray-500 rounded-full"></div>
+                                <div x-show="synthesis.status === 'error'" class="w-3 h-3 bg-fire-red rounded-full animate-pulse"></div>
+                            </div>
+                        </div>
+                        
+                        <div x-show="synthesis.last_synthesis" class="space-y-3">
+                            <div class="text-sm text-gray-300" x-text="synthesis.last_synthesis.summary || 'No summary available'"></div>
+                            
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span x-text="formatDate(synthesis.last_synthesis.timestamp)"></span>
+                                <span x-text="'Confidence: ' + (synthesis.last_synthesis.confidence_score || 'N/A') + '%'"></span>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button 
+                                    @click="viewDepartmentSynthesis(dept)"
+                                    class="bg-neon-cyan/20 hover:bg-neon-cyan/40 text-neon-cyan px-3 py-1 rounded-lg text-xs transition-colors"
+                                >
+                                    <i class="fas fa-eye mr-1"></i>
+                                    View Details
+                                </button>
+                                
+                                <button 
+                                    @click="showFounderOverride(dept, synthesis.last_synthesis)"
+                                    class="bg-sunbeam/20 hover:bg-sunbeam/40 text-sunbeam px-3 py-1 rounded-lg text-xs transition-colors"
+                                >
+                                    <i class="fas fa-crown mr-1"></i>
+                                    Founder Override
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div x-show="!synthesis.last_synthesis" class="text-center py-8">
+                            <i class="fas fa-lightbulb text-4xl text-gray-600 mb-4"></i>
+                            <p class="text-gray-400">No synthesis available</p>
+                            <p class="text-xs text-gray-500 mt-2">Run council synthesis in department</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <!-- Conflicts & Overlaps Section -->
+            <div x-show="conflicts.length > 0 || overlaps.length > 0" class="mb-8">
+                <h2 class="text-2xl font-bold text-sunbeam mb-4">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    Conflicts & Overlaps Analysis
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Conflicts -->
+                    <div x-show="conflicts.length > 0" class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-fire-red/30">
+                        <h3 class="text-lg font-bold text-fire-red mb-4">
+                            <i class="fas fa-times-circle mr-2"></i>
+                            Conflicts Detected
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="conflict in conflicts" :key="conflict.type + conflict.departments.join('-')">
+                                <div class="bg-midnight/60 rounded-lg p-3 border border-fire-red/20">
+                                    <div class="text-sm text-fire-red font-semibold mb-1" x-text="conflict.type.replace('_', ' ').toUpperCase()"></div>
+                                    <div class="text-xs text-gray-300 mb-2" x-text="conflict.description"></div>
+                                    <div class="text-xs text-gray-400">
+                                        Departments: <span x-text="conflict.departments.join(', ')"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Overlaps -->
+                    <div x-show="overlaps.length > 0" class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-cyber-purple/30">
+                        <h3 class="text-lg font-bold text-cyber-purple mb-4">
+                            <i class="fas fa-clock mr-2"></i>
+                            Timeline Overlaps
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="overlap in overlaps" :key="overlap.type + overlap.departments.join('-')">
+                                <div class="bg-midnight/60 rounded-lg p-3 border border-cyber-purple/20">
+                                    <div class="text-sm text-cyber-purple font-semibold mb-1" x-text="overlap.type.replace('_', ' ').toUpperCase()"></div>
+                                    <div class="text-xs text-gray-300 mb-2" x-text="overlap.description"></div>
+                                    <div class="text-xs text-gray-400">
+                                        Departments: <span x-text="overlap.departments.join(', ')"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cross-Department Analysis -->
+            <div x-show="crossDepartmentAnalysis" class="mb-8">
+                <h2 class="text-2xl font-bold text-sunbeam mb-4">
+                    <i class="fas fa-brain mr-2"></i>
+                    Cross-Department Analysis
+                </h2>
+                <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                    <div class="text-sm text-gray-300 leading-relaxed" x-text="crossDepartmentAnalysis"></div>
+                    <div class="text-xs text-gray-400 mt-4">
+                        Generated: <span x-text="formatDate(analysisTimestamp)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Founder Override Modal -->
+    <div x-show="showOverrideModal" 
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-midnight/90 rounded-2xl p-8 border border-neon-cyan/30 max-w-2xl w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-sunbeam">
+                    <i class="fas fa-crown mr-2"></i>
+                    Founder Override
+                </h3>
+                <button @click="showOverrideModal = false" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Department</label>
+                    <div class="text-sunbeam font-semibold" x-text="getDepartmentDisplayName(selectedDepartment)"></div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Action</label>
+                    <select x-model="overrideAction" class="w-full bg-midnight/60 border border-neon-cyan/30 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-sunbeam">
+                        <option value="approve">Approve Synthesis</option>
+                        <option value="override">Override Synthesis</option>
+                        <option value="comment">Add Comment</option>
+                        <option value="request_revision">Request Revision</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Comment/Feedback</label>
+                    <textarea 
+                        x-model="overrideComment" 
+                        rows="4"
+                        class="w-full bg-midnight/60 border border-neon-cyan/30 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-sunbeam"
+                        placeholder="Enter your feedback or override reason..."
+                    ></textarea>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button 
+                        @click="submitFounderOverride()"
+                        :disabled="isLoading"
+                        class="bg-sunbeam hover:bg-sunbeam/80 text-midnight px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50"
+                    >
+                        <i class="fas fa-check mr-2"></i>
+                        Submit Override
+                    </button>
+                    <button 
+                        @click="showOverrideModal = false"
+                        class="bg-gray-600 hover:bg-gray-500 px-6 py-3 rounded-xl font-semibold transition-colors"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function strategicRoom() {
+            return {
+                synthesisData: {},
+                conflicts: [],
+                overlaps: [],
+                crossDepartmentAnalysis: null,
+                analysisTimestamp: null,
+                isLoading: false,
+                showOverrideModal: false,
+                selectedDepartment: null,
+                selectedSynthesis: null,
+                overrideAction: 'approve',
+                overrideComment: '',
+                
+                async init() {
+                    await this.loadSynthesisSummary();
+                    this.updateCurrentTime();
+                    setInterval(() => this.updateCurrentTime(), 1000);
+                },
+                
+                async loadSynthesisSummary() {
+                    this.isLoading = true;
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch('/api/v1/strategic-room/synthesis-summary', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.synthesisData = data.synthesis_summary;
+                            this.updateCounts();
+                        }
+                    } catch (error) {
+                        console.error('Error loading synthesis summary:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                async analyzeConflicts() {
+                    this.isLoading = true;
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch('/api/v1/strategic-room/conflicts-analysis', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.conflicts = data.conflicts;
+                            this.overlaps = data.overlaps;
+                            this.updateCounts();
+                        }
+                    } catch (error) {
+                        console.error('Error analyzing conflicts:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                async generateCrossDepartmentAnalysis() {
+                    this.isLoading = true;
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch('/api/v1/strategic-room/generate-cross-department-analysis', {
+                            method: 'POST',
+                            headers: { 
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ focus: 'general' })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.crossDepartmentAnalysis = data.analysis;
+                            this.analysisTimestamp = new Date().toISOString();
+                        }
+                    } catch (error) {
+                        console.error('Error generating analysis:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                async viewDepartmentSynthesis(department) {
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch(`/api/v1/strategic-room/department/${department}/synthesis`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            // You can implement a detailed view modal here
+                            console.log('Department synthesis:', data);
+                        }
+                    } catch (error) {
+                        console.error('Error loading department synthesis:', error);
+                    }
+                },
+                
+                showFounderOverride(department, synthesis) {
+                    this.selectedDepartment = department;
+                    this.selectedSynthesis = synthesis;
+                    this.showOverrideModal = true;
+                },
+                
+                async submitFounderOverride() {
+                    this.isLoading = true;
+                    try {
+                        const token = localStorage.getItem('token');
+                        const response = await fetch('/api/v1/strategic-room/founder-override', {
+                            method: 'POST',
+                            headers: { 
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                department: this.selectedDepartment,
+                                action: this.overrideAction,
+                                comment: this.overrideComment,
+                                original_synthesis: this.selectedSynthesis
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.showOverrideModal = false;
+                            this.overrideComment = '';
+                            // Refresh synthesis data
+                            await this.loadSynthesisSummary();
+                        }
+                    } catch (error) {
+                        console.error('Error submitting override:', error);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
+                
+                updateCounts() {
+                    this.synthesisCount = Object.values(this.synthesisData).filter(s => s.last_synthesis).length;
+                    this.conflictsCount = this.conflicts.length;
+                    this.overlapsCount = this.overlaps.length;
+                    this.approvedCount = 0; // This would need to be calculated from founder feedback
+                },
+                
+                getDepartmentDisplayName(dept) {
+                    const names = {
+                        'engineering': 'Engineering & Technology',
+                        'product': 'Product & Design',
+                        'marketing': 'Marketing & Branding',
+                        'sales': 'Sales & Business Development',
+                        'finance': 'Finance & Investment',
+                        'hr': 'Human Resources & Culture',
+                        'operations': 'Operations & Process',
+                        'legal': 'Legal & Compliance'
+                    };
+                    return names[dept] || dept;
+                },
+                
+                formatDate(timestamp) {
+                    if (!timestamp) return 'N/A';
+                    return new Date(timestamp).toLocaleString();
+                },
+                
+                updateCurrentTime() {
+                    const now = new Date();
+                    document.getElementById('current-time').textContent = now.toLocaleTimeString();
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

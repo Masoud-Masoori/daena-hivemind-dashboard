@@ -1,0 +1,34 @@
+﻿{
+    "openai_api_key": "<YOUR_OPENAI_API_KEY_HERE>",
+    "gcp_credentials": "<PATH/TO/GCP/CREDENTIALS.json>",
+    "departments": [
+        {"name": "Marketing", "module": "marketing_agent", "class": "MarketingAgent"},
+        {"name": "Sales", "module": "sales_agent", "class": "SalesAgent"},
+        {"name": "ProductDev", "module": "product_dev_agent", "class": "ProductDevAgent"},
+        {"name": "Finance", "module": "finance_agent", "class": "FinanceAgent"},
+        {"name": "Data", "module": "data_agent", "class": "DataAgent"},
+        {"name": "HR", "module": "hr_agent", "class": "HRAgent"}
+    ],
+    "governance": [
+        {"name": "Compliance", "module": "compliance_agent", "class": "ComplianceAgent"},
+        {"name": "Security", "module": "security_agent", "class": "SecurityAgent"},
+        {"name": "Maintenance", "module": "maintenance_agent", "class": "MaintenanceAgent"}
+    ],
+    "voice": {
+        "wake_word": "Hey Daena",
+        "stt_engine": "whisper",
+        "tts_engine": "xtts",
+        "voice_model": "en-US-Lisa",  // hypothetical voice model name
+        "emotion_enabled": true
+    },
+    "dashboard": {
+        "port": 8000,
+        "admin_password": "<SET_A_SECURE_PASSWORD>"
+    },
+    "blockchain": {
+        "use_simulation": true,
+        "rpc_endpoint": "<YOUR_ETH_RPC_ENDPOINT>",
+        "wallet_address": "<DAENA_WALLET_ADDRESS>",
+        "wallet_private_key": "<ENCRYPTED_OR_EMPTY>"
+    }
+}

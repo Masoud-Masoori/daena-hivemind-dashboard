@@ -1,0 +1,220 @@
+{
+  "azure_openai": {
+    "api_type": "azure",
+    "api_key": "",
+    "api_base": "",
+    "api_version": "2024-02-15",
+    "deployment_name": "daena",
+    "model_name": "gpt-4",
+    "max_tokens": 4000,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0
+  },
+  "local_models": {
+    "r1": {
+      "path": "models/r1",
+      "type": "reasoning",
+      "max_length": 8192,
+      "max_new_tokens": 1024,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int8",
+      "device": "auto",
+      "model_size": "7B",
+      "context_length": 8192,
+      "specialties": ["reasoning", "logic", "problem_solving"],
+      "training_data": ["mathematical_reasoning", "logical_puzzles", "code_analysis"]
+    },
+    "r2": {
+      "path": "models/r2",
+      "type": "reasoning",
+      "max_length": 16384,
+      "max_new_tokens": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int8",
+      "device": "auto",
+      "model_size": "14B",
+      "context_length": 16384,
+      "specialties": ["advanced_reasoning", "complex_analysis", "strategic_thinking"],
+      "training_data": ["advanced_mathematics", "strategic_planning", "complex_problem_solving"]
+    },
+    "deepseek_v3": {
+      "path": "models/deepseek-v3",
+      "type": "causal",
+      "max_length": 32768,
+      "max_new_tokens": 4096,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int4",
+      "device": "auto",
+      "model_size": "67B",
+      "context_length": 32768,
+      "specialties": ["general_knowledge", "coding", "analysis"],
+      "training_data": ["general_corpus", "code_repositories", "scientific_papers"]
+    },
+    "qwen2.5": {
+      "path": "models/qwen2.5",
+      "type": "causal",
+      "max_length": 32768,
+      "max_new_tokens": 4096,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int4",
+      "device": "auto",
+      "model_size": "72B",
+      "context_length": 32768,
+      "specialties": ["multilingual", "reasoning", "coding"],
+      "training_data": ["multilingual_corpus", "code_data", "reasoning_tasks"]
+    },
+    "yi_34b": {
+      "path": "models/yi-34b",
+      "type": "causal",
+      "max_length": 4096,
+      "max_new_tokens": 1024,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int8",
+      "device": "auto",
+      "model_size": "34B",
+      "context_length": 4096,
+      "specialties": ["general_knowledge", "conversation"],
+      "training_data": ["general_corpus", "conversation_data"]
+    },
+    "llama3_70b": {
+      "path": "models/llama3-70b",
+      "type": "causal",
+      "max_length": 8192,
+      "max_new_tokens": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "quantization": "int4",
+      "device": "auto",
+      "model_size": "70B",
+      "context_length": 8192,
+      "specialties": ["general_knowledge", "instruction_following"],
+      "training_data": ["instruction_tuning", "general_corpus"]
+    }
+  },
+  "huggingface_models": {
+    "deepseek_coder": {
+      "model_id": "deepseek-ai/deepseek-coder-33b-instruct",
+      "type": "coding",
+      "max_length": 8192,
+      "max_new_tokens": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "model_size": "33B",
+      "context_length": 8192,
+      "specialties": ["code_generation", "code_analysis", "debugging"],
+      "training_data": ["code_repositories", "programming_books", "stack_overflow"]
+    },
+    "codellama": {
+      "model_id": "codellama/CodeLlama-34b-Instruct-hf",
+      "type": "coding",
+      "max_length": 8192,
+      "max_new_tokens": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "model_size": "34B",
+      "context_length": 8192,
+      "specialties": ["code_generation", "code_completion", "programming"],
+      "training_data": ["github_repositories", "programming_tutorials", "code_documentation"]
+    },
+    "mistral_7b": {
+      "model_id": "mistralai/Mistral-7B-Instruct-v0.2",
+      "type": "causal",
+      "max_length": 8192,
+      "max_new_tokens": 1024,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "model_size": "7B",
+      "context_length": 8192,
+      "specialties": ["general_knowledge", "instruction_following"],
+      "training_data": ["instruction_tuning", "general_corpus"]
+    }
+  },
+  "training_config": {
+    "batch_size": 4,
+    "learning_rate": 1e-5,
+    "max_epochs": 10,
+    "gradient_accumulation_steps": 4,
+    "warmup_steps": 100,
+    "save_steps": 500,
+    "eval_steps": 500,
+    "logging_steps": 50,
+    "weight_decay": 0.01,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-8,
+    "max_grad_norm": 1.0,
+    "lr_scheduler_type": "cosine",
+    "num_train_epochs": 3,
+    "per_device_train_batch_size": 4,
+    "per_device_eval_batch_size": 4,
+    "dataloader_num_workers": 4,
+    "remove_unused_columns": false,
+    "push_to_hub": false,
+    "report_to": "none"
+  },
+  "consensus_config": {
+    "min_models": 2,
+    "confidence_threshold": 0.7,
+    "weighted_voting": true,
+    "fallback_model": "azure_openai",
+    "consensus_methods": ["majority_vote", "weighted_average", "confidence_weighted"],
+    "model_weights": {
+      "r1": 1.2,
+      "r2": 1.5,
+      "deepseek_v3": 1.3,
+      "qwen2.5": 1.4,
+      "azure_gpt4": 1.0,
+      "yi_34b": 1.1
+    }
+  },
+  "performance_tracking": {
+    "metrics": ["latency", "accuracy", "throughput", "memory_usage", "token_efficiency"],
+    "tracking_interval": 300,
+    "retention_days": 30,
+    "alerts": {
+      "high_latency_threshold": 5000,
+      "low_accuracy_threshold": 0.7,
+      "high_memory_threshold": 0.9
+    }
+  },
+  "model_routing": {
+    "task_specific_routing": {
+      "reasoning": ["r1", "r2", "deepseek_v3"],
+      "coding": ["deepseek_coder", "codellama", "deepseek_v3"],
+      "conversation": ["azure_gpt4", "qwen2.5", "yi_34b"],
+      "analysis": ["deepseek_v3", "qwen2.5", "azure_gpt4"],
+      "strategy": ["r2", "deepseek_v3", "azure_gpt4"]
+    },
+    "fallback_chain": ["azure_gpt4", "deepseek_v3", "qwen2.5", "yi_34b"],
+    "load_balancing": {
+      "enabled": true,
+      "method": "round_robin",
+      "health_check_interval": 60
+    }
+  },
+  "resource_management": {
+    "gpu_memory_limit": 0.8,
+    "cpu_cores_limit": 0.7,
+    "model_loading_strategy": "lazy",
+    "cache_enabled": true,
+    "cache_size_gb": 10,
+    "model_eviction_policy": "lru"
+  },
+  "security": {
+    "api_key_encryption": true,
+    "model_access_control": true,
+    "audit_logging": true,
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 60,
+      "burst_limit": 10
+    }
+  }
+} 

@@ -1,0 +1,8 @@
+{
+    "primary": "E:/models",
+    "fallback": {
+        "gcp_bucket": "gs://daena-model-backup",
+        "huggingface_space": "https://huggingface.co/spaces/masai/daena"
+    },
+    "use_fallback_if": "low_vram"
+}

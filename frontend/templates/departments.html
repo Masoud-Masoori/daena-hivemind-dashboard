@@ -1,0 +1,75 @@
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-white">Departments</h2>
+            <p class="text-gray-400">Manage your business departments and their agents</p>
+        </div>
+        <button class="bg-daena-blue hover:bg-daena-blue/80 text-white px-4 py-2 rounded-lg transition-colors"
+                hx-post="/api/v1/departments" hx-target="#departments-list">
+            Create Department
+        </button>
+    </div>
+
+    <div id="departments-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Department cards will be loaded here via HTMX -->
+        <div class="bg-gray-800 rounded-xl p-6 card-glow border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-white">Data Science</h3>
+                <span class="bg-daena-green/20 text-daena-green px-2 py-1 rounded-full text-xs">Active</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-4">Handles data analysis and machine learning tasks</p>
+            <div class="flex items-center justify-between text-sm mb-4">
+                <span class="text-gray-500">Agents: 3</span>
+                <span class="text-gray-500">Tasks: 12</span>
+            </div>
+            <div class="flex space-x-2">
+                <button class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                    View Agents
+                </button>
+                <button class="bg-daena-blue hover:bg-daena-blue/80 text-white px-3 py-1 rounded text-xs transition-colors">
+                    Manage
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl p-6 card-glow border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-white">Customer Success</h3>
+                <span class="bg-daena-blue/20 text-daena-blue px-2 py-1 rounded-full text-xs">Online</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-4">Manages customer relationships and support</p>
+            <div class="flex items-center justify-between text-sm mb-4">
+                <span class="text-gray-500">Agents: 2</span>
+                <span class="text-gray-500">Tasks: 8</span>
+            </div>
+            <div class="flex space-x-2">
+                <button class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                    View Agents
+                </button>
+                <button class="bg-daena-blue hover:bg-daena-blue/80 text-white px-3 py-1 rounded text-xs transition-colors">
+                    Manage
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl p-6 card-glow border border-gray-700">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-white">Marketing</h3>
+                <span class="bg-daena-orange/20 text-daena-orange px-2 py-1 rounded-full text-xs">Busy</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-4">Creates and manages marketing campaigns</p>
+            <div class="flex items-center justify-between text-sm mb-4">
+                <span class="text-gray-500">Agents: 4</span>
+                <span class="text-gray-500">Tasks: 15</span>
+            </div>
+            <div class="flex space-x-2">
+                <button class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                    View Agents
+                </button>
+                <button class="bg-daena-blue hover:bg-daena-blue/80 text-white px-3 py-1 rounded text-xs transition-colors">
+                    Manage
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

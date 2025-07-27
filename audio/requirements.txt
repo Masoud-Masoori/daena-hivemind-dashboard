@@ -1,0 +1,32 @@
+# Daena Audio Environment - Voice and TTS Dependencies
+# This environment is separate from the main backend for audio processing
+
+# Core audio processing
+pyaudio==0.2.11
+speechrecognition==3.10.0
+pyttsx3==2.90
+sounddevice==0.4.6
+librosa==0.10.1
+
+# TTS and voice synthesis
+TTS==0.22.0
+torch==2.1.0
+torchaudio==2.1.0
+
+# Audio file handling
+pydub==0.25.1
+wave==0.0.2
+scipy==1.11.4
+
+# Real-time audio processing
+numpy>=1.20.3
+soundfile==0.12.1
+
+# Voice recognition and processing
+webrtcvad==2.0.10
+deepgram-sdk==2.12.0
+
+# Environment and utilities
+python-dotenv==1.0.0
+requests==2.31.0
+websockets==12.0 

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Timeline | MAS-AI Project Management</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'cosmic-void': '#0a0a1a',
+                        'stellar-purple': '#1a1a3a',
+                        'nebula-blue': '#1e2a5e',
+                        'plasma-cyan': '#00d4ff',
+                        'solar-gold': '#ffb800',
+                        'void-purple': '#6b46c1',
+                        'matrix-green': '#00ff88',
+                        'cosmic-blue': '#4338ca',
+                        'nova-pink': '#f472b6',
+                        'fire-red': '#ef4444',
+                        'royal-amber': '#f59e0b',
+                        'danger-crimson': '#dc2626',
+                        'command-indigo': '#3730a3'
+                    },
+                    animation: {
+                        'cosmic-pulse': 'cosmic-pulse 3s ease-in-out infinite',
+                        'stellar-drift': 'stellar-drift 20s ease infinite',
+                        'task-glow': 'task-glow 2s ease-in-out infinite alternate'
+                    },
+                    keyframes: {
+                        'cosmic-pulse': {
+                            '0%, 100%': { 
+                                boxShadow: '0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(0, 212, 255, 0.1)',
+                                borderColor: 'rgba(0, 212, 255, 0.5)'
+                            },
+                            '50%': { 
+                                boxShadow: '0 0 40px rgba(0, 212, 255, 0.8), inset 0 0 30px rgba(0, 212, 255, 0.2)',
+                                borderColor: 'rgba(0, 212, 255, 0.8)'
+                            }
+                        },
+                        'stellar-drift': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        'task-glow': {
+                            '0%': { boxShadow: '0 0 10px rgba(67, 56, 202, 0.3)' },
+                            '100%': { boxShadow: '0 0 20px rgba(67, 56, 202, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Enhanced cosmic background with blue theme */
+        .cosmic-background {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(67, 56, 202, 0.4) 0%, rgba(10, 10, 26, 0.8) 40%),
+                radial-gradient(circle at 80% 20%, rgba(239, 68, 68, 0.3) 0%, rgba(26, 26, 58, 0.8) 40%),
+                radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.2) 0%, rgba(10, 10, 26, 0.9) 50%),
+                linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            background-size: 400% 400%;
+            animation: stellar-drift 30s ease infinite;
+        }
+        
+        /* Enhanced task card styles with blue theme */
+        .task-card {
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.08), rgba(107, 70, 193, 0.12));
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            background: linear-gradient(145deg, rgba(0, 212, 255, 0.15), rgba(107, 70, 193, 0.2));
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+        
+        /* Project card styling */
+        .project-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(67, 56, 202, 0.15));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(67, 56, 202, 0.25));
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+        
+        .project-card.selected {
+            background: linear-gradient(135deg, rgba(67, 56, 202, 0.3), rgba(0, 212, 255, 0.2));
+            border-color: rgba(67, 56, 202, 0.6);
+            box-shadow: 0 0 20px rgba(67, 56, 202, 0.3);
+        }
+        
+        /* Timeline item styling */
+        .timeline-item {
+            background: linear-gradient(145deg, rgba(10, 10, 26, 0.8), rgba(26, 26, 58, 0.6));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            background: linear-gradient(145deg, rgba(10, 10, 26, 0.9), rgba(26, 26, 58, 0.8));
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen overflow-hidden" x-data="taskTimelineData()">
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-teal-500/30"
+                     title="📋 Task Timeline">
+                    📋
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        TASK TIMELINE
+                    </div>
+                    <p class="text-xs text-blue-200/80">Project Management & Execution Center</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="relative w-full h-screen pt-16">
+        <div class="max-w-7xl mx-auto p-6 h-full overflow-y-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Left Sidebar: Project List -->
+                <div class="lg:col-span-1">
+                    <div class="task-card rounded-xl p-6">
+                        <h2 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-4">📋 Projects</h2>
+                        
+                        <!-- Project Search -->
+                        <div class="mb-4">
+                            <input 
+                                type="text" 
+                                x-model="projectSearch"
+                                placeholder="Search projects..."
+                                class="w-full bg-cosmic-void/60 border border-plasma-cyan/30 rounded-lg px-3 py-2 text-white placeholder-blue-300/60 focus:outline-none focus:ring-2 focus:ring-plasma-cyan/50 focus:border-plasma-cyan/50"
+                            >
+                        </div>
+                        
+                        <!-- Project List -->
+                        <div class="space-y-2 max-h-96 overflow-y-auto">
+                            <template x-for="project in filteredProjects" :key="project.id">
+                                <div 
+                                    @click="selectProject(project)"
+                                    class="p-3 rounded-lg cursor-pointer project-card"
+                                    :class="selectedProject && selectedProject.id === project.id ? 'selected' : ''"
+                                >
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="font-medium text-white" x-text="project.project_name"></h3>
+                                            <p class="text-xs text-blue-300/70" x-text="project.total_tasks + ' tasks'"></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-xs text-plasma-cyan" x-text="project.completed_tasks + '/' + project.total_tasks"></div>
+                                            <div class="w-16 h-1 bg-cosmic-void/60 rounded-full mt-1">
+                                                <div class="h-1 bg-matrix-green rounded-full transition-all duration-300" 
+                                                     :style="'width: ' + (project.total_tasks > 0 ? (project.completed_tasks / project.total_tasks * 100) : 0) + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="task-card rounded-xl p-6 mt-6">
+                        <h3 class="text-lg font-bold bg-gradient-to-r from-plasma-cyan to-void-purple bg-clip-text text-transparent mb-4">📊 Quick Stats</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between p-2 bg-cosmic-void/30 rounded-lg">
+                                <span class="text-sm text-blue-300/80">Total Projects</span>
+                                <span class="text-sm font-medium text-plasma-cyan" x-text="projects.length"></span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-cosmic-void/30 rounded-lg">
+                                <span class="text-sm text-blue-300/80">Active Tasks</span>
+                                <span class="text-sm font-medium text-solar-gold" x-text="totalActiveTasks"></span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-cosmic-void/30 rounded-lg">
+                                <span class="text-sm text-blue-300/80">Completed Tasks</span>
+                                <span class="text-sm font-medium text-matrix-green" x-text="totalCompletedTasks"></span>
+                            </div>
+                            <div class="flex justify-between p-2 bg-cosmic-void/30 rounded-lg">
+                                <span class="text-sm text-blue-300/80">Failed Tasks</span>
+                                <span class="text-sm font-medium text-fire-red" x-text="totalFailedTasks"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content: Timeline View -->
+                <div class="lg:col-span-3">
+                    <div x-show="selectedProject" class="space-y-6">
+                        <!-- Project Header -->
+                        <div class="task-card rounded-xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent" x-text="selectedProject.project_name"></h2>
+                                    <p class="text-sm text-blue-300/70" x-text="'Project ID: ' + selectedProject.project_id"></p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-right">
+                                        <div class="text-sm text-blue-300/70">Completion Rate</div>
+                                        <div class="text-lg font-bold text-matrix-green" 
+                                             x-text="(selectedProject.total_tasks > 0 ? (selectedProject.completed_tasks / selectedProject.total_tasks * 100) : 0).toFixed(1) + '%'"></div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-blue-300/70">Total Duration</div>
+                                        <div class="text-lg font-bold text-plasma-cyan" x-text="(selectedProject.total_duration / 3600).toFixed(1) + 'h'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="w-full bg-cosmic-void/60 rounded-full h-3 border border-plasma-cyan/20">
+                                <div class="bg-gradient-to-r from-matrix-green to-plasma-cyan h-3 rounded-full transition-all duration-500" 
+                                     :style="'width: ' + (selectedProject.total_tasks > 0 ? (selectedProject.completed_tasks / selectedProject.total_tasks * 100) : 0) + '%'"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Task Timeline -->
+                        <div class="task-card rounded-xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold bg-gradient-to-r from-void-purple to-plasma-cyan bg-clip-text text-transparent">⏰ Task Timeline</h3>
+                                <div class="flex space-x-2">
+                                    <button @click="filterTasks('all')" 
+                                            class="px-3 py-1 rounded text-sm transition-all duration-300"
+                                            :class="taskFilter === 'all' ? 'bg-cosmic-blue text-white border border-cosmic-blue' : 'bg-cosmic-void/60 text-blue-300 hover:bg-cosmic-void/80 border border-plasma-cyan/20'">
+                                        All
+                                    </button>
+                                    <button @click="filterTasks('active')" 
+                                            class="px-3 py-1 rounded text-sm transition-all duration-300"
+                                            :class="taskFilter === 'active' ? 'bg-cosmic-blue text-white border border-cosmic-blue' : 'bg-cosmic-void/60 text-blue-300 hover:bg-cosmic-void/80 border border-plasma-cyan/20'">
+                                        Active
+                                    </button>
+                                    <button @click="filterTasks('completed')" 
+                                            class="px-3 py-1 rounded text-sm transition-all duration-300"
+                                            :class="taskFilter === 'completed' ? 'bg-cosmic-blue text-white border border-cosmic-blue' : 'bg-cosmic-void/60 text-blue-300 hover:bg-cosmic-void/80 border border-plasma-cyan/20'">
+                                        Completed
+                                    </button>
+                                    <button @click="filterTasks('failed')" 
+                                            class="px-3 py-1 rounded text-sm transition-all duration-300"
+                                            :class="taskFilter === 'failed' ? 'bg-cosmic-blue text-white border border-cosmic-blue' : 'bg-cosmic-void/60 text-blue-300 hover:bg-cosmic-void/80 border border-plasma-cyan/20'">
+                                        Failed
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Timeline -->
+                            <div class="space-y-4">
+                                <template x-for="task in filteredTasks" :key="task.id">
+                                    <div class="timeline-item rounded-lg p-4 border-l-4"
+                                         :class="task.status === 'completed' ? 'border-matrix-green' : task.status === 'failed' ? 'border-fire-red' : 'border-solar-gold'">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-3 h-3 rounded-full animate-pulse"
+                                                     :class="task.status === 'completed' ? 'bg-matrix-green' : task.status === 'failed' ? 'bg-fire-red' : 'bg-solar-gold'"></div>
+                                                <h4 class="font-medium text-white" x-text="task.task_name"></h4>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="text-xs px-3 py-1 rounded-full border" 
+                                                      :class="task.status === 'completed' ? 'bg-matrix-green/20 text-matrix-green border-matrix-green/30' : task.status === 'failed' ? 'bg-fire-red/20 text-fire-red border-fire-red/30' : 'bg-solar-gold/20 text-solar-gold border-solar-gold/30'"
+                                                      x-text="task.status"></span>
+                                                <button @click="viewTaskDetails(task)" 
+                                                        class="text-xs bg-cosmic-blue hover:bg-void-purple text-white px-3 py-1 rounded-lg transition-colors border border-plasma-cyan/30">
+                                                    Details
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-clock text-plasma-cyan text-xs"></i>
+                                                <span class="text-blue-300/80">Duration:</span>
+                                                <span class="text-white font-medium" x-text="(task.total_duration / 60).toFixed(1) + 'm'"></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-list text-void-purple text-xs"></i>
+                                                <span class="text-blue-300/80">Events:</span>
+                                                <span class="text-white font-medium" x-text="task.events.length"></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-exclamation-triangle text-fire-red text-xs"></i>
+                                                <span class="text-blue-300/80">Errors:</span>
+                                                <span class="text-white font-medium" x-text="task.error_count"></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-lightbulb text-solar-gold text-xs"></i>
+                                                <span class="text-blue-300/80">Knowledge:</span>
+                                                <span class="text-white font-medium" x-text="task.honey_knowledge_count"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <!-- Task Details Modal -->
+                        <div x-show="selectedTask" x-transition class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+                            <div class="task-card rounded-xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-xl font-bold bg-gradient-to-r from-plasma-cyan to-void-purple bg-clip-text text-transparent" x-text="selectedTask.task_name"></h3>
+                                    <button @click="selectedTask = null" class="text-blue-300 hover:text-white transition-colors">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Task Info -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div class="timeline-item rounded-lg p-4">
+                                        <h4 class="text-sm font-medium text-plasma-cyan mb-2">Status</h4>
+                                        <span class="text-sm px-3 py-1 rounded-full border" 
+                                              :class="selectedTask.status === 'completed' ? 'bg-matrix-green/20 text-matrix-green border-matrix-green/30' : selectedTask.status === 'failed' ? 'bg-fire-red/20 text-fire-red border-fire-red/30' : 'bg-solar-gold/20 text-solar-gold border-solar-gold/30'"
+                                              x-text="selectedTask.status"></span>
+                                    </div>
+                                    <div class="timeline-item rounded-lg p-4">
+                                        <h4 class="text-sm font-medium text-plasma-cyan mb-2">Total Duration</h4>
+                                        <p class="text-white font-medium" x-text="(selectedTask.total_duration / 60).toFixed(1) + ' minutes'"></p>
+                                    </div>
+                                    <div class="timeline-item rounded-lg p-4">
+                                        <h4 class="text-sm font-medium text-plasma-cyan mb-2">Events</h4>
+                                        <p class="text-white font-medium" x-text="selectedTask.events.length + ' events'"></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Event Timeline -->
+                                <div class="mb-6">
+                                    <h4 class="text-lg font-bold text-white mb-4">📝 Event Timeline</h4>
+                                    <div class="space-y-3">
+                                        <template x-for="event in selectedTask.events" :key="event.id">
+                                            <div class="timeline-item rounded-lg p-4 border-l-4"
+                                                 :class="event.event_type === 'error' ? 'border-fire-red' : event.event_type === 'completed' ? 'border-matrix-green' : 'border-plasma-cyan'">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="flex items-center space-x-3">
+                                                        <div class="w-2 h-2 rounded-full"
+                                                             :class="event.event_type === 'error' ? 'bg-fire-red' : event.event_type === 'completed' ? 'bg-matrix-green' : 'bg-plasma-cyan'"></div>
+                                                        <span class="text-sm font-medium text-white" x-text="event.event_type"></span>
+                                                    </div>
+                                                    <span class="text-xs text-blue-300/70" x-text="new Date(event.timestamp).toLocaleString()"></span>
+                                                </div>
+                                                <p class="text-sm text-blue-200" x-text="event.description"></p>
+                                                <div x-show="event.agent_name" class="mt-2">
+                                                    <span class="text-xs text-plasma-cyan">Agent:</span>
+                                                    <span class="text-xs text-white ml-1" x-text="event.agent_name"></span>
+                                                </div>
+                                                <div x-show="event.error_message" class="mt-2 p-2 bg-fire-red/20 border border-fire-red/30 rounded text-xs text-fire-red">
+                                                    <strong>Error:</strong> <span x-text="event.error_message"></span>
+                                                </div>
+                                                <div x-show="event.resolution_steps && event.resolution_steps.length > 0" class="mt-2">
+                                                    <span class="text-xs text-plasma-cyan">Resolution Steps:</span>
+                                                    <ul class="mt-1 space-y-1">
+                                                        <template x-for="step in event.resolution_steps" :key="step">
+                                                            <li class="text-xs text-blue-200 ml-4">• <span x-text="step"></span></li>
+                                                        </template>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                
+                                <!-- Error Analysis -->
+                                <div x-show="selectedTask.error_count > 0" class="mb-6">
+                                    <h4 class="text-lg font-bold text-white mb-4">⚠️ Error Analysis</h4>
+                                    <div class="bg-fire-red/10 border border-fire-red/30 rounded-lg p-4">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <svg class="w-5 h-5 text-fire-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                            </svg>
+                                            <span class="text-fire-red font-medium" x-text="selectedTask.error_count + ' errors detected'"></span>
+                                        </div>
+                                        <p class="text-sm text-fire-red/80">This task encountered errors that required resolution. Check the event timeline above for details.</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Honey Knowledge Generated -->
+                                <div x-show="selectedTask.honey_knowledge_count > 0">
+                                    <h4 class="text-lg font-bold text-white mb-4">💡 Honey Knowledge Generated</h4>
+                                    <div class="bg-solar-gold/10 border border-solar-gold/30 rounded-lg p-4">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <svg class="w-5 h-5 text-solar-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                            </svg>
+                                            <span class="text-solar-gold font-medium" x-text="selectedTask.honey_knowledge_count + ' knowledge items generated'"></span>
+                                        </div>
+                                        <p class="text-sm text-solar-gold/80">This task contributed valuable knowledge to the honey knowledge system.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- No Project Selected -->
+                    <div x-show="!selectedProject" class="task-card rounded-xl p-12 text-center">
+                        <div class="w-16 h-16 bg-cosmic-void/60 border border-plasma-cyan/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-plasma-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold bg-gradient-to-r from-plasma-cyan to-void-purple bg-clip-text text-transparent mb-2">No Project Selected</h3>
+                        <p class="text-blue-300/70">Select a project from the sidebar to view its task timeline and progress details.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function taskTimelineData() {
+            return {
+                projects: [],
+                selectedProject: null,
+                selectedTask: null,
+                projectSearch: '',
+                taskFilter: 'all',
+                
+                get filteredProjects() {
+                    if (!this.projectSearch) return this.projects;
+                    return this.projects.filter(project => 
+                        project.project_name.toLowerCase().includes(this.projectSearch.toLowerCase())
+                    );
+                },
+                
+                get filteredTasks() {
+                    if (!this.selectedProject) return [];
+                    let tasks = this.selectedProject.task_timelines;
+                    
+                    switch (this.taskFilter) {
+                        case 'active':
+                            return tasks.filter(task => task.status === 'active');
+                        case 'completed':
+                            return tasks.filter(task => task.status === 'completed');
+                        case 'failed':
+                            return tasks.filter(task => task.status === 'failed');
+                        default:
+                            return tasks;
+                    }
+                },
+                
+                get totalActiveTasks() {
+                    return this.projects.reduce((sum, project) => 
+                        sum + project.task_timelines.filter(task => task.status === 'active').length, 0
+                    );
+                },
+                
+                get totalCompletedTasks() {
+                    return this.projects.reduce((sum, project) => 
+                        sum + project.completed_tasks, 0
+                    );
+                },
+                
+                get totalFailedTasks() {
+                    return this.projects.reduce((sum, project) => 
+                        sum + project.failed_tasks, 0
+                    );
+                },
+                
+                async loadProjects() {
+                    try {
+                        const response = await fetch('/api/v1/task-timeline/projects');
+                        if (response.ok) {
+                            const result = await response.json();
+                            this.projects = result.projects;
+                        }
+                    } catch (error) {
+                        console.error('Error loading projects:', error);
+                        // Mock data for development
+                        this.projects = [
+                            {
+                                id: 1,
+                                project_id: 'PRJ001',
+                                project_name: 'AI Agent Development',
+                                total_tasks: 15,
+                                completed_tasks: 10,
+                                failed_tasks: 2,
+                                total_duration: 7200,
+                                task_timelines: [
+                                    {
+                                        id: 1,
+                                        task_name: 'Voice Recognition Setup',
+                                        status: 'completed',
+                                        total_duration: 1800,
+                                        error_count: 0,
+                                        honey_knowledge_count: 3,
+                                        events: [
+                                            {
+                                                id: 1,
+                                                event_type: 'started',
+                                                description: 'Task initiated by Daena VP',
+                                                timestamp: new Date().toISOString(),
+                                                agent_name: 'Sarah-Engineering'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ];
+                    }
+                },
+                
+                async selectProject(project) {
+                    try {
+                        const response = await fetch(`/api/v1/task-timeline/project/${project.project_id}`);
+                        if (response.ok) {
+                            this.selectedProject = await response.json();
+                            this.selectedTask = null;
+                        }
+                    } catch (error) {
+                        console.error('Error loading project details:', error);
+                        // Use mock data
+                        this.selectedProject = project;
+                        this.selectedTask = null;
+                    }
+                },
+                
+                filterTasks(filter) {
+                    this.taskFilter = filter;
+                },
+                
+                viewTaskDetails(task) {
+                    this.selectedTask = task;
+                },
+                
+                init() {
+                    this.loadProjects();
+                }
+            }
+        }
+        
+        // Load projects on page load
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('taskTimelineData', taskTimelineData);
+        });
+    </script>
+</body>
+</html> 
