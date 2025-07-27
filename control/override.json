@@ -1,0 +1,5 @@
+{
+  "emergency_shutdown": false,
+  "last_triggered": null,
+  "notes": "Set true to suspend all agents."
+}

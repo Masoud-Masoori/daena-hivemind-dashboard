@@ -1,0 +1,3 @@
+echo Booting Daena Autonomous Company Engine...
+python D:\Ideas\Daena\core\autonomy\train_trigger.py
+python D:\Ideas\Daena\core\autonomy\department_boot.py

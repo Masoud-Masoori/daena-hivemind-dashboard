@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daena Council Dashboard | Mas-AI Company</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0f0f23',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'daena-speak': 'daena-speak 1s ease-in-out infinite alternate',
+                        'hex-pulse': 'hex-pulse 3s ease-in-out infinite',
+                        'spiral-in': 'spiral-in 0.8s ease-out',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { boxShadow: '0 0 5px #00ffff, 0 0 10px #00ffff' },
+                            '100%': { boxShadow: '0 0 20px #00ffff, 0 0 40px #00ffff' }
+                        },
+                        'daena-speak': {
+                            '0%': { boxShadow: '0 0 20px #ffd700, 0 0 40px #ffd700' },
+                            '100%': { boxShadow: '0 0 40px #ffd700, 0 0 80px #ffd700' }
+                        },
+                        'hex-pulse': {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        },
+                        'spiral-in': {
+                            '0%': { transform: 'scale(0) rotate(-180deg)', opacity: '0' },
+                            '100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .hex-shape {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+        }
+        
+        .background-alive {
+            background: linear-gradient(45deg, #0f0f23, #1a1a3a, #0f0f23);
+            background-size: 400% 400%;
+            animation: gradient-alive 12s ease infinite;
+        }
+        
+        @keyframes gradient-alive {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .expert-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .expert-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            filter: brightness(1.2);
+        }
+        
+        .daena-avatar {
+            background: linear-gradient(45deg, #ffd700, #00ffff, #ffd700);
+            background-size: 200% 200%;
+            animation: gradient-alive 4s ease infinite;
+        }
+    </style>
+</head>
+<body class="bg-midnight text-white min-h-screen background-alive">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-yellow-500/30"
+                     title="👑 Expert Council">
+                    👑
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        EXPERT COUNCIL
+                    </div>
+                    <p class="text-xs text-blue-200/80">AI-Powered Decision Making</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div x-data="councilDashboard()" class="container mx-auto px-4 py-8 pt-24">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-center mb-2">
+                <i class="fas fa-crown text-sunbeam mr-3 animate-pulse"></i>
+                Daena Expert Council Dashboard
+            </h1>
+            <p class="text-gray-400 text-center">AI-Powered Decision Making with World-Class Expert Agents</p>
+        </div>
+
+        <!-- Department Selector -->
+        <div class="mb-8 bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+            <h2 class="text-2xl font-semibold mb-4 text-sunbeam">
+                <i class="fas fa-building mr-2"></i>
+                Select Expert Council
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <template x-for="dept in departments" :key="dept">
+                    <button 
+                        @click="selectDepartment(dept)"
+                        :class="selectedDepartment === dept ? 'bg-sunbeam/20 border-sunbeam text-sunbeam' : 'bg-midnight/60 border-neon-cyan/30 hover:bg-neon-cyan/10 hover:border-neon-cyan'"
+                        class="p-4 rounded-xl border-2 transition-all duration-300 text-center expert-card"
+                    >
+                        <div class="text-lg font-semibold" x-text="getDepartmentDisplayName(dept)"></div>
+                        <div class="text-sm text-gray-400">Top 5 World Experts</div>
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <!-- Current Department Title -->
+        <div class="mb-6 text-center">
+            <h2 class="text-3xl font-bold text-sunbeam">
+                <i class="fas fa-crown mr-3 animate-pulse"></i>
+                <span x-text="getDepartmentDisplayName(selectedDepartment) + ' Expert Council'"></span>
+            </h2>
+            <p class="text-gray-400 mt-2">AI Agents trained on the minds of the world's top 5 <span x-text="getDepartmentDisplayName(selectedDepartment)" class="font-semibold text-neon-cyan"></span> experts</p>
+        </div>
+
+        <!-- Council Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Expert Advisor Agents -->
+            <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-crown text-sunbeam mr-2"></i>
+                    World-Class Expert Agents
+                </h3>
+                <div class="space-y-4">
+                    <template x-for="advisor in advisors" :key="advisor.name">
+                        <div class="bg-midnight/60 rounded-xl p-4 border border-neon-cyan/20 hover:border-neon-cyan/40 transition-all duration-300 expert-card">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 daena-avatar rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-sm text-midnight"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-bold text-neon-cyan" x-text="advisor.name"></div>
+                                    <div class="text-sm text-sunbeam" x-text="advisor.persona"></div>
+                                    <div class="text-xs text-gray-400" x-text="advisor.expertise"></div>
+                                    <div class="text-xs text-gray-500 mt-1" x-text="advisor.description"></div>
+                                </div>
+                                <div class="w-3 h-3 bg-organic-green rounded-full animate-pulse"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Scout Agents -->
+            <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-search text-sunbeam mr-2"></i>
+                    Intelligence Scouts
+                </h3>
+                <div class="space-y-4">
+                    <template x-for="scout in scouts" :key="scout.name">
+                        <div class="bg-midnight/60 rounded-xl p-4 border border-neon-cyan/20 hover:border-neon-cyan/40 transition-all duration-300 expert-card">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-cyber-purple/20 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-search text-cyber-purple"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-bold text-neon-cyan" x-text="scout.name"></div>
+                                    <div class="text-sm text-sunbeam" x-text="scout.focus_area"></div>
+                                    <div class="text-xs text-gray-400 mt-1" x-text="scout.description"></div>
+                                </div>
+                                <div class="w-3 h-3 bg-cyber-purple rounded-full animate-pulse"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- AI Synthesizer -->
+            <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 border border-neon-cyan/30">
+                <h3 class="text-xl font-semibold mb-4 text-sunbeam">
+                    <i class="fas fa-brain text-sunbeam mr-2"></i>
+                    AI Synthesizer
+                </h3>
+                <div class="bg-midnight/60 rounded-xl p-4 border border-neon-cyan/20">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 daena-avatar rounded-full flex items-center justify-center">
+                            <i class="fas fa-brain text-sm text-midnight"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-bold text-neon-cyan" x-text="synthesizer?.name || 'SynthAI'"></div>
+                            <div class="text-sm text-sunbeam" x-text="synthesizer?.model || 'GPT-4'"></div>
+                            <div class="text-xs text-gray-400 mt-1" x-text="synthesizer?.description || 'AI that combines expert insights into actionable recommendations'"></div>
+                        </div>
+                        <div class="w-3 h-3 bg-organic-green rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expert Debate Section -->
+        <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 mb-8 border border-neon-cyan/30">
+            <h3 class="text-2xl font-semibold mb-4 text-sunbeam">
+                <i class="fas fa-comments text-sunbeam mr-2"></i>
+                Expert Council Debate
+            </h3>
+            
+            <!-- New Debate Input -->
+            <div class="mb-6">
+                <div class="flex gap-4">
+                    <input 
+                        x-model="newDebateTopic" 
+                        type="text" 
+                        placeholder="Enter a strategic topic for the expert council to debate..."
+                        class="flex-1 bg-midnight/60 border border-neon-cyan/30 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-sunbeam focus:ring-2 focus:ring-sunbeam/20"
+                    >
+                    <button 
+                        @click="startDebate()"
+                        class="bg-sunbeam hover:bg-sunbeam/80 text-midnight px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                    >
+                        <i class="fas fa-play mr-2"></i>
+                        Start Expert Debate
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Debate -->
+            <div x-show="currentDebate" class="space-y-4">
+                <div class="bg-midnight/60 rounded-xl p-6 border border-neon-cyan/20">
+                    <h4 class="text-lg font-semibold mb-4 text-neon-cyan" x-text="'Topic: ' + currentDebate.topic"></h4>
+                    <div class="space-y-4">
+                        <template x-for="(argument, advisor) in currentDebate.arguments" :key="advisor">
+                            <div class="bg-midnight/40 rounded-xl p-4 border border-neon-cyan/10 hover:border-neon-cyan/30 transition-all duration-300">
+                                <div class="font-bold text-sunbeam mb-2" x-text="advisor"></div>
+                                <div class="text-sm text-gray-300 leading-relaxed" x-text="argument"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expert Synthesis Section -->
+        <div class="bg-midnight/80 backdrop-blur-md rounded-2xl p-6 mb-8 border border-neon-cyan/30">
+            <h3 class="text-2xl font-semibold mb-4 text-sunbeam">
+                <i class="fas fa-lightbulb text-sunbeam mr-2"></i>
+                Expert Synthesis & Recommendations
+            </h3>
+            
+            <div class="flex gap-4 mb-6">
+                <button 
+                    @click="runSynthesis()"
+                    x-show="currentDebate && !currentSynthesis"
+                    class="bg-organic-green hover:bg-organic-green/80 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                >
+                    <i class="fas fa-magic mr-2"></i>
+                    Synthesize Expert Insights
+                </button>
+            </div>
+
+            <!-- Current Synthesis -->
+            <div x-show="currentSynthesis" class="space-y-4">
+                <div class="bg-midnight/60 rounded-xl p-6 border border-neon-cyan/20">
+                    <h4 class="text-lg font-semibold mb-3">Synthesis Summary</h4>
+                    <div class="text-sm mb-4" x-text="currentSynthesis.summary"></div>
+                    
+                    <h5 class="font-semibold mb-2">Confidence Scores:</h5>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
+                        <template x-for="(score, advisor) in currentSynthesis.confidence_scores" :key="advisor">
+                            <div class="bg-gray-600 rounded p-2 text-center">
+                                <div class="text-xs font-semibold" x-text="advisor"></div>
+                                <div class="text-sm text-primary-400" x-text="(score * 100).toFixed(0) + '%'"></div>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <h5 class="font-semibold mb-2">Follow-up Questions:</h5>
+                    <div class="space-y-2">
+                        <template x-for="question in currentSynthesis.followup_questions" :key="question">
+                            <div class="bg-gray-600 rounded p-2 text-sm" x-text="question"></div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debate History -->
+        <div class="bg-gray-800 rounded-lg p-6">
+            <h3 class="text-2xl font-semibold mb-4">
+                <i class="fas fa-history text-primary-500 mr-2"></i>
+                Debate History
+            </h3>
+            <div class="space-y-3">
+                <template x-for="debate in debateHistory" :key="debate.debate_id">
+                    <div class="bg-gray-700 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <div class="font-semibold" x-text="debate.topic"></div>
+                            <div class="text-sm text-gray-400" x-text="formatDate(debate.timestamp)"></div>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Participants: <span x-text="Object.keys(debate.arguments).join(', ')"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function councilDashboard() {
+            return {
+                selectedDepartment: 'engineering',
+                departments: ['engineering', 'product', 'marketing', 'finance', 'hr', 'operations', 'sales', 'legal'],
+                advisors: [],
+                scouts: [],
+                synthesizer: { name: 'SynthAI', model: 'GPT-4' },
+                newDebateTopic: '',
+                currentDebate: null,
+                currentSynthesis: null,
+                debateHistory: [],
+
+                getDepartmentDisplayName(dept) {
+                    const names = {
+                        'engineering': 'Engineering',
+                        'product': 'Product',
+                        'marketing': 'Marketing',
+                        'finance': 'Finance',
+                        'hr': 'Human Resources',
+                        'operations': 'Operations',
+                        'sales': 'Sales',
+                        'legal': 'Legal'
+                    };
+                    return names[dept] || dept;
+                },
+
+                async selectDepartment(dept) {
+                    this.selectedDepartment = dept;
+                    await this.loadCouncilState();
+                },
+
+                async loadCouncilState() {
+                    try {
+                        const response = await fetch(`/api/v1/council/${this.selectedDepartment}`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            const council = data.council;
+                            this.advisors = council.advisors || [];
+                            this.scouts = council.scouts || [];
+                            this.synthesizer = council.synthesizer || { name: 'SynthAI', model: 'GPT-4' };
+                            this.debateHistory = council.debate_history || [];
+                            this.currentDebate = this.debateHistory.length > 0 ? this.debateHistory[this.debateHistory.length - 1] : null;
+                            this.currentSynthesis = council.last_synthesis || null;
+                        }
+                    } catch (error) {
+                        console.error('Error loading council state:', error);
+                    }
+                },
+
+                async startDebate() {
+                    if (!this.newDebateTopic.trim()) return;
+                    
+                    try {
+                        const response = await fetch(`/api/v1/council/${this.selectedDepartment}/debate`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({
+                                topic: this.newDebateTopic
+                            })
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            this.currentDebate = data.debate;
+                            this.debateHistory.push(data.debate);
+                            this.newDebateTopic = '';
+                        }
+                    } catch (error) {
+                        console.error('Error starting debate:', error);
+                    }
+                },
+
+                async runSynthesis() {
+                    try {
+                        const response = await fetch(`/api/v1/council/${this.selectedDepartment}/synthesis`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({})
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            this.currentSynthesis = data.synthesis;
+                        }
+                    } catch (error) {
+                        console.error('Error running synthesis:', error);
+                    }
+                },
+
+                formatDate(timestamp) {
+                    return new Date(timestamp).toLocaleString();
+                },
+
+                updateCurrentTime() {
+                    const now = new Date();
+                    const timeString = now.toLocaleTimeString();
+                    const timeElement = document.getElementById('current-time');
+                    if (timeElement) {
+                        timeElement.textContent = timeString;
+                    }
+                },
+
+                init() {
+                    this.loadCouncilState();
+                    this.updateCurrentTime();
+                    // Update time every second
+                    setInterval(() => this.updateCurrentTime(), 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

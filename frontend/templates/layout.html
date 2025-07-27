@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Daena AI VP System{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a0f',
+                        'deep-space': '#1a1a2e',
+                        'cosmic-purple': '#16213e',
+                        'organic-green': '#00d4aa',
+                        'sunbeam': '#ffd700',
+                        'fire-orange': '#ff6b35',
+                        'coral': '#ff8a65',
+                        'lavender': '#e1bee7',
+                        'mint': '#a5d6a7',
+                        'sky': '#81c784',
+                        'amber': '#ffb74d',
+                        'rose': '#f48fb1',
+                        'teal': '#4db6ac',
+                        'indigo': '#7986cb',
+                        'emerald': '#66bb6a',
+                        'cyan': '#4dd0e1',
+                        'lime': '#cddc39',
+                        'pink': '#f06292',
+                        'blue': '#42a5f5',
+                        'violet': '#ab47bc',
+                        'yellow': '#ffca28',
+                        'orange': '#ff9800',
+                        'red': '#ef5350',
+                        'green': '#66bb6a',
+                        'purple': '#ab47bc',
+                        'gray': '#9e9e9e',
+                        'slate': '#78909c',
+                        'zinc': '#757575',
+                        'neutral': '#9e9e9e',
+                        'stone': '#8d6e63',
+                        'red-50': '#ffebee',
+                        'red-100': '#ffcdd2',
+                        'red-200': '#ef9a9a',
+                        'red-300': '#e57373',
+                        'red-400': '#ef5350',
+                        'red-500': '#f44336',
+                        'red-600': '#e53935',
+                        'red-700': '#d32f2f',
+                        'red-800': '#c62828',
+                        'red-900': '#b71c1c',
+                        'green-50': '#e8f5e8',
+                        'green-100': '#c8e6c9',
+                        'green-200': '#a5d6a7',
+                        'green-300': '#81c784',
+                        'green-400': '#66bb6a',
+                        'green-500': '#4caf50',
+                        'green-600': '#43a047',
+                        'green-700': '#388e3c',
+                        'green-800': '#2e7d32',
+                        'green-900': '#1b5e20',
+                        'blue-50': '#e3f2fd',
+                        'blue-100': '#bbdefb',
+                        'blue-200': '#90caf9',
+                        'blue-300': '#64b5f6',
+                        'blue-400': '#42a5f5',
+                        'blue-500': '#2196f3',
+                        'blue-600': '#1e88e5',
+                        'blue-700': '#1976d2',
+                        'blue-800': '#1565c0',
+                        'blue-900': '#0d47a1',
+                        'yellow-50': '#fffde7',
+                        'yellow-100': '#fff9c4',
+                        'yellow-200': '#fff59d',
+                        'yellow-300': '#fff176',
+                        'yellow-400': '#ffee58',
+                        'yellow-500': '#ffeb3b',
+                        'yellow-600': '#fdd835',
+                        'yellow-700': '#fbc02d',
+                        'yellow-800': '#f9a825',
+                        'yellow-900': '#f57f17',
+                        'purple-50': '#f3e5f5',
+                        'purple-100': '#e1bee7',
+                        'purple-200': '#ce93d8',
+                        'purple-300': '#ba68c8',
+                        'purple-400': '#ab47bc',
+                        'purple-500': '#9c27b0',
+                        'purple-600': '#8e24aa',
+                        'purple-700': '#7b1fa2',
+                        'purple-800': '#6a1b9a',
+                        'purple-900': '#4a148c',
+                        'pink-50': '#fce4ec',
+                        'pink-100': '#f8bbd9',
+                        'pink-200': '#f48fb1',
+                        'pink-300': '#f06292',
+                        'pink-400': '#ec407a',
+                        'pink-500': '#e91e63',
+                        'pink-600': '#d81b60',
+                        'pink-700': '#c2185b',
+                        'pink-800': '#ad1457',
+                        'pink-900': '#880e4f',
+                        'indigo-50': '#e8eaf6',
+                        'indigo-100': '#c5cae9',
+                        'indigo-200': '#9fa8da',
+                        'indigo-300': '#7986cb',
+                        'indigo-400': '#5c6bc0',
+                        'indigo-500': '#3f51b5',
+                        'indigo-600': '#3949ab',
+                        'indigo-700': '#303f9f',
+                        'indigo-800': '#283593',
+                        'indigo-900': '#1a237e',
+                        'gray-50': '#fafafa',
+                        'gray-100': '#f5f5f5',
+                        'gray-200': '#eeeeee',
+                        'gray-300': '#e0e0e0',
+                        'gray-400': '#bdbdbd',
+                        'gray-500': '#9e9e9e',
+                        'gray-600': '#757575',
+                        'gray-700': '#616161',
+                        'gray-800': '#424242',
+                        'gray-900': '#212121',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00d4aa;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd700;
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        /* Focus styles */
+        .focus-ring:focus {
+            outline: 2px solid #00d4aa;
+            outline-offset: 2px;
+        }
+        
+        /* Loading animation */
+        .loading {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4aa, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glass effect */
+        .glass {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+        
+        /* Hover effects */
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 170, 0.2);
+        }
+        
+        /* Status indicators */
+        .status-online {
+            background: #00d4aa;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+        }
+        
+        .status-offline {
+            background: #ef5350;
+            box-shadow: 0 0 10px rgba(239, 83, 80, 0.5);
+        }
+        
+        .status-warning {
+            background: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-midnight text-white min-h-screen font-sans">
+    <!-- Include the unified navbar -->
+    {% include "partials/navbar.html" %}
+    
+    <!-- Main content area -->
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-deep-space border-t border-organic-green/20 py-6 mt-auto">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <div class="w-8 h-8 bg-gradient-to-br from-sunbeam to-fire-orange rounded-lg flex items-center justify-center">
+                        <span class="text-midnight font-bold text-sm">D</span>
+                    </div>
+                    <span class="text-organic-green font-semibold">Daena AI VP System</span>
+                </div>
+                <div class="flex items-center space-x-6 text-sm text-gray-400">
+                    <span>© 2025 Mas-AI Company</span>
+                    <span>•</span>
+                    <a href="/privacy" class="hover:text-organic-green transition-colors">Privacy</a>
+                    <span>•</span>
+                    <a href="/terms" class="hover:text-organic-green transition-colors">Terms</a>
+                    <span>•</span>
+                    <a href="/support" class="hover:text-organic-green transition-colors">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Global JavaScript -->
+    <script>
+        // Global utility functions
+        window.DaenaUtils = {
+            // Show notification
+            showNotification: function(message, type = 'info', duration = 5000) {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm animate-slide-up`;
+                
+                const colors = {
+                    'info': 'bg-blue-500 text-white',
+                    'success': 'bg-green-500 text-white',
+                    'warning': 'bg-yellow-500 text-black',
+                    'error': 'bg-red-500 text-white'
+                };
+                
+                notification.className += ` ${colors[type] || colors.info}`;
+                notification.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="font-semibold">${message}</span>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-white/80 hover:text-white">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, duration);
+            },
+            
+            // Format date
+            formatDate: function(date) {
+                return new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).format(new Date(date));
+            },
+            
+            // Format number with commas
+            formatNumber: function(num) {
+                return new Intl.NumberFormat('en-US').format(num);
+            },
+            
+            // Debounce function
+            debounce: function(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            },
+            
+            // Check if user is authenticated
+            isAuthenticated: function() {
+                return localStorage.getItem('auth_token') !== null;
+            },
+            
+            // Get auth token
+            getAuthToken: function() {
+                return localStorage.getItem('auth_token');
+            },
+            
+            // Set auth token
+            setAuthToken: function(token) {
+                localStorage.setItem('auth_token', token);
+            },
+            
+            // Remove auth token
+            removeAuthToken: function() {
+                localStorage.removeItem('auth_token');
+            },
+            
+            // Make authenticated request
+            authenticatedFetch: function(url, options = {}) {
+                const token = this.getAuthToken();
+                if (token) {
+                    options.headers = {
+                        ...options.headers,
+                        'Authorization': `Bearer ${token}`
+                    };
+                }
+                return fetch(url, options);
+            }
+        };
+        
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            DaenaUtils.showNotification('An error occurred. Please try again.', 'error');
+        });
+        
+        // Handle authentication errors
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && event.reason.status === 401) {
+                DaenaUtils.removeAuthToken();
+                window.location.href = '/login';
+            }
+        });
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading states to buttons
+            document.querySelectorAll('button[type="submit"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (!this.disabled) {
+                        this.disabled = true;
+                        this.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Loading...';
+                    }
+                });
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

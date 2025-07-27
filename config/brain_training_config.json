@@ -1,0 +1,270 @@
+{
+  "training_modes": {
+    "conversation": {
+      "enabled": true,
+      "data_sources": ["conversation_history", "user_feedback", "email_interactions"],
+      "target_models": ["r1", "r2", "deepseek_v3", "qwen2.5", "azure_gpt4"],
+      "priority": "high",
+      "training_frequency": "daily"
+    },
+    "reasoning": {
+      "enabled": true,
+      "data_sources": ["mathematical_problems", "logical_puzzles", "strategic_scenarios", "decision_analysis"],
+      "target_models": ["r1", "r2", "deepseek_v3"],
+      "priority": "high",
+      "training_frequency": "weekly"
+    },
+    "coding": {
+      "enabled": true,
+      "data_sources": ["code_repositories", "programming_books", "debugging_scenarios", "code_reviews"],
+      "target_models": ["deepseek_v3", "qwen2.5", "deepseek_coder", "codellama"],
+      "priority": "medium",
+      "training_frequency": "weekly"
+    },
+    "business_strategy": {
+      "enabled": true,
+      "data_sources": ["business_cases", "market_analysis", "investment_scenarios", "competitive_intelligence"],
+      "target_models": ["r2", "deepseek_v3", "azure_gpt4", "qwen2.5"],
+      "priority": "high",
+      "training_frequency": "daily"
+    },
+    "leadership": {
+      "enabled": true,
+      "data_sources": ["leadership_books", "management_cases", "team_scenarios", "communication_patterns"],
+      "target_models": ["r2", "azure_gpt4", "deepseek_v3"],
+      "priority": "medium",
+      "training_frequency": "weekly"
+    },
+    "innovation": {
+      "enabled": true,
+      "data_sources": ["research_papers", "patent_data", "innovation_cases", "technology_trends"],
+      "target_models": ["r1", "r2", "deepseek_v3", "qwen2.5"],
+      "priority": "medium",
+      "training_frequency": "weekly"
+    }
+  },
+  "training_parameters": {
+    "batch_size": 4,
+    "learning_rate": 1e-5,
+    "max_epochs": 10,
+    "gradient_accumulation_steps": 4,
+    "warmup_steps": 100,
+    "save_steps": 500,
+    "eval_steps": 500,
+    "logging_steps": 50,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "lr_scheduler_type": "cosine",
+    "num_train_epochs": 3,
+    "per_device_train_batch_size": 4,
+    "per_device_eval_batch_size": 4,
+    "dataloader_num_workers": 4,
+    "remove_unused_columns": false,
+    "push_to_hub": false,
+    "report_to": "none",
+    "evaluation_strategy": "steps",
+    "save_strategy": "steps",
+    "load_best_model_at_end": true,
+    "metric_for_best_model": "eval_loss",
+    "greater_is_better": false
+  },
+  "knowledge_integration": {
+    "company_knowledge": {
+      "enabled": true,
+      "sources": ["company_docs", "business_plans", "strategy_documents", "meeting_notes"],
+      "update_frequency": "daily"
+    },
+    "market_intelligence": {
+      "enabled": true,
+      "sources": ["market_reports", "competitor_analysis", "industry_news", "trend_data"],
+      "update_frequency": "daily"
+    },
+    "technical_expertise": {
+      "enabled": true,
+      "sources": ["technical_docs", "research_papers", "code_repositories", "best_practices"],
+      "update_frequency": "weekly"
+    },
+    "strategic_insights": {
+      "enabled": true,
+      "sources": ["strategy_books", "case_studies", "expert_interviews", "historical_data"],
+      "update_frequency": "weekly"
+    },
+    "user_preferences": {
+      "enabled": true,
+      "sources": ["user_feedback", "interaction_patterns", "preference_settings", "usage_analytics"],
+      "update_frequency": "real_time"
+    },
+    "investment_knowledge": {
+      "enabled": true,
+      "sources": ["investment_cases", "funding_data", "valuation_models", "investor_profiles"],
+      "update_frequency": "daily"
+    }
+  },
+  "consensus_learning": {
+    "enabled": true,
+    "min_models": 2,
+    "confidence_threshold": 0.7,
+    "learning_rate_multiplier": 1.2,
+    "consensus_methods": ["weighted_average", "majority_vote", "confidence_weighted"],
+    "model_weights": {
+      "r1": 1.2,
+      "r2": 1.5,
+      "deepseek_v3": 1.3,
+      "qwen2.5": 1.4,
+      "azure_gpt4": 1.0,
+      "yi_34b": 1.1,
+      "deepseek_coder": 1.3,
+      "codellama": 1.2
+    },
+    "consensus_topics": [
+      "business_decisions",
+      "technical_architecture",
+      "investment_strategy",
+      "product_direction",
+      "team_structure"
+    ]
+  },
+  "data_quality": {
+    "minimum_quality_score": 0.7,
+    "data_validation": {
+      "enabled": true,
+      "checks": ["completeness", "accuracy", "relevance", "consistency"]
+    },
+    "data_augmentation": {
+      "enabled": true,
+      "methods": ["paraphrasing", "context_variation", "scenario_generation"]
+    },
+    "data_cleaning": {
+      "enabled": true,
+      "steps": ["duplicate_removal", "noise_reduction", "format_standardization"]
+    }
+  },
+  "performance_monitoring": {
+    "metrics": [
+      "training_loss",
+      "validation_loss",
+      "accuracy",
+      "latency",
+      "throughput",
+      "memory_usage",
+      "convergence_rate"
+    ],
+    "monitoring_interval": 300,
+    "alert_thresholds": {
+      "high_loss": 0.5,
+      "low_accuracy": 0.7,
+      "high_latency": 5000,
+      "memory_overflow": 0.9
+    },
+    "performance_tracking": {
+      "retention_days": 30,
+      "trend_analysis": true,
+      "anomaly_detection": true
+    }
+  },
+  "model_specialization": {
+    "r1": {
+      "specialties": ["reasoning", "logic", "problem_solving"],
+      "training_focus": ["mathematical_reasoning", "logical_puzzles", "strategic_analysis"],
+      "performance_targets": {
+        "accuracy": 0.9,
+        "latency": 2000,
+        "reasoning_quality": 0.95
+      }
+    },
+    "r2": {
+      "specialties": ["advanced_reasoning", "complex_analysis", "strategic_thinking"],
+      "training_focus": ["complex_problem_solving", "strategic_planning", "decision_analysis"],
+      "performance_targets": {
+        "accuracy": 0.92,
+        "latency": 3000,
+        "strategic_quality": 0.95
+      }
+    },
+    "deepseek_v3": {
+      "specialties": ["general_knowledge", "coding", "analysis"],
+      "training_focus": ["code_generation", "technical_analysis", "general_reasoning"],
+      "performance_targets": {
+        "accuracy": 0.88,
+        "latency": 1500,
+        "code_quality": 0.9
+      }
+    },
+    "qwen2.5": {
+      "specialties": ["multilingual", "reasoning", "coding"],
+      "training_focus": ["multilingual_tasks", "code_analysis", "general_reasoning"],
+      "performance_targets": {
+        "accuracy": 0.87,
+        "latency": 1800,
+        "multilingual_quality": 0.9
+      }
+    },
+    "azure_gpt4": {
+      "specialties": ["conversation", "general_knowledge", "business_insights"],
+      "training_focus": ["conversation_quality", "business_analysis", "user_interaction"],
+      "performance_targets": {
+        "accuracy": 0.9,
+        "latency": 1000,
+        "conversation_quality": 0.95
+      }
+    }
+  },
+  "training_schedule": {
+    "daily_training": {
+      "enabled": true,
+      "time": "02:00",
+      "timezone": "UTC",
+      "models": ["azure_gpt4", "r1", "r2"],
+      "modes": ["conversation", "business_strategy"]
+    },
+    "weekly_training": {
+      "enabled": true,
+      "day": "sunday",
+      "time": "04:00",
+      "timezone": "UTC",
+      "models": ["deepseek_v3", "qwen2.5", "yi_34b"],
+      "modes": ["reasoning", "coding", "leadership", "innovation"]
+    },
+    "on_demand_training": {
+      "enabled": true,
+      "triggers": ["new_knowledge", "performance_degradation", "user_request"],
+      "priority_models": ["r2", "azure_gpt4"]
+    }
+  },
+  "resource_management": {
+    "gpu_memory_limit": 0.8,
+    "cpu_cores_limit": 0.7,
+    "training_parallelism": {
+      "max_concurrent_training": 2,
+      "model_loading_strategy": "lazy",
+      "checkpoint_management": "lru"
+    },
+    "storage_management": {
+      "checkpoint_retention": 10,
+      "log_retention_days": 30,
+      "model_cache_size_gb": 20
+    }
+  },
+  "evaluation_criteria": {
+    "conversation_quality": {
+      "metrics": ["relevance", "helpfulness", "clarity", "engagement"],
+      "evaluation_method": "human_feedback",
+      "threshold": 0.8
+    },
+    "reasoning_quality": {
+      "metrics": ["logical_consistency", "problem_solving", "strategic_thinking"],
+      "evaluation_method": "automated_tests",
+      "threshold": 0.85
+    },
+    "business_insight": {
+      "metrics": ["market_understanding", "strategic_relevance", "actionability"],
+      "evaluation_method": "expert_review",
+      "threshold": 0.8
+    },
+    "technical_accuracy": {
+      "metrics": ["code_quality", "technical_correctness", "best_practices"],
+      "evaluation_method": "automated_tests",
+      "threshold": 0.9
+    }
+  }
+} 

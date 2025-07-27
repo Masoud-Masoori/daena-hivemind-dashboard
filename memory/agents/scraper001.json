@@ -1,0 +1,8 @@
+{
+  "agent_id": "scraper001",
+  "department": "Scraping",
+  "tasks": ["web scraping", "data mining", "live monitoring"],
+  "LLM_preference": "Qwen2.5",
+  "active": true,
+  "last_updated": "2025-06-01T12:00:00"
+}

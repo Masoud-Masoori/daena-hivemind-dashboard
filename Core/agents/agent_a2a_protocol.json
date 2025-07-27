@@ -1,0 +1,14 @@
+{
+  "header": {
+    "sender": "",
+    "receiver": "",
+    "timestamp": "",
+    "sync_id": ""
+  },
+  "payload": {
+    "task": "",
+    "priority": "",
+    "context": {},
+    "reply_required": true
+  }
+}

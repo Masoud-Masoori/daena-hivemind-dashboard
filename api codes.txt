@@ -1,0 +1,334 @@
+Admin credentials are set (evilbob / Evilbob3245)
+ssh -i ~/.ssh/id_ed25519 masou@34.31.122.212
+cd ~/lingovids/frontend
+
+========================
+ 
+We're still setting up reCAPTCHA settings in Google Cloud, but you can get started using the key details below.
+It should take around 1 minute to completely setup. Once completed, you'll have unlimited assessments and the ability to use advanced features like MFA and Account Defender.
+Use this site key in the HTML code your site serves to users.
+
+Copy site key :
+6LdGZe8qAAAAABjWYvG2f-U3N-3mkwGm04CAOXgj
+
+Use this secret key for communication between your site and reCAPTCHA.
+
+ 
+Copy secret key :
+6LdGZe8qAAAAAMtVxkB7jEZFWj42ldZ9b1w8yQZL
+
+-----------
+Open ai :
+Corsur : daena project :
+
+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
+Mas ai 
+
+OPENAI_API_KEY=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
+
+Deepseek :    
+daena.ai.secondary@gmail.com
+
+claude    
+mas-ai
+https://console.anthropic.com/settings/keys
+ANTHROPIC_API_KEY
+
+ANTHROPIC_API_KEY=claude-
+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
+
+-----
+claude   
+masoud.masori
+ANTHROPIC_API_KEY=claude-
+
+
+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
+-------------------------
+
+
+
+mas-ai
+Deep seej api key :
+
+
+sk-80f9553f15cd4702a18691e2a7918229
+
+
+
+# Please install OpenAI SDK first: `pip3 install openai` 
+from openai import OpenAI 
+client = OpenAI(api_key="<DeepSeek API Key>", base_url="https://api.deepseek.com") 
+response = client.chat.completions.create( 
+model="deepseek-chat", 
+messages=[ 
+{"role": "system", "content": "You are a helpful assistant"}, 
+{"role": "user", "content": "Hello"}, 
+], 
+stream=False 
+) 
+print(response.choices[0].message.content)
+
+------------------------
+
+
+gemeni :
+
+
+AIzaSyCprGIetN8TvTfnCeij2tz_IUCEyc9-NZY
+from google import genai 
+client = genai.Client(api_key="YOUR_API_KEY") 
+response = client.models.generate_content( 
+model="gemini-2.0-flash", 
+contents="Explain how AI works in a few words", 
+) 
+print(response.text)
+
+
+-------------------------
+long smit pi :
+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
+-------------
+GITHUB_CLIENT_ID=Ov23liConfWC6Kt21Wdz
+GITHUB_CLIENT_SECRET=58f69a4200755becdf4276a154cdaf4b1969bfa
+
+Yahoo
+ YAHOO_CLIENT_ID=PASTE_YAHOO_CLIENT_ID_HERE
+YAHOO_CLIENT_SECRET=PASTE_YAHOO_CLIENT_SECRET_HERE
+My AppsMAS-AI LingoVids
+App ID
+S8wG1rOO
+Client ID (Consumer Key)
+dj0yJmk9aEZWQzVCWnplSnluJmQ9WVdrOVV6aDNSekZ5VDA4bWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTlj
+Client Secret (Consumer Secret):
+bfb235c89178ace2a2e96f4c5ceb5b91e377e3f7
+Render 
+daena project
+https://dashboard.render.com/u/usr-d0g11oa4d50c73fc0n3g/settings#api-keys
+Api:
+rnd_c9YZ31NLsjGAIUlkIeRpgiL7g3Gc
+
+
+
+---------------------------------------
+vercel.com  
+Together AI:
+
+7e0d69b9a961793765238c381e1d297cfbb3244aee20a9851995ae93542433fa
+
+Atlas MongoDB ::
+DATABASE_URL="mongodb+srv://lingovids_user:Masoudtnt2@lingovids.degs8.mongodb.net/lingovids?retryWrites=true&w=majority&appName=LingoVids"
+
+Mas-AI
+Masoudtnt2@
+
+
+database ::
+username : lingovids_user
+Pass : Masoudtnt2
+PORT=5000
+DATABASE_URL="mongodb+srv://lingovids_user:Masoudtnt2@lingovids.degs8.mongodb.net/lingovids?retryWrites=true&w=majority&appName=LingoVids"
+
+
+
+Frontend : .env.local
+(   [System.Guid]::NewGuid().ToString()   ) -
+NEXTAUTH_SECRET=50889822-28be-432a-8d37-07e5358d8ff5
+NEXTAUTH_URL=https://lingovids.mas-ai.co
+NEXT_PUBLIC_API_URL=https://lingovids-backend-454706184716.us-central1.run.app
+
+
+                        vercel login --token H0yaUaUu8WMEguluTtI5j194
+
+
+JWT_SECRET=d1d9a80a90c96b211ad56af10dd71b728d06b075784ca9362f24873bd5efb360332d142bd950b6b1bbf6732d6c5c74c612a6453ce3afcff7e0aea1d659dc4410
+
+---------------------------------
+
+GOOGLE_CLIENT_ID=727824042493-ck26blmsmmulobugu71nqdvlq6ri8m5c.apps.googleusercontent.com
+
+GOOGLE_CLIENT_SECRET=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
+----------------------------------------
+Ai-Multilanguege:
+
+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
+
+----------------------
+https://elevenlabs.io/
+
+sk_0c2577a06c5ebb78797b880260d6f7517bd34d18b303ba3c
+----------------------
+google cloud :
+
+Mas AI:
+youtube API
+AIzaSyDZGGyAdkDw8jyQ1DbhlOBjNdZ3SXRswY8
+
+
+clud translator :
+
+AIzaSyB03upZaYZRS19xOuuqhcH4G_O-J8b3dRU
+
+-------------------------
+		multilanguage AI Video :
+GOOGLE_TTS_API_KEY, YOUTUBE_API_KEY, GOOGLE_TRANSLATE_API_KEY
+
+AIzaSyAZ7JpYhUE2uaFYqnNewH0Zq7VNo2Jli7A
+
+SERVICE: lingovids-backend
+REGION: us-central1
+URL: https://lingovids-backend-454706184716.us-central1.run.app
+LAST DEPLOYED BY: mas.ai.consulting.inc@gmail.com
+LAST DEPLOYED AT: 2025-03-18T02:58:06.858444Z
+(base) PS D:\Ideas\lingovids-mas-ai\backend>
+----------------------
+G Cloud  LingoVids :
+
+service URL: https://lingovids-backend-454706184716.us-central1.run.app
+
+Client ID::
+454706184716-atc09dafof5g408gvoghtfag96uahk83.apps.googleusercontent.com
+
+Client secret
+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
+
+-------------------------------------------------
+mistral ::
+La Plateforme - Mistral AI :
+
+prtPxlNiMJKZpY8BXreZhgrj5hYhFIzj
+
+-------------------
+Open AI :
+multilanguage Video AI:
+
+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
+
+
+daena project :  
+masoud. Masori   : 
+mas-ai  Oganization :
+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
+
+
+
+curl https://api.openai.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer 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" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "store": true,
+    "messages": [
+      {"role": "user", "content": "write a haiku about ai"}
+    ]
+  }'
+
+----
+
+cursor ::
+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
+
+
+
+groke : 
+daena 
+GROk_API_KEY=xai-9oz5TROJGu5xiyAOwwfGn8bQtxpnuIwic0qQzqpNM7zFji7jAsTjJJ0KQ9FBLbgXmvbH9TR9DOCzP9Gg
+---------------------------------
+
+
+api   3.5:   
+
+
+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
+
+
+---------------
+gemeni api :
+
+AIzaSyC2A6iJ2D122lAs6dT9NrVYEcQ9L_PHDPU
+
+------------------
+
+chatgpt – open ai :
+Masoud.masori@gmail.com
+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
+
+-------------------
+
+https://huggingface.co : 
+
+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
+----------------------
+POSTGRES_URL=postgres://username:Masoudtnt@localhost:5432/database 
+D-ID  api :
+https://studio.d-id.com/account-settings
+
+
+
+bWFzb3VkLm1hc29yaUBnbWFpbC5jb20:91S9goI0UatoLximM0UHZ
+
+
+
+Gig key : hithub :
+
+
+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
+fM7ofw==
+=opQP
+
+
+Lingo vid deploy  token 
+vercel 
+
+
+QCjspz3bvkMXe9yGwA5n5P3a
+
+
+--------------
+

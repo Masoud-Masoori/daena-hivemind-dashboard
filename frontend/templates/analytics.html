@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Daena AI VP System</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a0f',
+                        'cyber-purple': '#8b5cf6',
+                        'neon-cyan': '#00d4ff',
+                        'sunbeam': '#fbbf24',
+                        'electric-blue': '#3b82f6',
+                        'plasma-green': '#10b981',
+                        'crimson-red': '#ef4444',
+                        'cosmic-gray': '#374151'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.05); }
+        .neon-border { border: 1px solid rgba(0, 212, 255, 0.3); }
+        .cyber-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #00d4ff 100%); }
+    </style>
+</head>
+<body class="bg-midnight text-white min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-indigo-500/30"
+                     title="📊 Analytics Dashboard">
+                    📊
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        ANALYTICS DASHBOARD
+                    </div>
+                    <p class="text-xs text-blue-200/80">System Performance & Insights</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8 pt-24" x-data="analyticsDashboard()" x-init="init()">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-sunbeam mb-2">System Analytics</h1>
+            <p class="text-gray-400">Comprehensive insights into Daena AI VP System performance</p>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Agents</p>
+                        <p class="text-3xl font-bold text-neon-cyan" x-text="metrics.totalAgents">25</p>
+                    </div>
+                    <div class="w-12 h-12 bg-neon-cyan/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-robot text-neon-cyan text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">System Efficiency</p>
+                        <p class="text-3xl font-bold text-plasma-green" x-text="metrics.efficiency + '%'">94.6%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-plasma-green/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-chart-line text-plasma-green text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Active Projects</p>
+                        <p class="text-3xl font-bold text-electric-blue" x-text="metrics.activeProjects">5</p>
+                    </div>
+                    <div class="w-12 h-12 bg-electric-blue/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-project-diagram text-electric-blue text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Uptime</p>
+                        <p class="text-3xl font-bold text-sunbeam" x-text="metrics.uptime + '%'">99.7%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-sunbeam/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-server text-sunbeam text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Agent Performance Chart -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-xl font-semibold text-sunbeam mb-4">Agent Performance</h3>
+                <canvas id="agentChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Department Activity Chart -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-xl font-semibold text-sunbeam mb-4">Department Activity</h3>
+                <canvas id="departmentChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- System Health -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">System Health</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">CPU Usage</span>
+                        <span class="text-neon-cyan" x-text="health.cpu + '%'">45%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-neon-cyan h-2 rounded-full" :style="`width: ${health.cpu}%`"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Memory Usage</span>
+                        <span class="text-plasma-green" x-text="health.memory + '%'">62%</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-plasma-green h-2 rounded-full" :style="`width: ${health.memory}%`"></div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Network</span>
+                        <span class="text-electric-blue" x-text="health.network + ' Mbps'">125 Mbps</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-electric-blue h-2 rounded-full" :style="`width: ${health.network / 2}%`"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Performance -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">AI Performance</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Response Time</span>
+                        <span class="text-neon-cyan" x-text="aiMetrics.responseTime + 'ms'">245ms</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Accuracy</span>
+                        <span class="text-plasma-green" x-text="aiMetrics.accuracy + '%'">96.8%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Requests/min</span>
+                        <span class="text-electric-blue" x-text="aiMetrics.requestsPerMin">142</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Success Rate</span>
+                        <span class="text-sunbeam" x-text="aiMetrics.successRate + '%'">99.2%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Activity -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">User Activity</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Active Users</span>
+                        <span class="text-neon-cyan" x-text="userActivity.activeUsers">8</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Sessions Today</span>
+                        <span class="text-plasma-green" x-text="userActivity.sessionsToday">24</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Avg Session</span>
+                        <span class="text-electric-blue" x-text="userActivity.avgSession + ' min'">45 min</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Peak Usage</span>
+                        <span class="text-sunbeam" x-text="userActivity.peakUsage">14:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Analytics -->
+        <div class="glass-effect rounded-lg p-6 neon-border">
+            <h3 class="text-xl font-semibold text-sunbeam mb-6">Department Analytics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <template x-for="dept in departmentAnalytics" :key="dept.name">
+                    <div class="bg-midnight rounded-lg p-4 border border-neon-cyan/20">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-sunbeam" x-text="dept.name"></h4>
+                            <span class="text-sm text-gray-400" x-text="dept.agents + ' agents'"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Efficiency</span>
+                                <span class="text-neon-cyan" x-text="dept.efficiency + '%'"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Tasks</span>
+                                <span class="text-plasma-green" x-text="dept.tasks"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Status</span>
+                                <span class="text-electric-blue" x-text="dept.status"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyticsDashboard() {
+            return {
+                metrics: {
+                    totalAgents: 25,
+                    efficiency: 94.6,
+                    activeProjects: 5,
+                    uptime: 99.7
+                },
+                health: {
+                    cpu: 45,
+                    memory: 62,
+                    network: 125
+                },
+                aiMetrics: {
+                    responseTime: 245,
+                    accuracy: 96.8,
+                    requestsPerMin: 142,
+                    successRate: 99.2
+                },
+                userActivity: {
+                    activeUsers: 8,
+                    sessionsToday: 24,
+                    avgSession: 45,
+                    peakUsage: '14:30'
+                },
+                departmentAnalytics: [
+                    { name: 'Engineering', agents: 8, efficiency: 96.2, tasks: 15, status: 'Active' },
+                    { name: 'Product', agents: 6, efficiency: 94.8, tasks: 12, status: 'Active' },
+                    { name: 'Sales', agents: 7, efficiency: 92.1, tasks: 18, status: 'Active' },
+                    { name: 'Marketing', agents: 6, efficiency: 95.3, tasks: 10, status: 'Active' },
+                    { name: 'Finance', agents: 5, efficiency: 97.1, tasks: 8, status: 'Active' },
+                    { name: 'HR', agents: 4, efficiency: 93.7, tasks: 6, status: 'Active' },
+                    { name: 'Operations', agents: 3, efficiency: 91.5, tasks: 9, status: 'Active' },
+                    { name: 'Legal', agents: 3, efficiency: 98.2, tasks: 4, status: 'Active' }
+                ],
+
+                init() {
+                    this.loadMetrics();
+                    this.initCharts();
+                    this.startRealTimeUpdates();
+                },
+
+                async loadMetrics() {
+                    try {
+                        const response = await fetch('/api/v1/system/metrics', {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.metrics = data.metrics || this.metrics;
+                        }
+                    } catch (error) {
+                        console.error('Error loading metrics:', error);
+                    }
+                },
+
+                initCharts() {
+                    // Agent Performance Chart
+                    const agentCtx = document.getElementById('agentChart').getContext('2d');
+                    new Chart(agentCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Agent Efficiency',
+                                data: [92, 94, 96, 95, 97, 96, 94],
+                                borderColor: '#00d4ff',
+                                backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#ffffff' }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                },
+                                x: {
+                                    ticks: { color: '#ffffff' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                                }
+                            }
+                        }
+                    });
+
+                    // Department Activity Chart
+                    const deptCtx = document.getElementById('departmentChart').getContext('2d');
+                    new Chart(deptCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Engineering', 'Product', 'Sales', 'Marketing', 'Finance', 'HR', 'Operations', 'Legal'],
+                            datasets: [{
+                                data: [8, 6, 7, 6, 5, 4, 3, 3],
+                                backgroundColor: [
+                                    '#00d4ff', '#8b5cf6', '#10b981', '#fbbf24',
+                                    '#3b82f6', '#ef4444', '#6366f1', '#ec4899'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#ffffff' }
+                                }
+                            }
+                        }
+                    });
+                },
+
+                startRealTimeUpdates() {
+                    setInterval(() => {
+                        this.updateHealthMetrics();
+                    }, 5000);
+                },
+
+                updateHealthMetrics() {
+                    // Simulate real-time updates
+                    this.health.cpu = Math.floor(Math.random() * 30) + 30;
+                    this.health.memory = Math.floor(Math.random() * 20) + 50;
+                    this.health.network = Math.floor(Math.random() * 50) + 100;
+                }
+            }
+        }
+        
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('analyticsDashboard', analyticsDashboard);
+        });
+    </script>
+</body>
+</html> 

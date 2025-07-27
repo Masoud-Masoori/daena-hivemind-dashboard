@@ -1,0 +1,27 @@
+# Daena Audio/TTS Requirements (Python 3.10)
+# Audio and Voice Processing
+google-genai==1.19.0
+torchaudio==2.1.0
+torch==2.1.0
+numpy==1.24.3
+sounddevice==0.4.6
+soundfile==0.12.1
+librosa==0.10.1
+pydub==0.25.1
+
+# Web and API (compatible versions)
+anyio==4.8.0
+httpx==0.28.1
+websockets==13.0.0
+requests==2.31.0
+
+# Audio-specific dependencies
+pyaudio==0.2.11
+webrtcvad==2.0.10
+speechrecognition==3.10.0
+pyttsx3==2.90
+
+# Optional: Advanced TTS
+# coqui-tts==0.14.6
+# transformers==4.35.0
+# accelerate==0.24.1 

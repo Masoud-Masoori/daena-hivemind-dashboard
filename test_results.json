@@ -1,0 +1,86 @@
+{
+  "timestamp": "2025-07-25T10:27:34.328593",
+  "total_tests": 13,
+  "passed_tests": 13,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "Enhanced Health Check",
+      "success": true,
+      "details": "System: 8 departments, 25 agents",
+      "timestamp": "2025-07-25T10:26:39.182710"
+    },
+    {
+      "test": "JWT Login",
+      "success": true,
+      "details": "User: founder",
+      "timestamp": "2025-07-25T10:26:41.428822"
+    },
+    {
+      "test": "JWT Protected Endpoint",
+      "success": true,
+      "details": "Successfully accessed protected endpoint",
+      "timestamp": "2025-07-25T10:26:43.453249"
+    },
+    {
+      "test": "Rate Limiting",
+      "success": true,
+      "details": "Rate limit headers present",
+      "timestamp": "2025-07-25T10:27:15.351556"
+    },
+    {
+      "test": "Council Debate with Auth",
+      "success": true,
+      "details": "Debate created successfully",
+      "timestamp": "2025-07-25T10:27:18.083006"
+    },
+    {
+      "test": "Council Synthesis with Auth",
+      "success": true,
+      "details": "Synthesis completed successfully",
+      "timestamp": "2025-07-25T10:27:20.114540"
+    },
+    {
+      "test": "Strategic Assembly Session Creation",
+      "success": true,
+      "details": "Session: assembly-20250725102722",
+      "timestamp": "2025-07-25T10:27:22.151892"
+    },
+    {
+      "test": "Cross-Department Debate",
+      "success": true,
+      "details": "Cross-department debate completed",
+      "timestamp": "2025-07-25T10:27:26.208624"
+    },
+    {
+      "test": "Cross-Department Synthesis",
+      "success": true,
+      "details": "Cross-department synthesis completed",
+      "timestamp": "2025-07-25T10:27:28.239500"
+    },
+    {
+      "test": "WebSocket /ws/chat",
+      "success": true,
+      "details": "Endpoint exists",
+      "timestamp": "2025-07-25T10:27:30.264661"
+    },
+    {
+      "test": "WebSocket /ws/council",
+      "success": true,
+      "details": "Endpoint exists",
+      "timestamp": "2025-07-25T10:27:32.294263"
+    },
+    {
+      "test": "WebSocket /ws/founder",
+      "success": true,
+      "details": "Endpoint exists",
+      "timestamp": "2025-07-25T10:27:34.324309"
+    },
+    {
+      "test": "Knowledge Persistence",
+      "success": true,
+      "details": "8 departments, 6 files",
+      "timestamp": "2025-07-25T10:27:34.326517"
+    }
+  ]
+}

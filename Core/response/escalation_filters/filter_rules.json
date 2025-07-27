@@ -1,0 +1,6 @@
+{
+  "rules": [
+    {"condition": "confidence < 0.3", "escalate": true},
+    {"condition": "toxicity > 0.5", "escalate": true}
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Daena Guardian",
+  "role": "Real-time monitor and gatekeeper for mission alignment and override enforcement",
+  "permissions": ["read_all_memory", "block_actions", "trigger_alerts", "log_root_commands"]
+}

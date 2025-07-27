@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Management - Daena AI VP System</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a0f',
+                        'cyber-purple': '#8b5cf6',
+                        'neon-cyan': '#00d4ff',
+                        'sunbeam': '#fbbf24',
+                        'electric-blue': '#3b82f6',
+                        'plasma-green': '#10b981',
+                        'crimson-red': '#ef4444',
+                        'cosmic-gray': '#374151'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #00d4ff' },
+                            '100%': { boxShadow: '0 0 20px #00d4ff, 0 0 30px #00d4ff' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.05); }
+        .neon-border { border: 1px solid rgba(0, 212, 255, 0.3); }
+        .cyber-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #00d4ff 100%); }
+        .file-item { transition: all 0.3s ease; }
+        .file-item:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-midnight text-white min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-blue-500/30"
+                     title="📁 File Management">
+                    📁
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        FILE MANAGEMENT
+                    </div>
+                    <p class="text-xs text-blue-200/80">Document & Resource Center</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8 pt-24" x-data="fileManager()" x-init="init()">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-sunbeam mb-2">File Management</h1>
+            <p class="text-gray-400">Organize and manage all system documents, reports, and resources</p>
+        </div>
+
+        <!-- File Operations Bar -->
+        <div class="glass-effect rounded-lg p-6 mb-8 neon-border">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button @click="uploadFile()" 
+                            class="cyber-gradient text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                        <i class="fas fa-upload mr-2"></i>Upload File
+                    </button>
+                    <button @click="createFolder()" 
+                            class="bg-electric-blue text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-folder-plus mr-2"></i>New Folder
+                    </button>
+                    <button @click="searchFiles()" 
+                            class="bg-plasma-green text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select x-model="viewMode" 
+                            class="bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none">
+                        <option value="grid">Grid View</option>
+                        <option value="list">List View</option>
+                    </select>
+                    <select x-model="sortBy" 
+                            class="bg-midnight border border-cyber-purple/30 rounded-lg px-4 py-2 text-white focus:border-neon-cyan focus:outline-none">
+                        <option value="name">Name</option>
+                        <option value="date">Date</option>
+                        <option value="size">Size</option>
+                        <option value="type">Type</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb Navigation -->
+        <div class="glass-effect rounded-lg p-4 mb-6 neon-border">
+            <div class="flex items-center space-x-2 text-sm">
+                <button @click="navigateToRoot()" class="text-neon-cyan hover:text-cyan-300 transition-colors">
+                    <i class="fas fa-home"></i>
+                </button>
+                <template x-for="(folder, index) in breadcrumb" :key="index">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-400">/</span>
+                        <button @click="navigateToFolder(index)" 
+                                class="text-neon-cyan hover:text-cyan-300 transition-colors"
+                                x-text="folder"></button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- File Grid/List -->
+        <div class="glass-effect rounded-lg p-6 neon-border">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold text-sunbeam">Files & Folders</h3>
+                <div class="text-sm text-gray-400">
+                    <span x-text="filteredFiles.length"></span> items
+                </div>
+            </div>
+
+            <!-- Grid View -->
+            <div x-show="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <template x-for="file in filteredFiles" :key="file.id">
+                    <div class="file-item bg-midnight rounded-lg p-4 border border-neon-cyan/20 cursor-pointer"
+                         @click="selectFile(file)">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center"
+                                 :class="getFileIconClass(file.type)">
+                                <i :class="getFileIcon(file.type)" class="text-lg"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-white truncate" x-text="file.name"></p>
+                                <p class="text-xs text-gray-400" x-text="file.size"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span x-text="formatDate(file.modified)"></span>
+                            <div class="flex space-x-2">
+                                <button @click.stop="downloadFile(file)" 
+                                        class="text-neon-cyan hover:text-cyan-300">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button @click.stop="deleteFile(file)" 
+                                        class="text-crimson-red hover:text-red-300">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- List View -->
+            <div x-show="viewMode === 'list'" class="space-y-2">
+                <template x-for="file in filteredFiles" :key="file.id">
+                    <div class="file-item bg-midnight rounded-lg p-4 border border-neon-cyan/20 cursor-pointer"
+                         @click="selectFile(file)">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                 :class="getFileIconClass(file.type)">
+                                <i :class="getFileIcon(file.type)"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-white" x-text="file.name"></p>
+                                <p class="text-xs text-gray-400" x-text="file.path"></p>
+                            </div>
+                            <div class="text-sm text-gray-400" x-text="file.size"></div>
+                            <div class="text-sm text-gray-400" x-text="formatDate(file.modified)"></div>
+                            <div class="flex space-x-2">
+                                <button @click.stop="downloadFile(file)" 
+                                        class="text-neon-cyan hover:text-cyan-300 p-1">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button @click.stop="deleteFile(file)" 
+                                        class="text-crimson-red hover:text-red-300 p-1">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- File Categories -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+            <!-- Recent Files -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">Recent Files</h3>
+                <div class="space-y-3">
+                    <template x-for="file in recentFiles" :key="file.id">
+                        <div class="flex items-center space-x-3 p-2 rounded-lg hover:bg-midnight/50 transition-colors">
+                            <div class="w-6 h-6 rounded flex items-center justify-center"
+                                 :class="getFileIconClass(file.type)">
+                                <i :class="getFileIcon(file.type)" class="text-xs"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-white truncate" x-text="file.name"></p>
+                                <p class="text-xs text-gray-400" x-text="formatDate(file.modified)"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- File Types -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">File Types</h3>
+                <div class="space-y-3">
+                    <template x-for="type in fileTypes" :key="type.name">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 rounded"
+                                     :class="getFileIconClass(type.name)">
+                                    <i :class="getFileIcon(type.name)" class="text-xs"></i>
+                                </div>
+                                <span class="text-sm text-gray-300" x-text="type.name.toUpperCase()"></span>
+                            </div>
+                            <span class="text-sm text-gray-400" x-text="type.count"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Storage Usage -->
+            <div class="glass-effect rounded-lg p-6 neon-border">
+                <h3 class="text-lg font-semibold text-sunbeam mb-4">Storage Usage</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-400">Total Space</span>
+                            <span class="text-neon-cyan" x-text="storage.total"></span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div class="bg-neon-cyan h-2 rounded-full" :style="`width: ${storage.usedPercent}%`"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-400">Used:</span>
+                            <span class="text-plasma-green" x-text="storage.used"></span>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Free:</span>
+                            <span class="text-electric-blue" x-text="storage.free"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fileManager() {
+            return {
+                viewMode: 'grid',
+                sortBy: 'name',
+                currentPath: '/',
+                breadcrumb: ['Root'],
+                searchQuery: '',
+                
+                files: [
+                    { id: 1, name: 'Q4_Strategy_Report.pdf', type: 'pdf', size: '2.4 MB', path: '/documents', modified: '2024-01-15T10:30:00Z' },
+                    { id: 2, name: 'Engineering_Team', type: 'folder', size: '--', path: '/departments', modified: '2024-01-14T15:45:00Z' },
+                    { id: 3, name: 'Marketing_Campaign.xlsx', type: 'excel', size: '1.8 MB', path: '/marketing', modified: '2024-01-13T09:20:00Z' },
+                    { id: 4, name: 'System_Logs.log', type: 'log', size: '856 KB', path: '/logs', modified: '2024-01-15T11:15:00Z' },
+                    { id: 5, name: 'Daena_AI_Config.json', type: 'json', size: '124 KB', path: '/config', modified: '2024-01-15T08:30:00Z' },
+                    { id: 6, name: 'Meeting_Notes.docx', type: 'word', size: '567 KB', path: '/meetings', modified: '2024-01-14T16:20:00Z' },
+                    { id: 7, name: 'Financial_Report.xlsx', type: 'excel', size: '3.2 MB', path: '/finance', modified: '2024-01-12T14:10:00Z' },
+                    { id: 8, name: 'Product_Roadmap.pptx', type: 'powerpoint', size: '4.1 MB', path: '/product', modified: '2024-01-11T13:45:00Z' }
+                ],
+                
+                recentFiles: [
+                    { id: 1, name: 'Q4_Strategy_Report.pdf', type: 'pdf', modified: '2024-01-15T10:30:00Z' },
+                    { id: 3, name: 'Marketing_Campaign.xlsx', type: 'excel', modified: '2024-01-13T09:20:00Z' },
+                    { id: 6, name: 'Meeting_Notes.docx', type: 'word', modified: '2024-01-14T16:20:00Z' }
+                ],
+                
+                fileTypes: [
+                    { name: 'pdf', count: 12 },
+                    { name: 'excel', count: 8 },
+                    { name: 'word', count: 15 },
+                    { name: 'powerpoint', count: 6 },
+                    { name: 'json', count: 4 },
+                    { name: 'log', count: 3 }
+                ],
+                
+                storage: {
+                    total: '500 GB',
+                    used: '234 GB',
+                    free: '266 GB',
+                    usedPercent: 47
+                },
+
+                get filteredFiles() {
+                    let filtered = this.files;
+                    
+                    if (this.searchQuery) {
+                        filtered = filtered.filter(file => 
+                            file.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+                        );
+                    }
+                    
+                    // Sort files
+                    filtered.sort((a, b) => {
+                        switch (this.sortBy) {
+                            case 'name':
+                                return a.name.localeCompare(b.name);
+                            case 'date':
+                                return new Date(b.modified) - new Date(a.modified);
+                            case 'size':
+                                return this.parseSize(b.size) - this.parseSize(a.size);
+                            case 'type':
+                                return a.type.localeCompare(b.type);
+                            default:
+                                return 0;
+                        }
+                    });
+                    
+                    return filtered;
+                },
+
+                init() {
+                    this.loadFiles();
+                },
+
+                async loadFiles() {
+                    try {
+                        const response = await fetch('/api/v1/files', {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.files = data.files || this.files;
+                        }
+                    } catch (error) {
+                        console.error('Error loading files:', error);
+                    }
+                },
+
+                uploadFile() {
+                    // Create file input and trigger upload
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.multiple = true;
+                    input.onchange = (e) => {
+                        const files = Array.from(e.target.files);
+                        this.handleFileUpload(files);
+                    };
+                    input.click();
+                },
+
+                async handleFileUpload(files) {
+                    for (const file of files) {
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('path', this.currentPath);
+                        
+                        try {
+                            const response = await fetch('/api/v1/files/upload', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                },
+                                body: formData
+                            });
+                            
+                            if (response.ok) {
+                                this.loadFiles();
+                            }
+                        } catch (error) {
+                            console.error('Error uploading file:', error);
+                        }
+                    }
+                },
+
+                createFolder() {
+                    const folderName = prompt('Enter folder name:');
+                    if (folderName) {
+                        this.createNewFolder(folderName);
+                    }
+                },
+
+                async createNewFolder(name) {
+                    try {
+                        const response = await fetch('/api/v1/files/folder', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            },
+                            body: JSON.stringify({
+                                name: name,
+                                path: this.currentPath
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.loadFiles();
+                        }
+                    } catch (error) {
+                        console.error('Error creating folder:', error);
+                    }
+                },
+
+                selectFile(file) {
+                    if (file.type === 'folder') {
+                        this.navigateToFolder(file.name);
+                    } else {
+                        this.openFile(file);
+                    }
+                },
+
+                navigateToFolder(folderName) {
+                    this.currentPath += folderName + '/';
+                    this.breadcrumb.push(folderName);
+                    this.loadFiles();
+                },
+
+                navigateToRoot() {
+                    this.currentPath = '/';
+                    this.breadcrumb = ['Root'];
+                    this.loadFiles();
+                },
+
+                openFile(file) {
+                    // Open file based on type
+                    window.open(`/api/v1/files/download/${file.id}`, '_blank');
+                },
+
+                downloadFile(file) {
+                    window.open(`/api/v1/files/download/${file.id}`, '_blank');
+                },
+
+                async deleteFile(file) {
+                    if (confirm(`Are you sure you want to delete "${file.name}"?`)) {
+                        try {
+                            const response = await fetch(`/api/v1/files/${file.id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                }
+                            });
+                            
+                            if (response.ok) {
+                                this.loadFiles();
+                            }
+                        } catch (error) {
+                            console.error('Error deleting file:', error);
+                        }
+                    }
+                },
+
+                searchFiles() {
+                    this.searchQuery = prompt('Search files:') || '';
+                },
+
+                getFileIcon(type) {
+                    const icons = {
+                        'pdf': 'fas fa-file-pdf',
+                        'excel': 'fas fa-file-excel',
+                        'word': 'fas fa-file-word',
+                        'powerpoint': 'fas fa-file-powerpoint',
+                        'json': 'fas fa-file-code',
+                        'log': 'fas fa-file-alt',
+                        'folder': 'fas fa-folder'
+                    };
+                    return icons[type] || 'fas fa-file';
+                },
+
+                getFileIconClass(type) {
+                    const classes = {
+                        'pdf': 'bg-red-500/20 text-red-400',
+                        'excel': 'bg-green-500/20 text-green-400',
+                        'word': 'bg-blue-500/20 text-blue-400',
+                        'powerpoint': 'bg-orange-500/20 text-orange-400',
+                        'json': 'bg-purple-500/20 text-purple-400',
+                        'log': 'bg-gray-500/20 text-gray-400',
+                        'folder': 'bg-yellow-500/20 text-yellow-400'
+                    };
+                    return classes[type] || 'bg-gray-500/20 text-gray-400';
+                },
+
+                formatDate(dateString) {
+                    return new Date(dateString).toLocaleDateString();
+                },
+
+                parseSize(sizeString) {
+                    if (sizeString === '--') return 0;
+                    const match = sizeString.match(/(\d+\.?\d*)\s*([KMGT]?B)/);
+                    if (!match) return 0;
+                    const [, size, unit] = match;
+                    const multipliers = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
+                    return parseFloat(size) * (multipliers[unit] || 1);
+                }
+            }
+        }
+        
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('fileManager', fileManager);
+        });
+    </script>
+</body>
+</html> 

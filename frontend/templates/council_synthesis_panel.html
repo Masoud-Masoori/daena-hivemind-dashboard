@@ -1,0 +1,233 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-midnight via-deep-space to-cosmic-purple text-white">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-sunbeam mb-2">{{ department|title }} Council Synthesis</h1>
+            <p class="text-organic-green/80">Strategic insights from your expert advisors</p>
+        </div>
+
+        <!-- Department Selector -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-organic-green mb-2">Select Department</label>
+            <select id="department-selector" class="bg-midnight/50 border border-organic-green/30 rounded-lg p-3 text-white w-full max-w-xs">
+                <option value="engineering" {% if department == 'engineering' %}selected{% endif %}>Engineering</option>
+                <option value="product" {% if department == 'product' %}selected{% endif %}>Product</option>
+                <option value="sales" {% if department == 'sales' %}selected{% endif %}>Sales</option>
+                <option value="marketing" {% if department == 'marketing' %}selected{% endif %}>Marketing</option>
+                <option value="finance" {% if department == 'finance' %}selected{% endif %}>Finance</option>
+                <option value="hr" {% if department == 'hr' %}selected{% endif %}>Human Resources</option>
+            </select>
+        </div>
+
+        <!-- Top 5 Advisors Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-midnight/30 border border-organic-green/20 rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-sunbeam mb-4">Top 5 Advisors</h2>
+                <div class="space-y-4">
+                    {% for advisor in advisors[:5] %}
+                    <div class="flex items-center space-x-4 p-3 bg-midnight/50 rounded-lg border border-organic-green/10">
+                        <div class="w-10 h-10 bg-gradient-to-br from-sunbeam to-fire-orange rounded-full flex items-center justify-center">
+                            <span class="text-midnight font-bold text-sm">{{ loop.index }}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white">{{ advisor.name }}</h3>
+                            <p class="text-sm text-organic-green/70">{{ advisor.role }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sunbeam font-bold">{{ advisor.confidence|round(1) }}%</div>
+                            <div class="text-xs text-organic-green/60">Confidence</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Synthesis Content -->
+            <div class="bg-midnight/30 border border-organic-green/20 rounded-xl p-6">
+                <h2 class="text-2xl font-bold text-sunbeam mb-4">Synthesis Analysis</h2>
+                <div class="space-y-4">
+                    <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                        <h3 class="font-semibold text-organic-green mb-2">Key Insights</h3>
+                        <p class="text-white/90">{{ synthesis.key_insights }}</p>
+                    </div>
+                    <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                        <h3 class="font-semibold text-organic-green mb-2">Recommendations</h3>
+                        <ul class="list-disc list-inside text-white/90 space-y-1">
+                            {% for rec in synthesis.recommendations %}
+                            <li>{{ rec }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                        <h3 class="font-semibold text-organic-green mb-2">Risk Assessment</h3>
+                        <p class="text-white/90">{{ synthesis.risk_assessment }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusion Agent Logic -->
+        <div class="bg-midnight/30 border border-organic-green/20 rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-sunbeam mb-4">Conclusion Agent Logic</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                    <h3 class="font-semibold text-organic-green mb-2">Decision Matrix</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-white/80">Approval Score:</span>
+                            <span class="text-sunbeam font-bold">{{ conclusion.approval_score|round(1) }}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/80">Risk Level:</span>
+                            <span class="text-{{ 'fire-orange' if conclusion.risk_level == 'high' else 'organic-green' if conclusion.risk_level == 'low' else 'sunbeam' }} font-bold">{{ conclusion.risk_level|title }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-white/80">Confidence:</span>
+                            <span class="text-sunbeam font-bold">{{ conclusion.confidence|round(1) }}%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                    <h3 class="font-semibold text-organic-green mb-2">Final Decision</h3>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-{{ 'organic-green' if conclusion.decision == 'approve' else 'fire-orange' if conclusion.decision == 'reject' else 'sunbeam' }} mb-2">
+                            {{ conclusion.decision|title }}
+                        </div>
+                        <p class="text-white/80 text-sm">{{ conclusion.reasoning }}</p>
+                    </div>
+                </div>
+                <div class="p-4 bg-midnight/50 rounded-lg border border-organic-green/10">
+                    <h3 class="font-semibold text-organic-green mb-2">Next Steps</h3>
+                    <ul class="list-disc list-inside text-white/90 space-y-1 text-sm">
+                        {% for step in conclusion.next_steps %}
+                        <li>{{ step }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-4 justify-center">
+            <button onclick="approveSynthesis()" class="px-6 py-3 bg-organic-green text-midnight font-bold rounded-lg hover:bg-organic-green/80 transition-colors">
+                ✅ Approve Synthesis
+            </button>
+            <button onclick="pinSynthesis()" class="px-6 py-3 bg-sunbeam text-midnight font-bold rounded-lg hover:bg-sunbeam/80 transition-colors">
+                📌 Pin for Review
+            </button>
+            <button onclick="overrideSynthesis()" class="px-6 py-3 bg-fire-orange text-white font-bold rounded-lg hover:bg-fire-orange/80 transition-colors">
+                ⚡ Override Decision
+            </button>
+            <button onclick="requestRevision()" class="px-6 py-3 bg-cosmic-purple text-white font-bold rounded-lg hover:bg-cosmic-purple/80 transition-colors">
+                🔄 Request Revision
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('department-selector').addEventListener('change', function() {
+    const department = this.value;
+    window.location.href = `/council-synthesis-panel/${department}`;
+});
+
+function approveSynthesis() {
+    if (confirm('Are you sure you want to approve this synthesis?')) {
+        fetch('/api/v1/council/approve-synthesis', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                department: '{{ department }}',
+                action: 'approve'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Synthesis approved successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    }
+}
+
+function pinSynthesis() {
+    fetch('/api/v1/council/pin-synthesis', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            department: '{{ department }}',
+            action: 'pin'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Synthesis pinned for review!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    });
+}
+
+function overrideSynthesis() {
+    const reason = prompt('Please provide a reason for overriding the synthesis:');
+    if (reason) {
+        fetch('/api/v1/council/override-synthesis', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                department: '{{ department }}',
+                action: 'override',
+                reason: reason
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Synthesis overridden successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    }
+}
+
+function requestRevision() {
+    const feedback = prompt('Please provide feedback for the revision:');
+    if (feedback) {
+        fetch('/api/v1/council/request-revision', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                department: '{{ department }}',
+                action: 'revision',
+                feedback: feedback
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Revision requested successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    }
+}
+</script>
+{% endblock %} 

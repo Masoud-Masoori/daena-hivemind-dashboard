@@ -1,0 +1,23 @@
+[
+  {
+    "model": "deepseek-r2",
+    "latency_ms": 147,
+    "tokens_used": 238,
+    "timestamp": "2025-06-01T12:10:45",
+    "status": "success"
+  },
+  {
+    "model": "qwen2.5",
+    "latency_ms": 310,
+    "tokens_used": 300,
+    "timestamp": "2025-06-01T12:10:46",
+    "status": "success"
+  },
+  {
+    "model": "yi-6b",
+    "latency_ms": 0,
+    "tokens_used": 0,
+    "timestamp": "2025-06-01T12:10:47",
+    "status": "timeout"
+  }
+]

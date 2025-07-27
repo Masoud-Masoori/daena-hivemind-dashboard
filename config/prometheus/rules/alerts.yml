@@ -1,0 +1,334 @@
+groups:
+  - name: sunflower_alerts
+    rules:
+      # System Alerts
+      - alert: HighCPUUsage
+        expr: avg(sunflower_cpu_usage_percent) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage detected
+          description: CPU usage is above 80% for 5 minutes
+
+      - alert: CriticalCPUUsage
+        expr: avg(sunflower_cpu_usage_percent) > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical CPU usage detected
+          description: CPU usage is above 90% for 2 minutes
+
+      - alert: HighMemoryUsage
+        expr: sunflower_memory_usage_bytes{type="virtual"} / sunflower_memory_usage_bytes{type="virtual_total"} * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage detected
+          description: Memory usage is above 85% for 5 minutes
+
+      - alert: CriticalMemoryUsage
+        expr: sunflower_memory_usage_bytes{type="virtual"} / sunflower_memory_usage_bytes{type="virtual_total"} * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical memory usage detected
+          description: Memory usage is above 95% for 2 minutes
+
+      - alert: HighDiskUsage
+        expr: sunflower_disk_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High disk usage detected
+          description: Disk usage is above 85% for 5 minutes
+
+      - alert: CriticalDiskUsage
+        expr: sunflower_disk_usage_percent > 95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical disk usage detected
+          description: Disk usage is above 95% for 2 minutes
+
+      # GPU Alerts
+      - alert: HighGPUUsage
+        expr: sunflower_gpu_usage_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High GPU usage detected
+          description: GPU usage is above 90% for 5 minutes
+
+      - alert: HighGPUTemperature
+        expr: sunflower_gpu_temperature_celsius > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: High GPU temperature detected
+          description: GPU temperature is above 80°C for 2 minutes
+
+      - alert: CriticalGPUTemperature
+        expr: sunflower_gpu_temperature_celsius > 90
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical GPU temperature detected
+          description: GPU temperature is above 90°C for 1 minute
+
+      # Network Alerts
+      - alert: HighNetworkTraffic
+        expr: rate(sunflower_network_bytes_total[5m]) > 1000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High network traffic detected
+          description: Network traffic is above 1GB/s for 5 minutes
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(sunflower_api_latency_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High API latency detected
+          description: 95th percentile of API latency is above 1 second for 5 minutes
+
+      # Cache Alerts
+      - alert: HighCacheMissRate
+        expr: rate(sunflower_cache_misses_total[5m]) / rate(sunflower_cache_hits_total[5m]) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High cache miss rate detected
+          description: Cache miss rate is above 20% for 5 minutes
+
+      - alert: LowCacheHitRate
+        expr: rate(sunflower_cache_hits_total[5m]) / (rate(sunflower_cache_hits_total[5m]) + rate(sunflower_cache_misses_total[5m])) < 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low cache hit rate detected
+          description: Cache hit rate is below 80% for 5 minutes
+
+      # Process Alerts
+      - alert: HighProcessCPU
+        expr: sunflower_process_cpu_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process CPU usage detected
+          description: Process CPU usage is above 90% for 5 minutes
+
+      - alert: HighProcessMemory
+        expr: sunflower_process_memory_bytes > 1000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process memory usage detected
+          description: Process memory usage is above 1GB for 5 minutes
+
+      - alert: HighProcessThreadCount
+        expr: sunflower_process_threads > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process thread count detected
+          description: Process thread count is above 100 for 5 minutes
+
+      # System Resource Alerts
+      - alert: HighThreadCount
+        expr: sunflower_thread_count > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High system thread count detected
+          description: System thread count is above 1000 for 5 minutes
+
+      - alert: HighFileHandles
+        expr: sunflower_file_handles > 10000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High file handle count detected
+          description: File handle count is above 10000 for 5 minutes
+
+      - alert: HighSocketConnections
+        expr: sunflower_socket_connections > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High socket connection count detected
+          description: Socket connection count is above 1000 for 5 minutes
+
+      # Memory Leak Alerts
+      - alert: PotentialMemoryLeak
+        expr: rate(sunflower_memory_leaks_bytes[1h]) > 0
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: Potential memory leak detected
+          description: Memory usage is continuously increasing over the last hour
+
+      # API Performance Alerts
+      - alert: HighErrorRate
+        expr: rate(sunflower_errors_total[5m]) / rate(sunflower_http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High error rate detected
+          description: Error rate is above 5% for 5 minutes
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(sunflower_response_time_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High response time detected
+          description: 95th percentile of response time is above 2 seconds for 5 minutes
+
+      # Database Alerts
+      - alert: HighDatabaseConnections
+        expr: sunflower_database_connections > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High database connection count detected
+          description: Database connection count is above 100 for 5 minutes
+
+      # Cache Size Alerts
+      - alert: LargeCacheSize
+        expr: sunflower_cache_size_bytes > 1000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Large cache size detected
+          description: Cache size is above 1GB for 5 minutes
+
+      # Process GPU Alerts
+      - alert: HighProcessGPUUsage
+        expr: sunflower_process_gpu_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process GPU usage detected
+          description: Process GPU usage is above 90% for 5 minutes
+
+      - alert: HighProcessGPUMemory
+        expr: sunflower_process_gpu_memory_bytes > 1000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process GPU memory usage detected
+          description: Process GPU memory usage is above 1GB for 5 minutes
+
+      - alert: HighProcessGPUTemperature
+        expr: sunflower_process_gpu_temperature_celsius > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: High process GPU temperature detected
+          description: Process GPU temperature is above 80°C for 2 minutes
+
+      # Voice Processing Alerts
+      - alert: HighVoiceProcessingTime
+        expr: histogram_quantile(0.95, rate(sunflower_voice_processing_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High voice processing time detected
+          description: 95th percentile of voice processing time is above 5 seconds for 5 minutes
+
+      # Blockchain Alerts
+      - alert: HighBlockchainTransactionRate
+        expr: rate(sunflower_blockchain_transactions_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High blockchain transaction rate detected
+          description: Blockchain transaction rate is above 100 per 5 minutes
+
+      - alert: HighBlockchainErrorRate
+        expr: rate(sunflower_blockchain_transactions_total{status="error"}[5m]) / rate(sunflower_blockchain_transactions_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High blockchain error rate detected
+          description: Blockchain error rate is above 10% for 5 minutes
+
+      # Queue Alerts
+      - alert: LargeQueueSize
+        expr: sunflower_queue_size > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Large queue size detected
+          description: Queue size is above 1000 for 5 minutes
+
+      # Bandwidth Alerts
+      - alert: HighBandwidthUsage
+        expr: rate(sunflower_bandwidth_bytes_total[5m]) > 1000000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High bandwidth usage detected
+          description: Bandwidth usage is above 1GB/s for 5 minutes
+
+      # Model Load Alerts
+      - alert: HighModelLoad
+        expr: sunflower_model_load_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High model load detected
+          description: Model load is above 90% for 5 minutes
+
+      # Agent Status Alerts
+      - alert: AgentDown
+        expr: sunflower_agent_status == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Agent is down
+          description: Agent has been down for 1 minute
+
+      - alert: AgentDegraded
+        expr: sunflower_agent_status == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Agent is degraded
+          description: Agent has been in degraded state for 5 minutes 

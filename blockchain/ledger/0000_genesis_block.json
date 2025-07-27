@@ -1,0 +1,8 @@
+{
+  "index": 0,
+  "previous_hash": "0",
+  "timestamp": "2025-06-01T00:00:00Z",
+  "action": "genesis_init",
+  "signature": "GENESIS_SIGNATURE",
+  "hash": "ROOT_HASH"
+}

@@ -1,0 +1,109 @@
+name: Deploy Daena AI VP to Azure
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  AZURE_WEBAPP_NAME: daena-ai-vp-app
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Run tests
+      run: |
+        python test_demo.py
+        pytest tests/ --cov=backend --cov-report=xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .
+    
+    - name: Configure environment variables
+      run: |
+        az webapp config appsettings set \
+          --resource-group daena-ai-vp \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --settings \
+          OPENAI_API_TYPE=azure \
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+          OPENAI_API_BASE=${{ secrets.OPENAI_API_BASE }} \
+          OPENAI_API_VERSION=2024-02-15 \
+          OPENAI_DEPLOYMENT_NAME=daena \
+          GMAIL_USER=${{ secrets.GMAIL_USER }} \
+          GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }} \
+          DEMO_MODE=production
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Health check
+      run: |
+        sleep 30
+        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health || exit 1
+
+  deploy-vm:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[deploy-vm]')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Azure VM
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          cd daena-hivemind-dashboard
+          git pull origin main
+          source env_merged/bin/activate
+          pip install -r requirements.txt
+          ./launch_daena.ps1 -Mode azure-vm -EnableBrainTraining -EnableVoice -EnableCMP 

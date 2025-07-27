@@ -1,0 +1,38 @@
+{{ define "slack.default.title" }}
+[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.default.text" }}
+{{ if gt (len .Alerts.Firing) 0 }}
+*Firing Alerts:*
+{{ range .Alerts.Firing }}
+• *Alert:* {{ .Labels.alertname }}
+  *Severity:* {{ .Labels.severity }}
+  *Description:* {{ .Annotations.description }}
+  *Value:* {{ .Value }}
+  *Started:* {{ .StartsAt }}
+{{ end }}
+{{ end }}
+
+{{ if gt (len .Alerts.Resolved) 0 }}
+*Resolved Alerts:*
+{{ range .Alerts.Resolved }}
+• *Alert:* {{ .Labels.alertname }}
+  *Severity:* {{ .Labels.severity }}
+  *Description:* {{ .Annotations.description }}
+  *Value:* {{ .Value }}
+  *Started:* {{ .StartsAt }}
+  *Resolved:* {{ .EndsAt }}
+{{ end }}
+{{ end }}
+
+*Common Labels:*
+{{ range .CommonLabels.SortedPairs }}
+• {{ .Name }}: {{ .Value }}
+{{ end }}
+
+*Common Annotations:*
+{{ range .CommonAnnotations.SortedPairs }}
+• {{ .Name }}: {{ .Value }}
+{{ end }}
+{{ end }} 

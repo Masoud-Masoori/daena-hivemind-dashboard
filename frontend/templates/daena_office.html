@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daena's Executive Office | MAS-AI VP Command Center</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'royal-blue': '#6366f1',
+                        'electric-pink': '#ec4899',
+                        'fire-orange': '#f97316',
+                        'executive-blue': '#1e3a8a',
+                        'neural-blue': '#3b82f6',
+                        'matrix-blue': '#60a5fa'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'cosmic-drift': 'cosmic-drift 20s ease infinite',
+                        'neural-flow': 'neural-flow 15s ease infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 
+                                boxShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4)',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 40px rgba(59, 130, 246, 0.8), 0 0 80px rgba(59, 130, 246, 0.6)',
+                                transform: 'scale(1.02)'
+                            }
+                        },
+                        'cosmic-drift': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        'neural-flow': {
+                            '0%, 100%': { backgroundPosition: '0% 0%' },
+                            '50%': { backgroundPosition: '100% 100%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Executive cosmic background with blue focus */
+        .executive-background {
+            background: 
+                radial-gradient(circle at 20% 80%, #1e3a8a 0%, #1a1a3e 25%, #0a0a1e 50%),
+                radial-gradient(circle at 80% 20%, #3b82f6 0%, #2d1b69 25%, #0a0a1e 50%),
+                radial-gradient(circle at 40% 40%, #0a0a1e 0%, #1a1a3e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 30s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Floating particles animation */
+        .executive-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20% 30%, rgba(59, 130, 246, 0.8), transparent),
+                radial-gradient(2px 2px at 40% 70%, rgba(96, 165, 250, 0.6), transparent),
+                radial-gradient(1px 1px at 90% 40%, rgba(147, 197, 253, 0.4), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(59, 130, 246, 0.3), transparent),
+                radial-gradient(2px 2px at 80% 10%, rgba(30, 58, 138, 0.5), transparent),
+                radial-gradient(1px 1px at 10% 90%, rgba(96, 165, 250, 0.4), transparent),
+                radial-gradient(2px 2px at 70% 80%, rgba(59, 130, 246, 0.6), transparent),
+                radial-gradient(1px 1px at 30% 20%, rgba(147, 197, 253, 0.3), transparent);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px, 400px 400px, 200px 200px, 300px 300px, 100px 100px;
+            animation: floating-particles 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        /* Additional floating cosmic dust */
+        .executive-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(1px 1px at 25% 25%, rgba(255, 215, 0, 0.3), transparent),
+                radial-gradient(1px 1px at 75% 75%, rgba(0, 255, 255, 0.2), transparent),
+                radial-gradient(2px 2px at 60% 30%, rgba(59, 130, 246, 0.4), transparent),
+                radial-gradient(1px 1px at 15% 60%, rgba(96, 165, 250, 0.3), transparent),
+                radial-gradient(1px 1px at 85% 20%, rgba(147, 197, 253, 0.2), transparent);
+            background-size: 300px 300px, 400px 400px, 200px 200px, 350px 350px, 150px 150px;
+            animation: floating-cosmic-dust 25s linear infinite;
+            pointer-events: none;
+        }
+        
+        /* Floating particles keyframes */
+        @keyframes floating-particles {
+            0% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+                opacity: 1;
+            }
+            25% { 
+                transform: translateY(-100px) translateX(50px) rotate(90deg);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: translateY(-200px) translateX(0px) rotate(180deg);
+                opacity: 0.6;
+            }
+            75% { 
+                transform: translateY(-300px) translateX(-50px) rotate(270deg);
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translateY(-400px) translateX(0px) rotate(360deg);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes floating-cosmic-dust {
+            0% { 
+                transform: translateY(100vh) translateX(0px) scale(0.5);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(-100px) translateX(100px) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        /* Enhanced cosmic drift */
+        @keyframes cosmic-drift {
+            0%, 100% { 
+                background-position: 0% 50%, 100% 50%, 50% 100%;
+                filter: hue-rotate(0deg);
+            }
+            25% { 
+                background-position: 100% 100%, 0% 100%, 100% 0%;
+                filter: hue-rotate(15deg);
+            }
+            50% { 
+                background-position: 100% 0%, 50% 0%, 0% 50%;
+                filter: hue-rotate(30deg);
+            }
+            75% { 
+                background-position: 0% 0%, 100% 50%, 50% 50%;
+                filter: hue-rotate(15deg);
+            }
+        }
+        
+        /* Executive panel styles with floating effect */
+        .executive-panel {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(30, 58, 138, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+            animation: gentle-float 6s ease-in-out infinite;
+        }
+        
+        .executive-panel:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(30, 58, 138, 0.2));
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Gentle floating animation for panels */
+        @keyframes gentle-float {
+            0%, 100% { 
+                transform: translateY(0px);
+            }
+            50% { 
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* Special floating animation for different elements */
+        .float-delay-1 { animation-delay: -2s; }
+        .float-delay-2 { animation-delay: -4s; }
+        .float-delay-3 { animation-delay: -1s; }
+        .float-delay-4 { animation-delay: -3s; }
+        
+        /* Conversation bubble styles with floating */
+        .message-bubble {
+            max-width: 80%;
+            animation: slideIn 0.3s ease-out, gentle-float 8s ease-in-out infinite;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Neural network pattern with movement */
+        .neural-pattern {
+            background: linear-gradient(45deg, 
+                rgba(59, 130, 246, 0.1) 0%,
+                rgba(96, 165, 250, 0.05) 25%,
+                rgba(147, 197, 253, 0.1) 50%,
+                rgba(59, 130, 246, 0.05) 75%,
+                rgba(30, 58, 138, 0.1) 100%
+            );
+            background-size: 200% 200%;
+            animation: neural-flow 15s ease infinite;
+        }
+        
+        /* Daena's special crown animation */
+        .crown-glow {
+            animation: crown-pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes crown-pulse {
+            0%, 100% { 
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.7));
+                transform: scale(1);
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1)) drop-shadow(0 0 30px rgba(59, 130, 246, 0.5));
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Floating project cards */
+        .project-card {
+            animation: gentle-float 7s ease-in-out infinite;
+        }
+        
+        .project-card:nth-child(2) { animation-delay: -1.5s; }
+        .project-card:nth-child(3) { animation-delay: -3s; }
+        .project-card:nth-child(4) { animation-delay: -4.5s; }
+    </style>
+</head>
+
+<body class="executive-background text-white min-h-screen overflow-hidden" x-data="daenaOffice()" x-init="initializeOffice()">
+    
+    <!-- Enhanced Executive Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold animate-pulse-glow hover:scale-110 transition-transform shadow-lg shadow-blue-500/30"
+                     title="🧠 Daena's Executive Office">
+                    🧠
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        DAENA'S EXECUTIVE OFFICE
+                    </div>
+                    <p class="text-xs text-blue-200/80">AI VP Command Center</p>
+                </div>
+            </div>
+            
+            <!-- Executive Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 rounded-lg transition-colors text-sm border border-teal-400/30 text-teal-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Executive Interface -->
+    <div class="relative w-full h-screen pt-16" x-show="!minimizeToTray" x-transition>
+        
+        <!-- Horizontal Layout Container -->
+        <div class="flex h-full">
+            
+            <!-- Left Panel: Conversations & Chat Management -->
+            <div class="w-1/3 h-full border-r border-neural-blue/30 flex flex-col">
+                
+                <!-- Conversation Tabs -->
+                <div class="bg-midnight/60 border-b border-neural-blue/30 p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-white">💬 Conversation Center</h3>
+                        <button @click="createNewConversation()" 
+                                class="px-3 py-1 bg-neural-blue/20 hover:bg-neural-blue/30 rounded-lg text-sm transition-colors">
+                            <i class="fas fa-plus mr-1"></i>New
+                        </button>
+                    </div>
+                    
+                    <!-- Conversation Categories -->
+                    <div class="flex space-x-2 mb-3">
+                        <template x-for="category in conversationCategories" :key="category.id">
+                            <button @click="activeCategory = category.id"
+                                    :class="activeCategory === category.id ? 'bg-neural-blue text-white' : 'bg-midnight/40 text-gray-300 hover:bg-midnight/60'"
+                                    class="px-3 py-1 rounded-lg text-xs transition-colors"
+                                    x-text="category.name">
+                            </button>
+                        </template>
+                    </div>
+                    
+                    <!-- Conversation List -->
+                    <div class="space-y-2 max-h-40 overflow-y-auto">
+                        <template x-for="conversation in filteredConversations" :key="conversation.id">
+                            <div @click="selectConversation(conversation)"
+                                 :class="activeConversation?.id === conversation.id ? 'bg-neural-blue/30 border-neural-blue/50' : 'bg-midnight/40 hover:bg-midnight/60 border-neural-blue/20'"
+                                 class="p-3 rounded-lg border cursor-pointer transition-all">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="font-medium text-white text-sm" x-text="conversation.title">Strategic Planning Q1</div>
+                                        <div class="text-xs text-gray-400" x-text="conversation.lastMessage">Last: Project status update</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-xs" x-text="conversation.priority" 
+                                             :class="conversation.priority === 'high' ? 'text-fire-orange' : conversation.priority === 'medium' ? 'text-sunbeam' : 'text-organic-green'">high</div>
+                                        <div class="text-xs text-gray-500" x-text="conversation.date">2h ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Active Conversation -->
+                <div class="flex-1 flex flex-col">
+                    <!-- Messages Area -->
+                    <div class="flex-1 p-4 overflow-y-auto space-y-4" x-ref="messagesContainer">
+                        <template x-for="message in activeConversation?.messages || []" :key="message.id">
+                            <div class="flex" :class="message.sender === 'user' ? 'justify-end' : 'justify-start'">
+                                <div class="message-bubble" 
+                                     :class="message.sender === 'user' ? 'bg-neural-blue/20 border-neural-blue/30' : 'bg-midnight/40 border-matrix-blue/30'"
+                                     class="p-3 rounded-xl border">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <div class="text-lg" x-text="message.sender === 'user' ? '👤' : '🧠'"></div>
+                                        <div class="font-medium text-sm" x-text="message.sender === 'user' ? 'You' : 'Daena VP'"></div>
+                                        <div class="text-xs text-gray-400" x-text="message.timestamp">now</div>
+                                    </div>
+                                    <div class="text-sm text-gray-200" x-text="message.content"></div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="bg-midnight/60 border-t border-neural-blue/30 p-4">
+                        <div class="flex space-x-3">
+                            <input type="text" 
+                                   x-model="messageInput"
+                                   @keydown.enter="sendMessage()"
+                                   placeholder="Ask Daena about strategy, projects, decisions..."
+                                   class="flex-1 bg-midnight/60 border border-neural-blue/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-neural-blue text-sm">
+                            <button @click="sendMessage()" 
+                                    class="px-4 py-2 bg-neural-blue hover:bg-neural-blue/80 rounded-lg transition-colors">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                            <button @click="toggleVoiceInput()" 
+                                    :class="voiceActive ? 'bg-organic-green text-white' : 'bg-midnight/60 text-gray-300 hover:bg-midnight/80'"
+                                    class="px-4 py-2 rounded-lg transition-colors">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Panel: Strategic Command Center -->
+            <div class="w-1/3 h-full border-r border-neural-blue/30 flex flex-col">
+                
+                <!-- Strategic Overview -->
+                <div class="bg-midnight/60 border-b border-neural-blue/30 p-4">
+                    <h3 class="font-bold text-white mb-4">🎯 Strategic Command Center</h3>
+                    
+                    <!-- Executive Actions -->
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <button @click="openStrategicReport()" 
+                                class="executive-panel float-delay-1 rounded-lg p-3 text-center hover:scale-105 transition-transform">
+                            <div class="text-lg mb-1">📊</div>
+                            <div class="text-xs font-medium">Strategic Report</div>
+                        </button>
+                        <button @click="openBoardMeeting()" 
+                                class="executive-panel float-delay-2 rounded-lg p-3 text-center hover:scale-105 transition-transform">
+                            <div class="text-lg mb-1">🏛️</div>
+                            <div class="text-xs font-medium">Board Meeting</div>
+                        </button>
+                        <button @click="openProjectPortfolio()" 
+                                class="executive-panel float-delay-3 rounded-lg p-3 text-center hover:scale-105 transition-transform">
+                            <div class="text-lg mb-1">📋</div>
+                            <div class="text-xs font-medium">Project Portfolio</div>
+                        </button>
+                        <button @click="openExecutiveCommand()" 
+                                class="executive-panel float-delay-4 rounded-lg p-3 text-center hover:scale-105 transition-transform">
+                            <div class="text-lg mb-1">⚡</div>
+                            <div class="text-xs font-medium">Execute Command</div>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="text-center p-2 bg-neural-blue/10 border border-neural-blue/30 rounded-lg">
+                            <div class="text-sm font-bold text-neural-blue" x-text="quickStats.decisions">12</div>
+                            <div class="text-xs text-gray-400">Decisions Today</div>
+                        </div>
+                        <div class="text-center p-2 bg-matrix-blue/10 border border-matrix-blue/30 rounded-lg">
+                            <div class="text-sm font-bold text-matrix-blue" x-text="quickStats.meetings">3</div>
+                            <div class="text-xs text-gray-400">Meetings Scheduled</div>
+                        </div>
+                        <div class="text-center p-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg">
+                            <div class="text-sm font-bold text-neon-cyan" x-text="quickStats.alerts">2</div>
+                            <div class="text-xs text-gray-400">Priority Alerts</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Portfolio -->
+                <div class="flex-1 p-4 overflow-y-auto">
+                    <h4 class="font-bold text-white mb-4">📁 Active Project Portfolio</h4>
+                    
+                    <div class="space-y-3">
+                        <template x-for="project in projectPortfolio" :key="project.id">
+                            <div class="executive-panel project-card rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div>
+                                        <h5 class="font-medium text-white text-sm" x-text="project.name">AI Agent Platform v2.0</h5>
+                                        <p class="text-xs text-gray-400" x-text="project.description">Next-gen AI agent infrastructure</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-xs" x-text="project.status"
+                                             :class="project.status === 'active' ? 'text-organic-green' : project.status === 'planning' ? 'text-sunbeam' : 'text-matrix-blue'">active</div>
+                                        <div class="text-xs text-gray-400" x-text="project.priority">High</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progress Bar -->
+                                <div class="mb-3">
+                                    <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                        <span>Progress</span>
+                                        <span x-text="project.progress + '%'">75%</span>
+                                    </div>
+                                    <div class="w-full bg-midnight/60 rounded-full h-2">
+                                        <div class="bg-neural-blue h-2 rounded-full transition-all duration-300" 
+                                             :style="'width: ' + project.progress + '%'"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Project Details -->
+                                <div class="grid grid-cols-3 gap-2 text-xs">
+                                    <div class="text-center">
+                                        <div class="text-white font-medium" x-text="project.budget">$500K</div>
+                                        <div class="text-gray-400">Budget</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-white font-medium" x-text="project.team">8</div>
+                                        <div class="text-gray-400">Team Size</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-white font-medium" x-text="project.deadline">Q1 2024</div>
+                                        <div class="text-gray-400">Deadline</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Panel: File Management & System Control -->
+            <div class="w-1/3 h-full flex flex-col">
+                
+                <!-- File Management Header -->
+                <div class="bg-midnight/60 border-b border-neural-blue/30 p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-bold text-white">💾 Executive File Management</h3>
+                        <button @click="openFileExplorer()" 
+                                class="px-3 py-1 bg-neural-blue/20 hover:bg-neural-blue/30 rounded-lg text-sm transition-colors">
+                            <i class="fas fa-folder-open mr-1"></i>Browse
+                        </button>
+                    </div>
+                    
+                    <!-- File Operations -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-2">
+                            <label class="block text-xs font-medium text-gray-300">Upload Files</label>
+                            <input type="file" 
+                                   @change="handleFileUpload($event)"
+                                   multiple
+                                   class="w-full text-xs bg-midnight/60 border border-neural-blue/30 rounded-lg px-3 py-2 text-white file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-neural-blue file:text-white file:text-xs hover:file:bg-neural-blue/80">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-xs font-medium text-gray-300">Quick Actions</label>
+                            <div class="flex space-x-1">
+                                <button @click="downloadReports()" 
+                                        class="flex-1 px-2 py-1 bg-matrix-blue/20 hover:bg-matrix-blue/30 rounded-lg text-xs transition-colors">
+                                    <i class="fas fa-download mr-1"></i>Reports
+                                </button>
+                                <button @click="backupData()" 
+                                        class="flex-1 px-2 py-1 bg-organic-green/20 hover:bg-organic-green/30 rounded-lg text-xs transition-colors">
+                                    <i class="fas fa-shield-alt mr-1"></i>Backup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- File Browser -->
+                <div class="flex-1 overflow-y-auto">
+                    
+                    <!-- Current Directory -->
+                    <div class="bg-midnight/40 border-b border-neural-blue/20 p-3">
+                        <div class="flex items-center text-sm text-gray-300">
+                            <i class="fas fa-folder mr-2"></i>
+                            <span x-text="currentDirectory">D:\Ideas\Daena\Executive\</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Files and Folders -->
+                    <div class="p-4 space-y-2">
+                        <template x-for="item in fileSystem" :key="item.name">
+                            <div @click="selectFile(item)"
+                                 @dblclick="openFile(item)"
+                                 :class="selectedFile?.name === item.name ? 'bg-neural-blue/30 border-neural-blue/50' : 'hover:bg-midnight/60'"
+                                 class="flex items-center space-x-3 p-3 rounded-lg border border-neural-blue/20 cursor-pointer transition-all">
+                                <div class="text-lg" x-text="item.type === 'folder' ? '📁' : getFileIcon(item.extension)">📁</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-white text-sm" x-text="item.name">Projects</div>
+                                    <div class="text-xs text-gray-400" x-text="item.type === 'folder' ? item.itemCount + ' items' : item.size">5 items</div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="text-xs text-gray-500" x-text="item.modified">2h ago</div>
+                                    <button @click.stop="showFileMenu(item, $event)" 
+                                            class="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- System Status -->
+                <div class="bg-midnight/60 border-t border-neural-blue/30 p-4">
+                    <h4 class="font-bold text-white mb-3">⚙️ System Status</h4>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-300">Neural Network</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-organic-green rounded-full animate-pulse"></div>
+                                <span class="text-xs text-organic-green">Online</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-300">Voice Recognition</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-organic-green rounded-full animate-pulse"></div>
+                                <span class="text-xs text-organic-green">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-300">Project Sync</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-matrix-blue rounded-full animate-pulse"></div>
+                                <span class="text-xs text-matrix-blue">Syncing</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-300">Data Backup</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-sunbeam rounded-full"></div>
+                                <span class="text-xs text-sunbeam">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Minimized Tray -->
+    <div x-show="minimizeToTray" x-transition 
+         class="fixed bottom-4 right-4 w-64 bg-midnight/95 backdrop-blur-md border border-neural-blue/30 rounded-xl p-4 z-50">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-neural-blue to-neon-cyan rounded-lg flex items-center justify-center text-sm">👑</div>
+                <span class="font-bold text-white text-sm">Daena VP</span>
+            </div>
+            <button @click="minimizeToTray = false" class="text-gray-400 hover:text-white">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+        
+        <div class="space-y-2 text-xs">
+            <div class="flex justify-between">
+                <span class="text-gray-300">Active Projects:</span>
+                <span class="text-neural-blue font-medium" x-text="executiveMetrics.projects">5</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-300">Efficiency:</span>
+                <span class="text-organic-green font-medium" x-text="executiveMetrics.efficiency + '%'">92%</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-300">Revenue:</span>
+                <span class="text-matrix-blue font-medium" x-text="executiveMetrics.revenue">$2.4M</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function daenaOffice() {
+            return {
+                // UI State
+                minimizeToTray: false,
+                activeCategory: 'strategic',
+                activeConversation: null,
+                messageInput: '',
+                voiceActive: false,
+                selectedFile: null,
+                currentDirectory: 'D:\\Ideas\\Daena\\Executive\\',
+                
+                // Executive Metrics
+                executiveMetrics: {
+                    revenue: '$2.4M',
+                    efficiency: 92,
+                    projects: 5,
+                    agents: 25,
+                    departments: 8
+                },
+                
+                quickStats: {
+                    decisions: 12,
+                    meetings: 3,
+                    alerts: 2
+                },
+                
+                // Conversation Management
+                conversationCategories: [
+                    { id: 'strategic', name: 'Strategic' },
+                    { id: 'projects', name: 'Projects' },
+                    { id: 'decisions', name: 'Decisions' },
+                    { id: 'analytics', name: 'Analytics' }
+                ],
+                
+                conversations: [
+                    {
+                        id: 1,
+                        title: 'Q1 Strategic Planning',
+                        category: 'strategic',
+                        priority: 'high',
+                        date: '2h ago',
+                        lastMessage: 'Project status update needed',
+                        messages: [
+                            { id: 1, sender: 'user', content: 'What\'s our Q1 strategic focus?', timestamp: '10:30 AM' },
+                            { id: 2, sender: 'daena', content: 'Our Q1 priorities are: 1) AI Agent Platform v2.0 launch, 2) Market expansion to EU, 3) Team scaling to 35 agents. Current efficiency is 92% with strong momentum.', timestamp: '10:31 AM' }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        title: 'Project Portfolio Review',
+                        category: 'projects',
+                        priority: 'medium',
+                        date: '4h ago',
+                        lastMessage: 'Budget allocation discussion',
+                        messages: [
+                            { id: 1, sender: 'user', content: 'Show me the current project status', timestamp: '8:15 AM' },
+                            { id: 2, sender: 'daena', content: 'We have 5 active projects: AI Platform (75% complete), EU Expansion (60%), Agent Builder (40%), Security Framework (90%), and Analytics Dashboard (85%). Total budget utilization: 78%.', timestamp: '8:16 AM' }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        title: 'Decision Analytics',
+                        category: 'analytics',
+                        priority: 'low',
+                        date: '1d ago',
+                        lastMessage: 'Performance metrics review',
+                        messages: []
+                    }
+                ],
+                
+                // Project Portfolio
+                projectPortfolio: [
+                    {
+                        id: 1,
+                        name: 'AI Agent Platform v2.0',
+                        description: 'Next-generation AI agent infrastructure with advanced capabilities',
+                        status: 'active',
+                        priority: 'High',
+                        progress: 75,
+                        budget: '$500K',
+                        team: 8,
+                        deadline: 'Q1 2024'
+                    },
+                    {
+                        id: 2,
+                        name: 'EU Market Expansion',
+                        description: 'Strategic expansion into European markets',
+                        status: 'planning',
+                        priority: 'High',
+                        progress: 60,
+                        budget: '$1.2M',
+                        team: 12,
+                        deadline: 'Q2 2024'
+                    },
+                    {
+                        id: 3,
+                        name: 'Enterprise Security Framework',
+                        description: 'Comprehensive security infrastructure for enterprise clients',
+                        status: 'active',
+                        priority: 'Medium',
+                        progress: 90,
+                        budget: '$300K',
+                        team: 5,
+                        deadline: 'Q1 2024'
+                    }
+                ],
+                
+                // File System
+                fileSystem: [
+                    { name: 'Projects', type: 'folder', itemCount: 5, modified: '2h ago' },
+                    { name: 'Strategic Reports', type: 'folder', itemCount: 12, modified: '1d ago' },
+                    { name: 'Board Meeting Notes', type: 'folder', itemCount: 8, modified: '3h ago' },
+                    { name: 'Q1_Strategy.pdf', type: 'file', extension: 'pdf', size: '2.4 MB', modified: '4h ago' },
+                    { name: 'Revenue_Analysis.xlsx', type: 'file', extension: 'xlsx', size: '1.8 MB', modified: '6h ago' },
+                    { name: 'Team_Performance.pptx', type: 'file', extension: 'pptx', size: '5.2 MB', modified: '1d ago' }
+                ],
+                
+                // Computed Properties
+                get filteredConversations() {
+                    return this.conversations.filter(conv => conv.category === this.activeCategory);
+                },
+                
+                // Initialize Office
+                initializeOffice() {
+                    // Set default conversation
+                    this.selectConversation(this.conversations[0]);
+                    
+                    // Initialize voice recognition
+                    this.initializeVoiceRecognition();
+                    
+                    // Load executive data
+                    this.loadExecutiveData();
+                },
+                
+                // Voice Recognition
+                initializeVoiceRecognition() {
+                    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        this.recognition = new SpeechRecognition();
+                        
+                        this.recognition.continuous = false;
+                        this.recognition.interimResults = false;
+                        this.recognition.lang = 'en-US';
+                        
+                        this.recognition.onstart = () => {
+                            this.voiceActive = true;
+                        };
+                        
+                        this.recognition.onend = () => {
+                            this.voiceActive = false;
+                        };
+                        
+                        this.recognition.onresult = (event) => {
+                            const transcript = event.results[0][0].transcript;
+                            this.messageInput = transcript;
+                            this.sendMessage();
+                        };
+                    }
+                },
+                
+                toggleVoiceInput() {
+                    if (!this.recognition) {
+                        alert('Voice recognition not supported in this browser');
+                        return;
+                    }
+                    
+                    if (this.voiceActive) {
+                        this.recognition.stop();
+                    } else {
+                        this.recognition.start();
+                    }
+                },
+                
+                // Conversation Management
+                createNewConversation() {
+                    const title = prompt('Conversation title:') || 'New Discussion';
+                    const category = prompt('Category (strategic/projects/decisions/analytics):') || 'strategic';
+                    
+                    const newConv = {
+                        id: Date.now(),
+                        title: title,
+                        category: category,
+                        priority: 'medium',
+                        date: 'now',
+                        lastMessage: 'New conversation',
+                        messages: []
+                    };
+                    
+                    this.conversations.unshift(newConv);
+                    this.selectConversation(newConv);
+                },
+                
+                selectConversation(conversation) {
+                    this.activeConversation = conversation;
+                    this.$nextTick(() => {
+                        if (this.$refs.messagesContainer) {
+                            this.$refs.messagesContainer.scrollTop = this.$refs.messagesContainer.scrollHeight;
+                        }
+                    });
+                },
+                
+                sendMessage() {
+                    if (!this.messageInput.trim() || !this.activeConversation) return;
+                    
+                    // Add user message
+                    const userMessage = {
+                        id: Date.now(),
+                        sender: 'user',
+                        content: this.messageInput,
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+                    
+                    this.activeConversation.messages.push(userMessage);
+                    
+                    // Generate Daena response
+                    const response = this.generateDaenaResponse(this.messageInput);
+                    
+                    setTimeout(() => {
+                        const daenaMessage = {
+                            id: Date.now() + 1,
+                            sender: 'daena',
+                            content: response,
+                            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        };
+                        
+                        this.activeConversation.messages.push(daenaMessage);
+                        this.activeConversation.lastMessage = response.substring(0, 50) + '...';
+                        
+                        // Speak response
+                        this.speakText(response);
+                        
+                        this.$nextTick(() => {
+                            if (this.$refs.messagesContainer) {
+                                this.$refs.messagesContainer.scrollTop = this.$refs.messagesContainer.scrollHeight;
+                            }
+                        });
+                    }, 1000);
+                    
+                    this.messageInput = '';
+                },
+                
+                generateDaenaResponse(input) {
+                    const lowerInput = input.toLowerCase();
+                    
+                    if (lowerInput.includes('project') || lowerInput.includes('portfolio')) {
+                        return 'Based on current portfolio analysis: AI Platform v2.0 at 75% completion, EU Expansion at 60%, Security Framework nearing completion at 90%. Total budget utilization is optimal at 78%. Would you like detailed metrics on any specific project?';
+                    }
+                    
+                    if (lowerInput.includes('revenue') || lowerInput.includes('financial')) {
+                        return 'Current monthly revenue: $2.4M with 18% growth. Company efficiency at 92% with strong Q1 projections. Key revenue drivers: Enterprise contracts (60%), SaaS subscriptions (30%), Consulting services (10%).';
+                    }
+                    
+                    if (lowerInput.includes('strategic') || lowerInput.includes('strategy')) {
+                        return 'Strategic priorities for Q1: Platform enhancement, market expansion, team scaling. Key focus areas: AI capabilities advancement, European market entry, enterprise security framework. Current strategic alignment score: 94%.';
+                    }
+                    
+                    if (lowerInput.includes('team') || lowerInput.includes('agents')) {
+                        return 'Current team composition: 25 active AI agents across 8 departments. Top performers: Engineering (94% efficiency), Sales (96% efficiency), Analytics (91% efficiency). Scaling plan targets 35 agents by Q1 end.';
+                    }
+                    
+                    if (lowerInput.includes('meeting') || lowerInput.includes('schedule')) {
+                        return 'Upcoming strategic sessions: Board meeting (tomorrow 2PM), Department sync (Friday 10AM), Quarterly review (next week). Would you like me to prepare briefing materials or schedule additional meetings?';
+                    }
+                    
+                    return 'I understand your query. As your AI VP, I can provide insights on strategic decisions, project portfolio, financial performance, team management, or schedule strategic meetings. What specific area would you like to explore?';
+                },
+                
+                speakText(text) {
+                    if ('speechSynthesis' in window) {
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.rate = 0.9;
+                        utterance.pitch = 1.1;
+                        utterance.volume = 0.7;
+                        
+                        const voices = speechSynthesis.getVoices();
+                        const professionalVoice = voices.find(voice => 
+                            voice.name.includes('Female') || 
+                            voice.name.includes('Google UK English Female')
+                        );
+                        if (professionalVoice) utterance.voice = professionalVoice;
+                        
+                        speechSynthesis.speak(utterance);
+                    }
+                },
+                
+                // Executive Actions
+                openStrategicReport() {
+                    const report = `📊 STRATEGIC EXECUTIVE REPORT
+
+📈 Financial Performance:
+• Monthly Revenue: $2.4M (+18% growth)
+• Profit Margin: 34%
+• Cash Flow: Positive $890K
+
+🎯 Project Portfolio Status:
+• AI Platform v2.0: 75% complete (On track)
+• EU Expansion: 60% complete (Ahead of schedule)
+• Security Framework: 90% complete (Deploying Q1)
+
+👥 Team Performance:
+• 25 Active AI Agents
+• 92% Overall Efficiency
+• 8 Departments Operating
+
+⚡ Key Decisions Required:
+1. Additional hiring for EU expansion
+2. Security framework budget increase
+3. Q2 strategic planning approval
+
+Recommendation: Proceed with current trajectory. Consider accelerating EU expansion timeline.`;
+
+                    alert(report);
+                },
+                
+                openBoardMeeting() {
+                    const confirmed = confirm(`🏛️ BOARD MEETING PREPARATION
+
+📅 Next Board Meeting: Tomorrow 2:00 PM
+👥 Attendees: 8 Board Members + Executive Team
+
+📋 Agenda:
+1. Q1 Performance Review
+2. EU Expansion Approval
+3. Budget Allocation Q2
+4. Strategic Partnerships Discussion
+
+Would you like me to:
+• Prepare presentation materials
+• Send meeting reminders
+• Update financial projections
+
+Proceed with preparation?`);
+                    
+                    if (confirmed) {
+                        alert('✅ Board meeting preparation initiated.\n\n📊 Generating reports...\n📧 Sending invitations...\n📋 Compiling agenda materials...\n\nAll materials will be ready 2 hours before the meeting.');
+                    }
+                },
+                
+                openProjectPortfolio() {
+                    window.location.href = '/task-timeline';
+                },
+                
+                openExecutiveCommand() {
+                    const command = prompt(`⚡ EXECUTIVE COMMAND CENTER
+
+Available Commands:
+1. "emergency decision" - Start emergency CMP voting
+2. "department meeting [dept]" - Schedule department sync
+3. "strategic analysis" - Generate comprehensive report
+4. "agent deployment" - Deploy new AI agents
+5. "financial review" - Run financial analysis
+6. "security audit" - Initiate security check
+
+Enter command:`);
+                    
+                    if (command) {
+                        this.executeCommand(command);
+                    }
+                },
+                
+                executeCommand(command) {
+                    const cmd = command.toLowerCase();
+                    
+                    if (cmd.includes('emergency')) {
+                        window.location.href = '/cmp-voting';
+                    } else if (cmd.includes('department meeting')) {
+                        window.location.href = '/strategic-meetings';
+                    } else if (cmd.includes('strategic analysis')) {
+                        this.openStrategicReport();
+                    } else if (cmd.includes('agent deployment')) {
+                        window.location.href = '/agents';
+                    } else if (cmd.includes('financial')) {
+                        alert('📊 Financial Analysis Running...\n\nQ1 Revenue: $2.4M\nProjected Q2: $2.8M\nGrowth Rate: 18%\nProfit Margin: 34%\nCash Flow: $890K positive\n\nDetailed report generated and saved to Executive folder.');
+                    } else if (cmd.includes('security')) {
+                        alert('🔒 Security Audit Initiated...\n\n✅ System integrity: Secure\n✅ Data encryption: Active\n✅ Access controls: Verified\n✅ Backup systems: Operational\n⚠️ 2 Minor vulnerabilities found\n\nSecurity report available in file system.');
+                    } else {
+                        alert('Command not recognized. Available: emergency decision, department meeting, strategic analysis, agent deployment, financial review, security audit.');
+                    }
+                },
+                
+                // File Management
+                handleFileUpload(event) {
+                    const files = Array.from(event.target.files);
+                    
+                    files.forEach(file => {
+                        const fileItem = {
+                            name: file.name,
+                            type: 'file',
+                            extension: file.name.split('.').pop(),
+                            size: this.formatFileSize(file.size),
+                            modified: 'now'
+                        };
+                        
+                        this.fileSystem.unshift(fileItem);
+                    });
+                    
+                    alert(`✅ ${files.length} file(s) uploaded successfully to Executive folder.`);
+                },
+                
+                downloadReports() {
+                    const reports = [
+                        'Q1_Strategic_Report.pdf',
+                        'Financial_Analysis_Q1.xlsx',
+                        'Project_Portfolio_Status.pptx',
+                        'Team_Performance_Metrics.pdf',
+                        'Board_Meeting_Materials.zip'
+                    ];
+                    
+                    alert(`📥 DOWNLOADING EXECUTIVE REPORTS\n\n${reports.join('\n')}\n\nFiles will be saved to your Downloads folder.`);
+                },
+                
+                backupData() {
+                    alert('🛡️ EXECUTIVE DATA BACKUP\n\n⏳ Backing up:\n• Conversation history\n• Project files\n• Strategic reports\n• Executive decisions\n• Financial data\n\n✅ Backup completed successfully!\nLocation: D:\\Backups\\Executive\\' + new Date().toISOString().split('T')[0]);
+                },
+                
+                openFileExplorer() {
+                    alert('📁 EXECUTIVE FILE EXPLORER\n\nConnecting to:\n• D:\\Ideas\\Daena\\Executive\\\n• Network drives\n• Cloud storage\n• Project repositories\n\nFile explorer integration with Windows Explorer would open here.');
+                },
+                
+                selectFile(item) {
+                    this.selectedFile = item;
+                    
+                    if (item.type === 'folder') {
+                        // Navigate into folder
+                        this.currentDirectory += item.name + '\\';
+                        // In a real implementation, you'd load the folder contents
+                    } else {
+                        // File actions
+                        const action = confirm(`📄 ${item.name}\n\nChoose action:\nOK = Open file\nCancel = File properties`);
+                        
+                        if (action) {
+                            alert(`📂 Opening ${item.name}...\n\nIn a real implementation, this would open the file with the appropriate application.`);
+                        } else {
+                            alert(`📋 File Properties: ${item.name}\n\nSize: ${item.size}\nModified: ${item.modified}\nType: ${item.extension || 'Folder'}\nLocation: ${this.currentDirectory}`);
+                        }
+                    }
+                },
+                
+                openFile(item) {
+                    if (item.type === 'folder') {
+                        this.currentDirectory += item.name + '\\';
+                        // In a real implementation, you'd load the folder contents
+                    } else {
+                        alert(`📂 Opening ${item.name}...\n\nIn a real implementation, this would open the file with the appropriate application.`);
+                    }
+                },
+                
+                showFileMenu(item, event) {
+                    event.stopPropagation(); // Prevent the parent div's click from triggering
+                    const menu = document.createElement('div');
+                    menu.className = 'absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-midnight/90 border border-neural-blue/30 rounded-lg p-2 z-10';
+                    
+                    const openBtn = document.createElement('button');
+                    openBtn.className = 'flex items-center px-3 py-1 text-xs text-white rounded-md hover:bg-neural-blue/30 transition-colors';
+                    openBtn.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i>Open';
+                    openBtn.onclick = () => {
+                        this.openFile(item);
+                        menu.remove();
+                    };
+                    menu.appendChild(openBtn);
+
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'flex items-center px-3 py-1 text-xs text-white rounded-md hover:bg-neural-blue/30 transition-colors';
+                    downloadBtn.innerHTML = '<i class="fas fa-download mr-1"></i>Download';
+                    downloadBtn.onclick = () => {
+                        alert(`📥 DOWNLOADING ${item.name}\n\n${item.size}\n\nFiles will be saved to your Downloads folder.`);
+                        menu.remove();
+                    };
+                    menu.appendChild(downloadBtn);
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'flex items-center px-3 py-1 text-xs text-red-400 rounded-md hover:bg-red-500/20 transition-colors';
+                    deleteBtn.innerHTML = '<i class="fas fa-trash mr-1"></i>Delete';
+                    deleteBtn.onclick = () => {
+                        if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+                            this.fileSystem = this.fileSystem.filter(f => f.name !== item.name);
+                            alert(`✅ ${item.name} deleted.`);
+                        }
+                        menu.remove();
+                    };
+                    menu.appendChild(deleteBtn);
+
+                    document.body.appendChild(menu);
+                    menu.style.top = `${event.clientY}px`;
+                    menu.style.left = `${event.clientX}px`;
+                },
+                
+                getFileIcon(extension) {
+                    const icons = {
+                        'pdf': '📄',
+                        'xlsx': '📊',
+                        'pptx': '📋',
+                        'docx': '📝',
+                        'zip': '🗜️',
+                        'png': '🖼️',
+                        'jpg': '🖼️',
+                        'mp4': '🎥',
+                        'mp3': '🎵'
+                    };
+                    return icons[extension] || '📄';
+                },
+                
+                formatFileSize(bytes) {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024;
+                    const sizes = ['B', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+                },
+                
+                loadExecutiveData() {
+                    // Simulate loading executive data
+                    setTimeout(() => {
+                        // Update metrics periodically
+                        setInterval(() => {
+                            this.executiveMetrics.efficiency = Math.min(95, this.executiveMetrics.efficiency + Math.random() * 2 - 1);
+                            this.quickStats.decisions += Math.random() > 0.7 ? 1 : 0;
+                        }, 30000);
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

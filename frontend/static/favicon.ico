@@ -1,0 +1,13 @@
+<!-- This is a placeholder for favicon.ico -->
+<!-- The actual favicon.ico file should be a binary ICO file -->
+<!-- For now, we'll create a simple HTML redirect to the SVG favicon -->
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+<body>
+    <script>window.location.href = '/';</script>
+</body>
+</html> 

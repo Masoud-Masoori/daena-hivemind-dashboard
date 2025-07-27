@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daena AI VP - The World's First AI Vice President</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: var(--primary-gradient);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .voice-bar {
+            width: 3px;
+            background: #4facfe;
+            border-radius: 2px;
+            animation: voiceWave 1.2s ease-in-out infinite;
+        }
+        
+        .voice-bar:nth-child(1) { animation-delay: 0s; }
+        .voice-bar:nth-child(2) { animation-delay: 0.1s; }
+        .voice-bar:nth-child(3) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(4) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes voiceWave {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
+        }
+        
+        .email-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .success-animation {
+            animation: successPulse 0.6s ease-out;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Navigation -->
+    <nav class="glass-effect fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
+                        <i class="fas fa-brain text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">Daena AI VP</h1>
+                        <p class="text-xs text-gray-300">The World's First AI Vice President</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="voiceToggle" class="glass-effect px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                        <i class="fas fa-microphone mr-2"></i>
+                        <span id="voiceStatus">Voice Off</span>
+                    </button>
+                    <button id="demoMode" class="gradient-bg px-6 py-2 rounded-lg hover:opacity-80 transition-all">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Live Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-8">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    <span class="gradient-text">Daena AI VP</span>
+                </h1>
+                <p class="text-2xl md:text-3xl text-gray-300 mb-8">
+                    The World's First AI Vice President
+                </p>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-12">
+                    Revolutionary AI-powered business leadership with voice-activated control, 
+                    autonomous decision-making, and comprehensive enterprise oversight.
+                </p>
+            </div>
+            
+            <!-- Key Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-microphone text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Voice-First Interface</h3>
+                    <p class="text-gray-400">"Hey Daena" - Control your business with natural voice commands</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Multi-AI Brain</h3>
+                    <p class="text-gray-400">6 AI providers working in consensus for optimal decisions</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Autonomous Leadership</h3>
+                    <p class="text-gray-400">AI manages 8 business departments simultaneously</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Demo Section -->
+    <section class="px-4 pb-16">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Chat Interface -->
+                <div class="glass-effect rounded-xl p-6 h-[600px] flex flex-col">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">Chat with Daena</h2>
+                        <div class="flex items-center space-x-2">
+                            <div id="voiceIndicator" class="voice-wave hidden">
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                            </div>
+                            <span id="statusText" class="text-sm text-gray-400">Ready</span>
+                        </div>
+                    </div>
+                    
+                    <div id="chatMessages" class="flex-1 overflow-y-auto mb-4 space-y-4">
+                        <div class="chat-message">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center">
+                                    <i class="fas fa-brain text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="glass-effect rounded-lg p-4">
+                                        <p class="text-sm">Hello! I'm Daena, your AI Vice President. I can help you with business strategy, investor outreach, market analysis, and much more. What would you like to work on today?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <input type="text" id="chatInput" placeholder="Ask Daena anything..." 
+                               class="flex-1 glass-effect rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button id="sendMessage" class="gradient-bg px-6 py-3 rounded-lg hover:opacity-80 transition-all">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button id="voiceInput" class="glass-effect px-4 py-3 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Agent-Powered Investor Outreach Section -->
+                <div class="glass-effect rounded-xl p-6 h-[600px] flex flex-col overflow-y-auto">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">🤖 AI Agent-Powered Outreach</h2>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-sm text-green-400">Agents Online</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 space-y-4">
+                        <!-- Agent Status -->
+                        <div class="bg-blue-500/20 p-4 rounded-lg border border-blue-500/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fas fa-robot text-blue-400"></i>
+                                <span class="font-semibold text-blue-400">AI Agents Ready</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Investor Scraper & Email Builder agents operational</p>
+                        </div>
+                        
+                        <!-- Agent Actions -->
+                        <div class="grid grid-cols-1 gap-4">
+                            <!-- Scrape Investors -->
+                            <div class="bg-gradient-to-br from-purple-500/20 to-blue-500/20 p-4 rounded-lg border border-purple-500/30">
+                                <h4 class="text-lg font-semibold text-purple-400 mb-2">🕵️ Investor Scraper Agent</h4>
+                                <p class="text-sm text-gray-300 mb-3">Automatically find and score AI investors from multiple sources</p>
+                                <div class="flex gap-2">
+                                    <button onclick="scrapeInvestors()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg font-semibold transition-all text-sm">
+                                        🔍 Scrape Investors
+                                    </button>
+                                    <button onclick="loadMockInvestors()" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg font-semibold transition-all text-sm">
+                                        🎭 Load Demo Data
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Send Emails -->
+                            <div class="bg-gradient-to-br from-green-500/20 to-emerald-500/20 p-4 rounded-lg border border-green-500/30">
+                                <h4 class="text-lg font-semibold text-green-400 mb-2">✉️ Email Builder Agent</h4>
+                                <p class="text-sm text-gray-300 mb-3">Generate personalized emails and send via Gmail</p>
+                                <div class="flex gap-2">
+                                    <button onclick="sendBulkEmails()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-semibold transition-all text-sm">
+                                        📧 Send All Emails
+                                    </button>
+                                    <button onclick="previewEmails()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-semibold transition-all text-sm">
+                                        👀 Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Configuration -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Email Style</label>
+                                <select id="emailStyle" class="w-full glass-effect rounded-lg px-3 py-2 text-sm">
+                                    <option value="professional">Professional</option>
+                                    <option value="friendly">Friendly</option>
+                                    <option value="confident">Confident</option>
+                                    <option value="innovative">Innovative</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Max Results</label>
+                                <input type="number" id="maxResults" value="20" min="1" max="100" class="w-full glass-effect rounded-lg px-3 py-2 text-sm">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Use Mock Data</label>
+                            <select id="useMock" class="w-full glass-effect rounded-lg px-3 py-2 text-sm">
+                                <option value="true">Yes (Demo)</option>
+                                <option value="false">No (Real)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Custom Message (Optional)</label>
+                            <textarea id="customMessage" rows="2" class="w-full glass-effect rounded-lg px-3 py-2 text-sm" placeholder="Add any custom message for all emails..."></textarea>
+                        </div>
+                        
+                        <!-- Results Table -->
+                        <div id="resultsSection" class="hidden">
+                            <h4 class="text-lg font-semibold mb-3">📊 Scraped Investors</h4>
+                            <div class="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs">
+                                        <thead class="bg-white/10">
+                                            <tr>
+                                                <th class="px-3 py-2 text-left text-white/80 font-semibold">Name</th>
+                                                <th class="px-3 py-2 text-left text-white/80 font-semibold">Email</th>
+                                                <th class="px-3 py-2 text-left text-white/80 font-semibold">Score</th>
+                                                <th class="px-3 py-2 text-left text-white/80 font-semibold">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="investorsTableBody">
+                                            <!-- Dynamic content -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Campaign Status -->
+                        <div id="campaignStatus" class="hidden">
+                            <h4 class="text-lg font-semibold mb-3">📈 Campaign Status</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-blue-500/20 p-3 rounded-lg border border-blue-500/30">
+                                    <div class="text-xl font-bold text-white" id="totalInvestors">0</div>
+                                    <div class="text-white/70 text-xs">Total Investors</div>
+                                </div>
+                                <div class="bg-green-500/20 p-3 rounded-lg border border-green-500/30">
+                                    <div class="text-xl font-bold text-white" id="emailsSent">0</div>
+                                    <div class="text-white/70 text-xs">Emails Sent</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Voice Summary -->
+                        <div id="voiceSummary" class="hidden">
+                            <h4 class="text-lg font-semibold mb-3">🎤 Daena's Voice Summary</h4>
+                            <div class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-3 rounded-lg border border-purple-500/30">
+                                <p id="summaryText" class="text-sm text-gray-300 mb-2"></p>
+                                <button onclick="playVoiceSummary()" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg font-semibold transition-all text-xs">
+                                    🔊 Play Summary
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="px-4 pb-16">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Production-Ready Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-server text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">500+ API Endpoints</h3>
+                    <p class="text-sm text-gray-400">Comprehensive backend infrastructure</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">Enterprise Security</h3>
+                    <p class="text-sm text-gray-400">JWT auth, rate limiting, CORS</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">Expert Council</h3>
+                    <p class="text-sm text-gray-400">40+ AI advisors with real-time debate</p>
+                </div>
+                <div class="glass-effect p-6 rounded-xl text-center">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-rocket text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold mb-2">100% Test Coverage</h3>
+                    <p class="text-sm text-gray-400">Production-ready reliability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Section -->
+    <section class="px-4 pb-16">
+        <div class="max-w-7xl mx-auto">
+            <div class="glass-effect rounded-xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Investment Opportunity</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <div class="text-4xl font-bold gradient-text mb-2">$5M</div>
+                        <p class="text-gray-400">Series A Funding</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold gradient-text mb-2">$25M</div>
+                        <p class="text-gray-400">Pre-money Valuation</p>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold gradient-text mb-2">$280B</div>
+                        <p class="text-gray-400">Market Opportunity</p>
+                    </div>
+                </div>
+                <button id="contactInvestor" class="gradient-bg px-8 py-4 rounded-lg text-lg font-semibold hover:opacity-80 transition-all">
+                    <i class="fas fa-handshake mr-2"></i>
+                    Contact for Investment
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect mt-16">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="text-center">
+                <p class="text-gray-400">&copy; 2025 Daena AI VP System. The World's First AI Vice President.</p>
+                <p class="text-sm text-gray-500 mt-2">Contact: investors@daena-ai.com | Demo: demo@daena-ai.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="glass-effect rounded-xl p-8 text-center">
+            <div class="typing-indicator mx-auto mb-4"></div>
+            <p class="text-lg">Daena is thinking...</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="glass-effect rounded-xl p-8 text-center success-animation">
+            <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-check text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Success!</h3>
+            <p id="successMessage" class="text-gray-400 mb-4">Operation completed successfully.</p>
+            <button id="closeSuccess" class="gradient-bg px-6 py-2 rounded-lg hover:opacity-80 transition-all">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Configuration
+        const config = {
+            apiType: 'azure',
+            apiBase: 'https://masou-mdksrl1q-eastus2.openai.azure.com/',
+            apiVersion: '2024-02-15',
+            deploymentName: 'daena',
+            gmailUser: 'masoud.masoori@gmail.com'
+        };
+
+        // State management
+        let isVoiceActive = false;
+        let recognition = null;
+        let synthesis = null;
+        let isProcessing = false;
+
+        // DOM elements
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        const voiceInput = document.getElementById('voiceInput');
+        const voiceToggle = document.getElementById('voiceToggle');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const voiceIndicator = document.getElementById('voiceIndicator');
+        const statusText = document.getElementById('statusText');
+        const loadingModal = document.getElementById('loadingModal');
+        const successModal = document.getElementById('successModal');
+        const successMessage = document.getElementById('successMessage');
+        const closeSuccess = document.getElementById('closeSuccess');
+
+        // Investor outreach elements
+        const investorSelect = document.getElementById('investorSelect');
+        const customInvestor = document.getElementById('customInvestor');
+        const investorName = document.getElementById('investorName');
+        const investorCompany = document.getElementById('investorCompany');
+        const investorEmail = document.getElementById('investorEmail');
+        const emailTone = document.getElementById('emailTone');
+        const generateEmail = document.getElementById('generateEmail');
+        const emailPreview = document.getElementById('emailPreview');
+        const emailContent = document.getElementById('emailContent');
+        const sendEmail = document.getElementById('sendEmail');
+        const regenerateEmail = document.getElementById('regenerateEmail');
+        const contactInvestor = document.getElementById('contactInvestor');
+
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    voiceIndicator.classList.remove('hidden');
+                    statusText.textContent = 'Listening...';
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    chatInput.value = transcript;
+                    sendMessageToDaena(transcript);
+                };
+
+                recognition.onend = () => {
+                    voiceIndicator.classList.add('hidden');
+                    statusText.textContent = 'Ready';
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    voiceIndicator.classList.add('hidden');
+                    statusText.textContent = 'Error';
+                };
+            }
+        }
+
+        // Initialize speech synthesis
+        function initSpeechSynthesis() {
+            if ('speechSynthesis' in window) {
+                synthesis = window.speechSynthesis;
+            }
+        }
+
+        // Send message to Daena
+        async function sendMessageToDaena(message) {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            // Add user message to chat
+            addMessageToChat('user', message);
+            chatInput.value = '';
+
+            // Show loading
+            loadingModal.classList.remove('hidden');
+
+            try {
+                // Simulate API call to Daena's backend
+                const response = await simulateDaenaResponse(message);
+                
+                // Add Daena's response
+                addMessageToChat('daena', response);
+                
+                // Speak response if voice is active
+                if (isVoiceActive && synthesis) {
+                    const utterance = new SpeechSynthesisUtterance(response);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.1;
+                    synthesis.speak(utterance);
+                }
+
+            } catch (error) {
+                console.error('Error communicating with Daena:', error);
+                addMessageToChat('daena', 'I apologize, but I encountered an error. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+                isProcessing = false;
+            }
+        }
+
+        // Simulate Daena's response (replace with actual API call)
+        async function simulateDaenaResponse(message) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('investor') || lowerMessage.includes('funding') || lowerMessage.includes('raise')) {
+                return `I'd be happy to help with investor outreach! We're currently seeking $5M Series A funding at a $25M pre-money valuation. Our AI VP system addresses a $280B market opportunity with no direct competitors. Would you like me to generate a personalized investor email or help you identify potential investors?`;
+            } else if (lowerMessage.includes('email') || lowerMessage.includes('outreach')) {
+                return `Perfect! I can help you create compelling investor outreach emails. I'll analyze the target investor, craft a personalized pitch highlighting our unique value proposition, and even send it directly via Gmail. Would you like to try the investor outreach feature?`;
+            } else if (lowerMessage.includes('demo') || lowerMessage.includes('show')) {
+                return `Absolutely! You're currently experiencing my live demo. I can help with business strategy, investor relations, market analysis, and much more. Try asking me to "generate an investor email" or "analyze our market position" to see my capabilities in action.`;
+            } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                return `Hello! I'm Daena, your AI Vice President. I'm here to help you revolutionize your business with autonomous AI leadership. What would you like to work on today?`;
+            } else {
+                return `Thank you for your message! As your AI Vice President, I'm here to help with strategic decision-making, investor relations, market analysis, and business operations. How can I assist you today?`;
+            }
+        }
+
+        // Add message to chat
+        function addMessageToChat(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            
+            const isUser = sender === 'user';
+            const icon = isUser ? 'fas fa-user' : 'fas fa-brain';
+            const bgClass = isUser ? 'bg-blue-600' : 'gradient-bg';
+            
+            messageDiv.innerHTML = `
+                <div class="flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}">
+                    <div class="w-8 h-8 ${bgClass} rounded-full flex items-center justify-center">
+                        <i class="${icon} text-sm"></i>
+                    </div>
+                    <div class="flex-1 ${isUser ? 'text-right' : ''}">
+                        <div class="glass-effect rounded-lg p-4 ${isUser ? 'bg-blue-600 bg-opacity-20' : ''}">
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Generate investor email
+        async function generateInvestorEmail() {
+            const investor = investorSelect.value;
+            const tone = emailTone.value;
+            
+            if (!investor && !investorName.value) {
+                showSuccess('Please select an investor or enter custom details.');
+                return;
+            }
+
+            loadingModal.classList.remove('hidden');
+
+            try {
+                // Simulate email generation
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                const email = generateEmailContent(investor, tone);
+                emailContent.innerHTML = email.replace(/\n/g, '<br>');
+                emailPreview.classList.remove('hidden');
+                
+                showSuccess('Email generated successfully!');
+                
+            } catch (error) {
+                console.error('Error generating email:', error);
+                showSuccess('Error generating email. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        }
+
+        // Generate email content
+        function generateEmailContent(investor, tone) {
+            const investorInfo = getInvestorInfo(investor);
+            const toneStyle = getToneStyle(tone);
+            
+            return `Subject: Revolutionary AI VP System - $280B Market Opportunity
+
+Dear ${investorInfo.name},
+
+${toneStyle.greeting}
+
+I'm reaching out to introduce Daena AI VP System, the world's first AI-powered Vice President that provides autonomous business leadership and strategic decision-making.
+
+${toneStyle.body}
+
+Our revolutionary platform features:
+• Voice-activated AI leadership ("Hey Daena")
+• Multi-AI consensus system with 6 providers
+• 8-department orchestration
+• Expert Council with 40+ AI advisors
+• Production-ready with 500+ API endpoints
+
+${toneStyle.closing}
+
+We're seeking $5M Series A funding at a $25M pre-money valuation to scale this $280B market opportunity.
+
+${toneStyle.signature}
+
+Best regards,
+Masoud Masoori
+CEO, Daena AI VP System
+investors@daena-ai.com
+daena-ai.com`;
+        }
+
+        // Get investor information
+        function getInvestorInfo(investor) {
+            const investors = {
+                'toronto_ai_vc': { name: 'Toronto AI Venture Capital Team' },
+                'canadian_tech_fund': { name: 'Canadian Tech Growth Fund' },
+                'mars_dd': { name: 'MaRS Discovery District' },
+                'cvca': { name: 'CVCA Member Fund' },
+                'custom': { name: investorName.value || 'Valued Investor' }
+            };
+            return investors[investor] || { name: 'Valued Investor' };
+        }
+
+        // Get tone style
+        function getToneStyle(tone) {
+            const tones = {
+                'professional': {
+                    greeting: 'I hope this message finds you well.',
+                    body: 'I believe our innovative AI VP technology aligns perfectly with your investment thesis in transformative business solutions.',
+                    closing: 'I would welcome the opportunity to discuss how Daena can revolutionize business management and deliver exceptional returns.',
+                    signature: 'I look forward to your response.'
+                },
+                'friendly': {
+                    greeting: 'I hope you\'re having a great day!',
+                    body: 'I think you\'ll be excited about our breakthrough AI VP technology that\'s changing how businesses operate.',
+                    closing: 'I\'d love to share more about our vision and explore potential collaboration.',
+                    signature: 'Looking forward to connecting!'
+                },
+                'confident': {
+                    greeting: 'I\'m reaching out because I know you invest in game-changing technologies.',
+                    body: 'Daena AI VP System is the future of business leadership, and we\'re building something truly revolutionary.',
+                    closing: 'This is a once-in-a-generation opportunity to lead the AI VP market.',
+                    signature: 'Let\'s discuss how we can dominate this space together.'
+                },
+                'innovative': {
+                    greeting: 'Imagine having an AI Vice President that runs your entire business.',
+                    body: 'That\'s exactly what we\'ve built with Daena - the world\'s first autonomous AI business leader.',
+                    closing: 'We\'re not just building software; we\'re creating the future of business management.',
+                    signature: 'Ready to revolutionize business together?'
+                }
+            };
+            return tones[tone] || tones.professional;
+        }
+
+        // Send email
+        async function sendInvestorEmail() {
+            loadingModal.classList.remove('hidden');
+
+            try {
+                // Simulate email sending
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                showSuccess('Email sent successfully to investor!');
+                emailPreview.classList.add('hidden');
+                
+            } catch (error) {
+                console.error('Error sending email:', error);
+                showSuccess('Error sending email. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successModal.classList.remove('hidden');
+        }
+
+        // Event listeners
+        sendMessage.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                sendMessageToDaena(message);
+            }
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = chatInput.value.trim();
+                if (message) {
+                    sendMessageToDaena(message);
+                }
+            }
+        });
+
+        voiceInput.addEventListener('click', () => {
+            if (recognition && !isProcessing) {
+                recognition.start();
+            }
+        });
+
+        voiceToggle.addEventListener('click', () => {
+            isVoiceActive = !isVoiceActive;
+            voiceStatus.textContent = isVoiceActive ? 'Voice On' : 'Voice Off';
+            voiceToggle.classList.toggle('gradient-bg', isVoiceActive);
+        });
+
+        // ===== AI AGENT FUNCTIONS =====
+        
+        let scrapedInvestors = [];
+        let campaignResults = null;
+
+        // Scrape investors using the investor scraper agent
+        async function scrapeInvestors() {
+            const maxResults = document.getElementById('maxResults').value;
+            const useMock = document.getElementById('useMock').value === 'true';
+            
+            loadingModal.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/demo/scrape-investors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        max_results: parseInt(maxResults),
+                        use_mock: useMock
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    scrapedInvestors = result.investors;
+                    displayInvestorsTable(scrapedInvestors);
+                    showSuccess(`Successfully scraped ${scrapedInvestors.length} investors!`);
+                } else {
+                    showError(`Error: ${result.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Error scraping investors:', error);
+                showError('Failed to scrape investors. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        }
+
+        // Load mock investors for demo
+        function loadMockInvestors() {
+            scrapedInvestors = [
+                {
+                    name: 'Sarah Chen',
+                    email: 'sarah.chen@torontovc.com',
+                    source: 'cvca',
+                    score: 0.85,
+                    status: 'scraped'
+                },
+                {
+                    name: 'Michael Rodriguez',
+                    email: 'm.rodriguez@aiaccelerator.ca',
+                    source: 'marsdd',
+                    score: 0.92,
+                    status: 'scraped'
+                },
+                {
+                    name: 'Jennifer Kim',
+                    email: 'jennifer@techfund.ca',
+                    source: 'angel',
+                    score: 0.78,
+                    status: 'scraped'
+                },
+                {
+                    name: 'David Thompson',
+                    email: 'david@saasventures.com',
+                    source: 'crunchbase',
+                    score: 0.88,
+                    status: 'scraped'
+                }
+            ];
+            
+            displayInvestorsTable(scrapedInvestors);
+            showSuccess(`Loaded ${scrapedInvestors.length} demo investors!`);
+        }
+
+        // Display investors in table
+        function displayInvestorsTable(investors) {
+            const tbody = document.getElementById('investorsTableBody');
+            tbody.innerHTML = '';
+            
+            investors.forEach(investor => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-white/10';
+                
+                const statusClass = investor.status === 'sent' ? 'text-green-400' : 
+                                  investor.status === 'failed' ? 'text-red-400' : 'text-yellow-400';
+                const statusText = investor.status === 'sent' ? '✅ Sent' : 
+                                 investor.status === 'failed' ? '❌ Failed' : '⏳ Pending';
+                
+                row.innerHTML = `
+                    <td class="px-3 py-2 text-white">${investor.name}</td>
+                    <td class="px-3 py-2 text-white/70">${investor.email}</td>
+                    <td class="px-3 py-2 text-white">${(investor.score * 100).toFixed(0)}%</td>
+                    <td class="px-3 py-2 ${statusClass}">${statusText}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            document.getElementById('resultsSection').classList.remove('hidden');
+        }
+
+        // Send bulk emails using the email builder agent
+        async function sendBulkEmails() {
+            if (scrapedInvestors.length === 0) {
+                showError('No investors to email. Please scrape investors first.');
+                return;
+            }
+            
+            const style = document.getElementById('emailStyle').value;
+            const customMessage = document.getElementById('customMessage').value;
+            
+            loadingModal.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/demo/send-bulk-emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        investors: scrapedInvestors,
+                        style: style,
+                        custom_message: customMessage || null
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    campaignResults = result.results;
+                    displayCampaignStatus(campaignResults);
+                    displayVoiceSummary(result.voice_summary);
+                    showSuccess(`Email campaign completed: ${campaignResults.sent} sent, ${campaignResults.failed} failed`);
+                } else {
+                    showError(`Error: ${result.message}`);
+                }
+                
+            } catch (error) {
+                console.error('Error sending bulk emails:', error);
+                showError('Failed to send emails. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        }
+
+        // Preview emails (generate without sending)
+        async function previewEmails() {
+            if (scrapedInvestors.length === 0) {
+                showError('No investors to preview. Please scrape investors first.');
+                return;
+            }
+            
+            const style = document.getElementById('emailStyle').value;
+            const customMessage = document.getElementById('customMessage').value;
+            
+            loadingModal.classList.remove('hidden');
+            
+            try {
+                // For preview, we'll just show the first email
+                const investor = scrapedInvestors[0];
+                const response = await fetch('/demo/generate-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        investor: {
+                            name: investor.name,
+                            company: investor.source,
+                            email: investor.email,
+                            type: 'Venture Capital'
+                        },
+                        tone: style,
+                        custom_message: customMessage || null
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.subject && result.body) {
+                    showEmailPreview(result.subject, result.body);
+                } else {
+                    showError('Failed to generate email preview.');
+                }
+                
+            } catch (error) {
+                console.error('Error previewing emails:', error);
+                showError('Failed to preview emails. Please try again.');
+            } finally {
+                loadingModal.classList.add('hidden');
+            }
+        }
+
+        // Display campaign status
+        function displayCampaignStatus(results) {
+            document.getElementById('totalInvestors').textContent = results.total_investors;
+            document.getElementById('emailsSent').textContent = results.sent;
+            document.getElementById('emailsFailed').textContent = results.failed;
+            
+            const successRate = results.total_investors > 0 ? 
+                Math.round((results.sent / results.total_investors) * 100) : 0;
+            document.getElementById('successRate').textContent = `${successRate}%`;
+            
+            document.getElementById('campaignStatus').classList.remove('hidden');
+        }
+
+        // Display voice summary
+        function displayVoiceSummary(summary) {
+            document.getElementById('summaryText').textContent = summary;
+            document.getElementById('voiceSummary').classList.remove('hidden');
+        }
+
+        // Play voice summary
+        function playVoiceSummary() {
+            const summary = document.getElementById('summaryText').textContent;
+            if (summary && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(summary);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.volume = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Show email preview
+        function showEmailPreview(subject, body) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white">Email Preview</h3>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-1">Subject:</label>
+                            <div class="bg-gray-700 p-3 rounded text-white">${subject}</div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-1">Body:</label>
+                            <div class="bg-gray-700 p-3 rounded text-white whitespace-pre-wrap">${body}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorModal = document.createElement('div');
+            errorModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            errorModal.innerHTML = `
+                <div class="bg-red-600 rounded-lg p-6 max-w-md w-full mx-4">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-white mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">Error</h3>
+                    </div>
+                    <p class="text-white mb-4">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded">
+                        Close
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(errorModal);
+        }
+
+        investorSelect.addEventListener('change', () => {
+            if (investorSelect.value === 'custom') {
+                customInvestor.classList.remove('hidden');
+            } else {
+                customInvestor.classList.add('hidden');
+            }
+        });
+
+        generateEmail.addEventListener('click', generateInvestorEmail);
+        sendEmail.addEventListener('click', sendInvestorEmail);
+        regenerateEmail.addEventListener('click', generateInvestorEmail);
+        closeSuccess.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+
+        contactInvestor.addEventListener('click', () => {
+            showSuccess('Thank you for your interest! We\'ll contact you within 24 hours to discuss investment opportunities.');
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initSpeechRecognition();
+            initSpeechSynthesis();
+        });
+    </script>
+</body>
+</html> 

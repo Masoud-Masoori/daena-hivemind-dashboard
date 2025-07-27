@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAS-AI - Daena AI VP | Executive Command Center</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'royal-blue': '#6366f1',
+                        'electric-pink': '#ec4899',
+                        'fire-orange': '#f97316'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'daena-speak': 'daena-speak 1.5s ease-in-out infinite alternate',
+                        'hex-hover': 'hex-hover 0.3s ease-out',
+                        'hex-pulse': 'hex-pulse 3s ease-in-out infinite',
+                        'float-in': 'float-in 1s ease-out',
+                        'particle': 'particle 25s infinite linear',
+                        'voice-pulse': 'voice-pulse 1s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 
+                                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4)',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.6)',
+                                transform: 'scale(1.02)'
+                            }
+                        },
+                        'daena-speak': {
+                            '0%': { 
+                                boxShadow: '0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(0, 255, 255, 0.4)',
+                                transform: 'scale(1.02)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 60px rgba(255, 215, 0, 1), 0 0 120px rgba(0, 255, 255, 0.6)',
+                                transform: 'scale(1.05)'
+                            }
+                        },
+                        'hex-hover': {
+                            '0%': { transform: 'scale(1) rotate(0deg)' },
+                            '100%': { transform: 'scale(1.1) rotate(2deg)' }
+                        },
+                        'hex-pulse': {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.03)' }
+                        },
+                        'float-in': {
+                            '0%': { 
+                                transform: 'scale(0) rotate(-90deg)', 
+                                opacity: '0'
+                            },
+                            '100%': { 
+                                transform: 'scale(1) rotate(0deg)', 
+                                opacity: '1'
+                            }
+                        },
+                        'particle': {
+                            '0%': { 
+                                transform: 'translateY(100vh) translateX(0) rotate(0deg)', 
+                                opacity: '0'
+                            },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { 
+                                transform: 'translateY(-100vh) translateX(200px) rotate(360deg)', 
+                                opacity: '0'
+                            }
+                        },
+                        'voice-pulse': {
+                            '0%, 100%': { 
+                                transform: 'scale(1)',
+                                backgroundColor: 'rgba(16, 185, 129, 0.8)'
+                            },
+                            '50%': { 
+                                transform: 'scale(1.2)',
+                                backgroundColor: 'rgba(16, 185, 129, 1)'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Enhanced cosmic background */
+        .cosmic-background {
+            background: radial-gradient(circle at 20% 80%, #2d1b69 0%, #1a1a3e 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 80% 20%, #1a1a3e 0%, #2d1b69 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 40% 40%, #0a0a1e 0%, #1a1a3e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 20s ease infinite;
+        }
+        
+        @keyframes cosmic-drift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        /* Enhanced particle system */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .particle-small {
+            width: 2px;
+            height: 2px;
+            background: rgba(99, 102, 241, 0.8);
+        }
+        
+        .particle-medium {
+            width: 4px;
+            height: 4px;
+            background: rgba(139, 92, 246, 0.6);
+        }
+        
+        .particle-large {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Smaller perfect hexagonal honeycomb shape */
+        .hexagon {
+            position: relative;
+            width: 100px;
+            height: 90px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .hexagon:hover {
+            animation: hex-hover 0.3s ease-out forwards;
+            z-index: 20;
+        }
+        
+        .hexagon-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            background: linear-gradient(135deg, var(--hex-color-1), var(--hex-color-2));
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .hexagon:hover .hexagon-inner {
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .hexagon-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            width: 80px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Department-specific hexagon colors for honeycomb */
+        .hex-engineering {
+            --hex-color-1: #3b82f6;
+            --hex-color-2: #1e40af;
+        }
+        
+        .hex-product {
+            --hex-color-1: #8b5cf6;
+            --hex-color-2: #6366f1;
+        }
+        
+        .hex-sales {
+            --hex-color-1: #10b981;
+            --hex-color-2: #059669;
+        }
+        
+        .hex-marketing {
+            --hex-color-1: #f97316;
+            --hex-color-2: #ea580c;
+        }
+        
+        .hex-finance {
+            --hex-color-1: #06b6d4;
+            --hex-color-2: #0891b2;
+        }
+        
+        .hex-hr {
+            --hex-color-1: #ec4899;
+            --hex-color-2: #db2777;
+        }
+        
+        .hex-customer {
+            --hex-color-1: #84cc16;
+            --hex-color-2: #65a30d;
+        }
+        
+        .hex-legal {
+            --hex-color-1: #6366f1;
+            --hex-color-2: #4f46e5;
+        }
+        
+        /* Smaller central Daena hub */
+        .daena-hub {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            background: conic-gradient(from 0deg, #ffd700, #00ffff, #8b5cf6, #10b981, #ffd700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 30;
+        }
+        
+        .daena-inner {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, #0a0a1e 0%, #1a1a3e 70%, #2d1b69 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Voice indicator */
+        .voice-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .voice-indicator.active {
+            opacity: 1;
+            animation: voice-pulse 1s ease-in-out infinite;
+        }
+        
+        /* Enhanced sidebar - fixed positioning */
+        .enhanced-sidebar {
+            backdrop-filter: blur(25px);
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.95), rgba(26, 26, 62, 0.9));
+            border-left: 3px solid;
+            border-image: linear-gradient(135deg, #6366f1, #8b5cf6) 1;
+            z-index: 100;
+        }
+        
+        /* Department room styles */
+        .department-room {
+            background: linear-gradient(135deg, rgba(10, 10, 30, 0.98), rgba(26, 26, 62, 0.95));
+            backdrop-filter: blur(20px);
+            z-index: 50;
+        }
+        
+        /* Agent cards in department rooms */
+        .agent-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.2));
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        /* Voice chat interface */
+        .voice-chat-panel {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+        
+        /* Fixed system status panel positioning */
+        .system-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            min-width: 240px;
+            z-index: 40;
+        }
+        
+        /* Voice recording indicator */
+        .voice-recording {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            z-index: 200;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen overflow-hidden">
+    
+    <!-- Enhanced particle system -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="particles"></div>
+    
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold animate-pulse-glow shadow-lg shadow-blue-500/30"
+                     title="🏠 MAS-AI Command Center">
+                    🏠
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        MAS-AI COMMAND CENTER
+                    </div>
+                    <p class="text-xs text-blue-200/80">AI-Native Company Control Hub</p>
+                </div>
+            </div>
+            
+            <!-- Header Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="navigateToPage('/strategic-meetings'); showButtonFeedback('meetings')" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="openAnalytics(); showButtonFeedback('analytics')" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-chart-bar mr-2"></i>Analytics
+                </button>
+                <button onclick="openFiles(); showButtonFeedback('files')" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-folder mr-2"></i>Files
+                </button>
+                <button onclick="navigateToPage('/founder-panel'); showButtonFeedback('founder')" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+                <button onclick="navigateToPage('/council-dashboard'); showButtonFeedback('council')" 
+                        class="px-3 py-2 bg-cyber-purple/20 hover:bg-cyber-purple/30 rounded-lg transition-colors text-sm border border-cyber-purple/30 text-cyber-purple-200 hover:text-white">
+                    <i class="fas fa-users-cog mr-2"></i>Council
+                </button>
+                <button onclick="navigateToPage('/council-debate'); showButtonFeedback('debate')" 
+                        class="px-3 py-2 bg-sunbeam/20 hover:bg-sunbeam/30 rounded-lg transition-colors text-sm border border-sunbeam/30 text-sunbeam hover:text-midnight">
+                    <i class="fas fa-comments mr-2"></i>Debate
+                </button>
+                <button onclick="navigateToPage('/council-synthesis'); showButtonFeedback('synthesis')" 
+                        class="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 rounded-lg transition-colors text-sm border border-green-400/30 text-green-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Synthesis
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Voice Recording Indicator -->
+    <div x-show="isRecording" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-90"
+         x-transition:enter-end="opacity-100 scale-100"
+         class="fixed top-20 right-6 bg-organic-green/90 text-white px-4 py-2 rounded-lg z-200 backdrop-blur-10">
+        <div class="flex items-center space-x-2">
+            <div class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+            <span class="font-semibold text-sm">🎤 Voice Active</span>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard -->
+    <div x-data="enhancedDashboard()" x-init="initializeDashboard()" class="relative w-full h-screen pt-16">
+        
+        <!-- Honeycomb Ecosystem -->
+        <div class="absolute inset-0 flex items-center justify-center" id="ecosystem">
+            
+            <!-- Central Daena Hub -->
+            <div class="absolute z-30 transition-all duration-500"
+                 @click="openDaenaOffice()"
+                 :class="{ 'animate-daena-speak': daenaSpeaking }">
+                <div class="daena-hub animate-pulse-glow">
+                    <div class="daena-inner">
+                        <div class="text-3xl mb-2">🧠</div>
+                        <div class="text-sm font-bold text-sunbeam">Daena VP</div>
+                        
+                        <!-- Voice indicator -->
+                        <div class="voice-indicator" :class="{ 'active': voiceMode }"></div>
+                        
+                        <!-- Status ring -->
+                        <div class="absolute -inset-3 rounded-full border-2 border-sunbeam/30 animate-spin" style="animation-duration: 20s;"></div>
+                    </div>
+                </div>
+                
+                <!-- System metrics -->
+                <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center">
+                    <div class="text-xs font-bold text-sunbeam" x-text="systemStats.agents + ' Agents'"></div>
+                    <div class="text-xs text-neon-cyan" x-text="systemStats.efficiency + '% Efficiency'"></div>
+                </div>
+            </div>
+            
+            <!-- Department Hexagons in Perfect Circle -->
+            <template x-for="(dept, index) in departments" :key="dept.id">
+                <div class="absolute department cursor-pointer transform transition-all duration-700 animate-float-in"
+                     :style="getCircularPosition(index)"
+                     @click="enterDepartmentRoom(dept)"
+                     @mouseenter="highlightDepartment(dept.id)"
+                     @mouseleave="clearHighlights()">
+                    
+                    <div class="hexagon" :class="'hex-' + dept.id">
+                        <div class="hexagon-inner animate-hex-pulse" 
+                             :style="'animation-delay: ' + (index * 0.3) + 's'"></div>
+                        
+                        <div class="hexagon-content">
+                            <div class="text-xl mb-1" x-text="dept.icon"></div>
+                            <div class="text-xs font-bold text-white text-center leading-tight" x-text="dept.name"></div>
+                            <div class="text-xs text-gray-200 mt-1" x-text="dept.agents + ' agents'"></div>
+                            
+                            <!-- Performance indicator -->
+                            <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                                <div class="w-3 h-3 rounded-full"
+                                     :class="dept.performance >= 90 ? 'bg-organic-green animate-pulse' : 
+                                             dept.performance >= 80 ? 'bg-sunbeam animate-pulse' : 'bg-fire-orange animate-pulse'"></div>
+                            </div>
+                            
+                            <!-- Voice indicator for department -->
+                            <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-organic-green opacity-0 transition-opacity duration-300"
+                                 :class="{ 'opacity-100 animate-voice-pulse': dept.voiceActive }"></div>
+                        </div>
+                        
+                        <!-- Enhanced Hover info -->
+                        <div class="absolute -bottom-20 left-1/2 transform -translate-x-1/2 
+                                    opacity-0 hover:opacity-100 transition-opacity duration-300
+                                    bg-midnight/95 backdrop-blur-sm rounded-lg p-3 border border-royal-blue/30
+                                    min-w-44 text-center z-20 pointer-events-none group-hover:pointer-events-auto">
+                            <div class="font-semibold text-white mb-1 text-sm" x-text="dept.fullName"></div>
+                            <div class="text-xs text-gray-300 mb-2" x-text="dept.details"></div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-royal-blue">Agents: <span x-text="dept.agents"></span></span>
+                                <span class="text-cyber-purple">Projects: <span x-text="dept.projects"></span></span>
+                            </div>
+                            <div class="text-xs text-organic-green">Performance: <span x-text="dept.performance + '%'"></span></div>
+                            <div class="text-xs text-neon-cyan mt-1 font-semibold">🏢 Click to Enter</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            
+        </div>
+        
+        <!-- Connection Lines -->
+        <svg class="absolute inset-0 pointer-events-none z-20" id="connectionsSvg">
+            <!-- Animated connection lines will be drawn here -->
+        </svg>
+        
+        <!-- Department Room Modal -->
+        <div x-show="departmentRoomOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 department-room"
+             @click.self="closeDepartmentRoom()">
+            
+            <div class="w-full h-full flex flex-col">
+                <!-- Department Room Header -->
+                <div class="flex-shrink-0 p-4 border-b border-royal-blue/30">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="text-2xl" x-text="currentDepartment?.icon"></div>
+                            <div>
+                                <h2 class="text-xl font-bold text-white" x-text="currentDepartment?.fullName"></h2>
+                                <p class="text-gray-400 text-sm" x-text="currentDepartment?.description"></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <!-- Voice Chat Toggle -->
+                            <button @click="toggleDepartmentVoice()" 
+                                    class="px-3 py-2 rounded-lg transition-all duration-300 text-sm"
+                                    :class="departmentVoiceActive ? 'bg-organic-green/30 text-organic-green animate-pulse' : 'bg-gray-600/30 text-gray-400'">
+                                <i class="fas fa-microphone mr-2"></i>
+                                <span x-text="departmentVoiceActive ? 'Voice Active' : 'Start Voice'"></span>
+                            </button>
+                            <button @click="closeDepartmentRoom()" 
+                                    class="text-gray-400 hover:text-white text-xl">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex overflow-hidden">
+                    <!-- Left Panel: Agents -->
+                    <div class="w-1/3 p-4 border-r border-royal-blue/30 overflow-y-auto">
+                        <h3 class="text-lg font-bold text-white mb-4">
+                            <i class="fas fa-robot mr-2 text-cyber-purple"></i>
+                            Department Agents
+                        </h3>
+                        
+                        <div class="space-y-3" x-html="getDepartmentAgentsHTML()">
+                            <!-- Agents will be populated here -->
+                        </div>
+                        
+                        <!-- All Agents Chat Button -->
+                        <button @click="startGroupChat()" 
+                                class="w-full mt-4 px-4 py-3 bg-gradient-to-r from-cyber-purple to-royal-blue 
+                                       rounded-lg hover:from-cyber-purple/80 hover:to-royal-blue/80 transition-all text-sm">
+                            <i class="fas fa-users mr-2"></i>
+                            Chat with All Agents + Daena VP
+                        </button>
+                    </div>
+                    
+                    <!-- Right Panel: Chat Interface -->
+                    <div class="flex-1 flex flex-col">
+                        <!-- Chat Messages -->
+                        <div class="flex-1 p-4 overflow-y-auto" id="departmentChatMessages">
+                            <div class="space-y-3" x-html="departmentChatHTML">
+                                <!-- Chat messages will appear here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Voice Chat Panel -->
+                        <div x-show="departmentVoiceActive" 
+                             class="mx-4 mb-3 p-3 voice-chat-panel">
+                            <div class="flex items-center justify-center space-x-4">
+                                <div class="w-10 h-10 bg-organic-green/20 rounded-full flex items-center justify-center animate-voice-pulse">
+                                    <i class="fas fa-microphone text-organic-green"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm text-organic-green font-semibold">Voice Chat Active</div>
+                                    <div class="text-xs text-gray-400">Speak to chat with agents and Daena</div>
+                                </div>
+                                <button @click="toggleDepartmentVoice()" 
+                                        class="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 text-sm">
+                                    <i class="fas fa-stop mr-2"></i>Stop
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Text Input -->
+                        <div class="p-4 border-t border-royal-blue/30">
+                            <div class="flex space-x-3">
+                                <input type="text" 
+                                       x-model="departmentMessage"
+                                       @keydown.enter="sendDepartmentMessage()"
+                                       class="flex-1 bg-midnight/60 border border-royal-blue/30 rounded-lg px-4 py-2 
+                                              text-white placeholder-gray-400 focus:outline-none focus:border-royal-blue text-sm"
+                                       placeholder="Chat with department agents and Daena VP...">
+                                <button @click="sendDepartmentMessage()" 
+                                        class="px-4 py-2 bg-gradient-to-r from-sunbeam to-neon-cyan text-midnight 
+                                               rounded-lg hover:from-sunbeam/80 hover:to-neon-cyan/80 transition-all font-bold text-sm">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <button @click="startVoiceRecording()" 
+                                        class="px-4 py-2 bg-organic-green/20 text-organic-green 
+                                               rounded-lg hover:bg-organic-green/30 transition-all text-sm">
+                                    <i class="fas fa-microphone"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Sidebar -->
+        <div x-show="sidebarOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform translate-x-full"
+             x-transition:enter-end="opacity-100 transform translate-x-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform translate-x-0"
+             x-transition:leave-end="opacity-0 transform translate-x-full"
+             class="fixed top-16 right-0 w-80 h-full enhanced-sidebar overflow-y-auto">
+            
+            <div class="sticky top-0 bg-midnight/95 backdrop-blur-md p-4 border-b border-royal-blue/30">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-white" x-html="sidebarTitle"></h2>
+                    <button @click="closeSidebar()" 
+                            class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4" x-html="sidebarContent"></div>
+        </div>
+        
+        <!-- System Status Panel -->
+        <div class="system-status">
+            <h3 class="text-sm font-bold text-white mb-2">
+                <i class="fas fa-chart-line mr-2 text-sunbeam"></i>
+                System Status
+            </h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="text-center">
+                    <div class="text-lg font-bold text-organic-green" x-text="systemStats.agents"></div>
+                    <div class="text-gray-400">Agents</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-lg font-bold text-cyber-purple" x-text="systemStats.projects"></div>
+                    <div class="text-gray-400">Projects</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-lg font-bold text-sunbeam" x-text="systemStats.efficiency + '%'"></div>
+                    <div class="text-gray-400">Efficiency</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-lg font-bold text-neon-cyan" x-text="systemStats.uptime + '%'"></div>
+                    <div class="text-gray-400">Uptime</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions Menu -->
+        <div class="fixed bottom-20 left-6 space-y-2" x-data="{ showActions: false }">
+            <div x-show="showActions" x-transition class="space-y-2">
+                <button @click="window.location.href='/strategic-meetings'" 
+                        class="w-12 h-12 bg-cyber-purple hover:bg-cyber-purple/80 rounded-full 
+                               flex items-center justify-center text-white shadow-lg 
+                               transition-all duration-300 hover:scale-110">
+                    <i class="fas fa-users text-sm"></i>
+                </button>
+                <button @click="window.location.href='/task-timeline'" 
+                        class="w-12 h-12 bg-royal-blue hover:bg-royal-blue/80 rounded-full 
+                               flex items-center justify-center text-white shadow-lg 
+                               transition-all duration-300 hover:scale-110">
+                    <i class="fas fa-tasks text-sm"></i>
+                </button>
+                <button @click="window.location.href='/cmp-voting'" 
+                        class="w-12 h-12 bg-fire-orange hover:bg-fire-orange/80 rounded-full 
+                               flex items-center justify-center text-white shadow-lg 
+                               transition-all duration-300 hover:scale-110">
+                    <i class="fas fa-vote-yea text-sm"></i>
+                </button>
+                <button @click="window.location.href='/agents'" 
+                        class="w-12 h-12 bg-organic-green hover:bg-organic-green/80 rounded-full 
+                               flex items-center justify-center text-white shadow-lg 
+                               transition-all duration-300 hover:scale-110">
+                    <i class="fas fa-robot text-sm"></i>
+                </button>
+            </div>
+            <button @click="showActions = !showActions" 
+                    class="w-12 h-12 bg-gradient-to-br from-royal-blue to-cyber-purple rounded-full 
+                           flex items-center justify-center text-white shadow-lg 
+                           transition-all duration-300 hover:scale-110 animate-pulse-glow">
+                <i class="fas fa-plus text-sm" :class="{ 'rotate-45': showActions }"></i>
+            </button>
+        </div>
+        
+    </div>
+
+    <script>
+        function enhancedDashboard() {
+            return {
+                // Enhanced department data
+                departments: [
+                    {
+                        id: 'engineering',
+                        name: 'Engineering',
+                        fullName: 'Engineering & Technology',
+                        description: 'Software development, AI/ML systems, and technical innovation',
+                        icon: '⚙️',
+                        agents: 8,
+                        projects: 12,
+                        performance: 94,
+                        details: '8 Agents • 12 Projects • 94% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'CodeMaster AI', speciality: 'Full-stack Development', status: 'active', efficiency: 95 },
+                            { name: 'DevOps Agent', speciality: 'CI/CD & Infrastructure', status: 'active', efficiency: 92 },
+                            { name: 'QA Tester', speciality: 'Test Automation', status: 'active', efficiency: 89 },
+                            { name: 'Architecture AI', speciality: 'System Design', status: 'active', efficiency: 96 },
+                            { name: 'Security Scanner', speciality: 'Vulnerability Assessment', status: 'active', efficiency: 88 },
+                            { name: 'Performance Monitor', speciality: 'System Optimization', status: 'active', efficiency: 91 },
+                            { name: 'API Designer', speciality: 'RESTful Services', status: 'active', efficiency: 93 },
+                            { name: 'Database Expert', speciality: 'Data Architecture', status: 'active', efficiency: 90 }
+                        ]
+                    },
+                    {
+                        id: 'product',
+                        name: 'Product',
+                        fullName: 'Product & Innovation',
+                        description: 'Product strategy, roadmap planning, and user experience design',
+                        icon: '🚀',
+                        agents: 6,
+                        projects: 8,
+                        performance: 91,
+                        details: '6 Agents • 8 Projects • 91% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Strategy AI', speciality: 'Product Roadmap', status: 'active', efficiency: 94 },
+                            { name: 'UX Research', speciality: 'User Experience', status: 'active', efficiency: 89 },
+                            { name: 'Feature Prioritizer', speciality: 'Backlog Management', status: 'active', efficiency: 92 },
+                            { name: 'Market Analyzer', speciality: 'Competitive Intelligence', status: 'active', efficiency: 87 },
+                            { name: 'Design System', speciality: 'UI/UX Design', status: 'active', efficiency: 91 },
+                            { name: 'Innovation Scout', speciality: 'Trend Analysis', status: 'active', efficiency: 88 }
+                        ]
+                    },
+                    {
+                        id: 'sales',
+                        name: 'Sales',
+                        fullName: 'Sales & Revenue',
+                        description: 'Revenue generation, client relations, and deal management',
+                        icon: '💰',
+                        agents: 7,
+                        projects: 15,
+                        performance: 96,
+                        details: '7 Agents • 15 Projects • 96% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Lead Hunter', speciality: 'Prospect Research', status: 'active', efficiency: 97 },
+                            { name: 'Deal Closer', speciality: 'Sales Negotiation', status: 'active', efficiency: 95 },
+                            { name: 'Proposal Generator', speciality: 'Quote Creation', status: 'active', efficiency: 92 },
+                            { name: 'CRM Manager', speciality: 'Customer Relations', status: 'active', efficiency: 94 },
+                            { name: 'Revenue Optimizer', speciality: 'Sales Analytics', status: 'active', efficiency: 96 },
+                            { name: 'Account Manager', speciality: 'Client Success', status: 'active', efficiency: 93 },
+                            { name: 'Pipeline Tracker', speciality: 'Sales Forecasting', status: 'active', efficiency: 91 }
+                        ]
+                    },
+                    {
+                        id: 'marketing',
+                        name: 'Marketing',
+                        fullName: 'Marketing & Brand',
+                        description: 'Brand promotion, content creation, and customer acquisition',
+                        icon: '📢',
+                        agents: 6,
+                        projects: 11,
+                        performance: 89,
+                        details: '6 Agents • 11 Projects • 89% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Content Creator', speciality: 'Blog & Articles', status: 'active', efficiency: 90 },
+                            { name: 'Social Media AI', speciality: 'Social Campaigns', status: 'active', efficiency: 92 },
+                            { name: 'SEO Optimizer', speciality: 'Search Marketing', status: 'active', efficiency: 87 },
+                            { name: 'Ad Campaign Manager', speciality: 'PPC & Display', status: 'active', efficiency: 89 },
+                            { name: 'Brand Guardian', speciality: 'Brand Consistency', status: 'active', efficiency: 85 },
+                            { name: 'Analytics Expert', speciality: 'Marketing Metrics', status: 'active', efficiency: 91 }
+                        ]
+                    },
+                    {
+                        id: 'finance',
+                        name: 'Finance',
+                        fullName: 'Finance & Operations',
+                        description: 'Financial planning, budgeting, and operational efficiency',
+                        icon: '📊',
+                        agents: 5,
+                        projects: 7,
+                        performance: 98,
+                        details: '5 Agents • 7 Projects • 98% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Budget Analyzer', speciality: 'Financial Planning', status: 'active', efficiency: 98 },
+                            { name: 'Revenue Forecaster', speciality: 'Revenue Analysis', status: 'active', efficiency: 97 },
+                            { name: 'Cost Optimizer', speciality: 'Expense Management', status: 'active', efficiency: 96 },
+                            { name: 'Risk Assessor', speciality: 'Financial Risk', status: 'active', efficiency: 99 },
+                            { name: 'Investment Advisor', speciality: 'Investment Strategy', status: 'active', efficiency: 95 }
+                        ]
+                    },
+                    {
+                        id: 'hr',
+                        name: 'HR',
+                        fullName: 'Human Resources',
+                        description: 'Talent management, recruitment, and company culture',
+                        icon: '👥',
+                        agents: 4,
+                        projects: 6,
+                        performance: 93,
+                        details: '4 Agents • 6 Projects • 93% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Recruiter AI', speciality: 'Talent Acquisition', status: 'active', efficiency: 94 },
+                            { name: 'Culture Curator', speciality: 'Employee Engagement', status: 'active', efficiency: 92 },
+                            { name: 'Performance Tracker', speciality: 'HR Analytics', status: 'active', efficiency: 91 },
+                            { name: 'Learning Coordinator', speciality: 'Training & Development', status: 'active', efficiency: 95 }
+                        ]
+                    },
+                    {
+                        id: 'customer',
+                        name: 'Customer',
+                        fullName: 'Customer Success',
+                        description: 'Customer support, success management, and satisfaction',
+                        icon: '🎯',
+                        agents: 5,
+                        projects: 9,
+                        performance: 95,
+                        details: '5 Agents • 9 Projects • 95% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Support Bot', speciality: 'Customer Support', status: 'active', efficiency: 96 },
+                            { name: 'Success Manager', speciality: 'Customer Onboarding', status: 'active', efficiency: 94 },
+                            { name: 'Feedback Analyzer', speciality: 'Sentiment Analysis', status: 'active', efficiency: 97 },
+                            { name: 'Satisfaction Tracker', speciality: 'Customer Health', status: 'active', efficiency: 93 },
+                            { name: 'Retention Specialist', speciality: 'Churn Prevention', status: 'active', efficiency: 95 }
+                        ]
+                    },
+                    {
+                        id: 'legal',
+                        name: 'Legal',
+                        fullName: 'Legal & Compliance',
+                        description: 'Legal affairs, compliance monitoring, and risk management',
+                        icon: '⚖️',
+                        agents: 3,
+                        projects: 4,
+                        performance: 87,
+                        details: '3 Agents • 4 Projects • 87% Performance',
+                        voiceActive: false,
+                        agentsList: [
+                            { name: 'Contract Reviewer', speciality: 'Legal Documentation', status: 'active', efficiency: 89 },
+                            { name: 'Compliance Monitor', speciality: 'Regulatory Compliance', status: 'active', efficiency: 86 },
+                            { name: 'Risk Advisor', speciality: 'Legal Risk Assessment', status: 'active', efficiency: 85 }
+                        ]
+                    }
+                ],
+                
+                // UI State
+                sidebarOpen: false,
+                sidebarTitle: '',
+                sidebarContent: '',
+                daenaSpeaking: false,
+                voiceMode: false,
+                isRecording: false,
+                recordingText: '',
+                
+                // Department Room State
+                departmentRoomOpen: false,
+                currentDepartment: null,
+                departmentVoiceActive: false,
+                departmentMessage: '',
+                departmentChatHTML: '',
+                selectedAgents: [],
+                
+                // System stats
+                systemStats: {
+                    agents: 47,
+                    projects: 72,
+                    efficiency: 94,
+                    uptime: 99.7
+                },
+                
+                // Voice recognition
+                recognition: null,
+                synthesis: null,
+                
+                // Initialization
+                async initializeDashboard() {
+                    this.createEnhancedParticles();
+                    this.drawHoneycombConnections();
+                    this.startRealTimeUpdates();
+                    this.initializeSpeechSynthesis();
+                    await this.loadSystemData();
+                    
+                    // Initialize department room with welcome message
+                    this.departmentChatHTML = `
+                        <div class="flex items-start space-x-3 mb-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-sunbeam to-neon-cyan rounded-full flex items-center justify-center text-lg">🧠</div>
+                            <div class="flex-1">
+                                <div class="bg-royal-blue/20 rounded-lg p-3 border border-royal-blue/30">
+                                    <div class="font-semibold text-sunbeam mb-1 text-sm">Daena VP</div>
+                                    <div class="text-sm text-white">Welcome to the department room! I'm here to facilitate communication between you and the department agents. You can chat with individual agents or start a group conversation with everyone.</div>
+                                </div>
+                                <div class="text-xs text-gray-400 mt-1">${new Date().toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `;
+                },
+                
+                // Perfect circular positioning (honeycomb structure)
+                getCircularPosition(index) {
+                    const total = this.departments.length;
+                    const angle = (index * 360) / total; // Even distribution in circle
+                    const radius = 240; // Smaller radius for better fit
+                    
+                    const radian = (angle * Math.PI) / 180;
+                    const x = Math.cos(radian) * radius;
+                    const y = Math.sin(radian) * radius;
+                    
+                    return {
+                        transform: `translate(${x}px, ${y}px)`,
+                        animationDelay: `${index * 0.15}s`
+                    };
+                },
+                
+                // Enhanced particle system
+                createEnhancedParticles() {
+                    const container = document.getElementById('particles');
+                    const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
+                    
+                    for (let i = 0; i < 60; i++) {
+                        const particle = document.createElement('div');
+                        const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+                        
+                        particle.className = `particle ${type} animate-particle`;
+                        particle.style.left = Math.random() * 100 + '%';
+                        particle.style.animationDelay = Math.random() * 25 + 's';
+                        particle.style.animationDuration = (20 + Math.random() * 10) + 's';
+                        
+                        container.appendChild(particle);
+                    }
+                },
+                
+                // Enhanced honeycomb connection lines
+                drawHoneycombConnections() {
+                    const svg = document.getElementById('connectionsSvg');
+                    svg.innerHTML = '';
+                    
+                    const centerX = window.innerWidth / 2;
+                    const centerY = window.innerHeight / 2;
+                    
+                    this.departments.forEach((dept, index) => {
+                        const position = this.getCircularPosition(index);
+                        const transform = position.transform;
+                        const match = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
+                        
+                        if (match) {
+                            const x = centerX + parseFloat(match[1]);
+                            const y = centerY + parseFloat(match[2]);
+                            
+                            // Create animated line
+                            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                            line.setAttribute('x1', centerX);
+                            line.setAttribute('y1', centerY);
+                            line.setAttribute('x2', x);
+                            line.setAttribute('y2', y);
+                            line.setAttribute('stroke', `url(#gradient-${dept.id})`);
+                            line.setAttribute('stroke-width', '2');
+                            line.setAttribute('opacity', '0.4');
+                            line.setAttribute('id', `connection-${dept.id}`);
+                            
+                            // Create gradient for each line
+                            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+                            gradient.setAttribute('id', `gradient-${dept.id}`);
+                            gradient.setAttribute('x1', '0%');
+                            gradient.setAttribute('y1', '0%');
+                            gradient.setAttribute('x2', '100%');
+                            gradient.setAttribute('y2', '0%');
+                            
+                            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                            stop1.setAttribute('offset', '0%');
+                            stop1.setAttribute('stop-color', '#ffd700');
+                            stop1.setAttribute('stop-opacity', '0.8');
+                            
+                            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                            stop2.setAttribute('offset', '100%');
+                            stop2.setAttribute('stop-color', '#6366f1');
+                            stop2.setAttribute('stop-opacity', '0.4');
+                            
+                            gradient.appendChild(stop1);
+                            gradient.appendChild(stop2);
+                            defs.appendChild(gradient);
+                            svg.appendChild(defs);
+                            svg.appendChild(line);
+                        }
+                    });
+                },
+                
+                // Enhanced speech synthesis setup
+                initializeSpeechSynthesis() {
+                    if ('speechSynthesis' in window) {
+                        this.synthesis = window.speechSynthesis;
+                        
+                        // Wait for voices to load
+                        const waitForVoices = () => {
+                            this.availableVoices = this.synthesis.getVoices();
+                            if (this.availableVoices.length === 0) {
+                                setTimeout(waitForVoices, 100);
+                            } else {
+                                console.log('✅ Voice synthesis initialized with', this.availableVoices.length, 'voices');
+                                this.setupCustomVoices();
+                            }
+                        };
+                        waitForVoices();
+                        
+                        // Listen for voice changes
+                        this.synthesis.onvoiceschanged = () => {
+                            this.availableVoices = this.synthesis.getVoices();
+                            this.setupCustomVoices();
+                        };
+                    }
+                    
+                    // Initialize speech recognition for voice input
+                    this.initializeSpeechRecognition();
+                },
+                
+                // Setup custom voices for different characters
+                setupCustomVoices() {
+                    this.voiceSettings = {
+                        daena: {
+                            customAudio: '/static/audio/daena_voice.wav', // Custom Daena voice file
+                            fallbackVoice: this.availableVoices.find(v => 
+                                v.name.toLowerCase().includes('female') || 
+                                v.name.toLowerCase().includes('samantha') ||
+                                v.name.toLowerCase().includes('zira')
+                            ) || this.availableVoices[0],
+                            pitch: 1.1,
+                            rate: 0.85,
+                            volume: 0.9
+                        },
+                        agent_male: {
+                            voice: this.availableVoices.find(v => 
+                                v.name.toLowerCase().includes('male') ||
+                                v.name.toLowerCase().includes('david') ||
+                                v.name.toLowerCase().includes('mark')
+                            ) || this.availableVoices[1] || this.availableVoices[0],
+                            pitch: 0.9,
+                            rate: 1.0,
+                            volume: 0.8
+                        },
+                        agent_female: {
+                            voice: this.availableVoices.find(v => 
+                                v.name.toLowerCase().includes('female') ||
+                                v.name.toLowerCase().includes('susan') ||
+                                v.name.toLowerCase().includes('hazel')
+                            ) || this.availableVoices[0],
+                            pitch: 1.0,
+                            rate: 0.95,
+                            volume: 0.8
+                        }
+                    };
+                },
+                
+                // Initialize speech recognition for voice commands
+                initializeSpeechRecognition() {
+                    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        this.recognition = new SpeechRecognition();
+                        
+                        this.recognition.continuous = true;
+                        this.recognition.interimResults = true;
+                        this.recognition.lang = 'en-US';
+                        
+                        this.recognition.onstart = () => {
+                            this.isRecording = true;
+                            console.log('🎤 Voice recognition started');
+                        };
+                        
+                        this.recognition.onend = () => {
+                            this.isRecording = false;
+                            if (this.voiceMode) {
+                                // Restart recognition if voice mode is still active
+                                setTimeout(() => {
+                                    if (this.voiceMode) {
+                                        this.recognition.start();
+                                    }
+                                }, 1000);
+                            }
+                        };
+                        
+                        this.recognition.onresult = (event) => {
+                            let finalTranscript = '';
+                            for (let i = event.resultIndex; i < event.results.length; i++) {
+                                if (event.results[i].isFinal) {
+                                    finalTranscript += event.results[i][0].transcript;
+                                }
+                            }
+                            
+                            if (finalTranscript.trim()) {
+                                console.log('🎤 Voice input:', finalTranscript);
+                                this.processVoiceCommand(finalTranscript);
+                            }
+                        };
+                        
+                        this.recognition.onerror = (event) => {
+                            console.error('Voice recognition error:', event.error);
+                            this.isRecording = false;
+                        };
+                        
+                        console.log('✅ Speech recognition initialized');
+                    } else {
+                        console.warn('⚠️ Speech recognition not supported in this browser');
+                    }
+                },
+                
+                // Enhanced voice controls
+                toggleVoiceMode() {
+                    this.voiceMode = !this.voiceMode;
+                    
+                    if (this.voiceMode) {
+                        if (this.recognition) {
+                            this.recognition.start();
+                            this.speakText("Voice mode activated. I'm listening for your commands.", 'daena');
+                        } else {
+                            console.warn('Voice recognition not available');
+                            this.voiceMode = false;
+                        }
+                    } else {
+                        if (this.recognition) {
+                            this.recognition.stop();
+                            this.speakText("Voice mode deactivated.", 'daena');
+                        }
+                        this.isRecording = false;
+                    }
+                    
+                    // Update UI
+                    this.updateVoiceIndicator();
+                },
+                
+                // Update voice indicator
+                updateVoiceIndicator() {
+                    const indicator = document.querySelector('.voice-indicator');
+                    if (indicator) {
+                        indicator.classList.toggle('active', this.voiceMode);
+                    }
+                },
+                
+                startVoiceRecording() {
+                    if (this.recognition && !this.isRecording) {
+                        this.recognition.start();
+                    }
+                },
+                
+                toggleDepartmentVoice() {
+                    this.departmentVoiceActive = !this.departmentVoiceActive;
+                    if (this.currentDepartment) {
+                        this.currentDepartment.voiceActive = this.departmentVoiceActive;
+                    }
+                },
+                
+                // Enhanced text-to-speech with custom voice support
+                async speakText(text, voiceType = 'daena') {
+                    if (!text || text.trim() === '') return;
+                    
+                    try {
+                        // Try to use custom audio for Daena first
+                        if (voiceType === 'daena' && this.voiceSettings.daena.customAudio) {
+                            const success = await this.playCustomAudio(text);
+                            if (success) return; // If custom audio worked, we're done
+                        }
+                        
+                        // Fall back to speech synthesis
+                        if (this.synthesis) {
+                            // Stop any current speech
+                            this.synthesis.cancel();
+                            
+                            const utterance = new SpeechSynthesisUtterance(text);
+                            
+                            // Determine voice type based on agent name or specified type
+                            let voiceConfig;
+                            if (voiceType === 'daena') {
+                                voiceConfig = this.voiceSettings.daena;
+                            } else if (voiceType === 'agent') {
+                                // Determine gender based on common name patterns (basic implementation)
+                                const femaleNames = ['sarah', 'emma', 'olivia', 'sophia', 'isabella', 'maya', 'zoe', 'alex', 'jamie'];
+                                const maleNames = ['john', 'david', 'michael', 'james', 'robert', 'william', 'mark', 'paul', 'chris'];
+                                
+                                const lowerText = text.toLowerCase();
+                                const isFemale = femaleNames.some(name => lowerText.includes(name));
+                                const isMale = maleNames.some(name => lowerText.includes(name));
+                                
+                                voiceConfig = isFemale ? this.voiceSettings.agent_female : 
+                                             isMale ? this.voiceSettings.agent_male : 
+                                             this.voiceSettings.agent_female; // Default to female
+                            } else {
+                                voiceConfig = this.voiceSettings.agent_male;
+                            }
+                            
+                            // Apply voice settings
+                            if (voiceConfig.voice) {
+                                utterance.voice = voiceConfig.voice;
+                            }
+                            utterance.pitch = voiceConfig.pitch || 1.0;
+                            utterance.rate = voiceConfig.rate || 1.0;
+                            utterance.volume = voiceConfig.volume || 1.0;
+                            
+                            // Visual feedback
+                            if (voiceType === 'daena') {
+                                this.daenaSpeaking = true;
+                                utterance.onend = () => {
+                                    this.daenaSpeaking = false;
+                                };
+                            }
+                            
+                            this.synthesis.speak(utterance);
+                            console.log(`🔊 Speaking as ${voiceType}:`, text);
+                        }
+                    } catch (error) {
+                        console.error('Error in text-to-speech:', error);
+                    }
+                },
+                
+                // Play custom audio file for Daena
+                async playCustomAudio(text) {
+                    try {
+                        // For now, we'll use the speech synthesis as fallback
+                        // In a full implementation, you would:
+                        // 1. Send text to a TTS service that uses your custom voice
+                        // 2. Or have pre-recorded audio clips
+                        // 3. Or use Web Audio API with voice cloning
+                        
+                        console.log('🎵 Using custom Daena voice for:', text);
+                        
+                        // Check if custom audio file exists
+                        const audio = new Audio('/static/audio/daena_voice.wav');
+                        return new Promise((resolve) => {
+                            audio.oncanplaythrough = () => {
+                                audio.play().then(() => {
+                                    resolve(true);
+                                }).catch(() => {
+                                    resolve(false);
+                                });
+                            };
+                            audio.onerror = () => {
+                                resolve(false);
+                            };
+                            audio.load();
+                        });
+                    } catch (error) {
+                        console.warn('Custom audio playback failed:', error);
+                        return false;
+                    }
+                },
+                
+                // Process voice commands like Jarvis
+                processVoiceCommand(command) {
+                    const lowerCommand = command.toLowerCase();
+                    
+                    // Jarvis-style activation words
+                    if (lowerCommand.includes('hey daena') || lowerCommand.includes('daena') || 
+                        lowerCommand.includes('jarvis') || lowerCommand.includes('hey jarvis')) {
+                        
+                        this.daenaSpeaking = true;
+                        
+                        // Extract the actual command after activation
+                        let actualCommand = command;
+                        if (lowerCommand.includes('hey daena')) {
+                            actualCommand = command.substring(command.toLowerCase().indexOf('hey daena') + 9);
+                        } else if (lowerCommand.includes('daena')) {
+                            actualCommand = command.substring(command.toLowerCase().indexOf('daena') + 5);
+                        } else if (lowerCommand.includes('hey jarvis')) {
+                            actualCommand = command.substring(command.toLowerCase().indexOf('hey jarvis') + 10);
+                        } else if (lowerCommand.includes('jarvis')) {
+                            actualCommand = command.substring(command.toLowerCase().indexOf('jarvis') + 6);
+                        }
+                        
+                        actualCommand = actualCommand.trim();
+                        
+                        // Process Jarvis-style commands
+                        if (actualCommand.includes('open') || actualCommand.includes('show')) {
+                            this.handleOpenCommand(actualCommand);
+                        } else if (actualCommand.includes('status') || actualCommand.includes('report')) {
+                            this.handleStatusCommand();
+                        } else if (actualCommand.includes('department')) {
+                            this.handleDepartmentCommand(actualCommand);
+                        } else if (actualCommand.includes('meeting') || actualCommand.includes('schedule')) {
+                            this.handleMeetingCommand();
+                        } else if (actualCommand.includes('analytics') || actualCommand.includes('data')) {
+                            this.handleAnalyticsCommand();
+                        } else if (actualCommand === '' || actualCommand.includes('hello') || actualCommand.includes('hi')) {
+                            this.handleGreeting();
+                        } else {
+                            this.handleGeneralQuery(actualCommand);
+                        }
+                        
+                        setTimeout(() => {
+                            this.daenaSpeaking = false;
+                        }, 3000);
+                    } else if (this.departmentRoomOpen) {
+                        // In department room, process as department message
+                        this.departmentMessage = command;
+                        this.sendDepartmentMessage();
+                    }
+                },
+                
+                // Jarvis-style command handlers
+                handleOpenCommand(command) {
+                    if (command.includes('office')) {
+                        this.speakText("Opening executive office command center.", 'daena');
+                        setTimeout(() => this.openDaenaOffice(), 1000);
+                    } else if (command.includes('engineering')) {
+                        this.speakText("Accessing engineering department.", 'daena');
+                        setTimeout(() => this.enterDepartmentRoom(this.departments.find(d => d.id === 'engineering')), 1000);
+                    } else if (command.includes('meeting')) {
+                        this.speakText("Opening meeting rooms and strategic sessions.", 'daena');
+                        setTimeout(() => this.openMeetings(), 1000);
+                    } else if (command.includes('analytics')) {
+                        this.speakText("Displaying system analytics and performance metrics.", 'daena');
+                        setTimeout(() => this.openAnalytics(), 1000);
+                    } else {
+                        this.speakText("Please specify what you'd like me to open. Available options: office, engineering, sales, marketing, finance, HR, customer, legal, meetings, or analytics.", 'daena');
+                    }
+                },
+                
+                handleStatusCommand() {
+                    const response = `Executive status report: Currently managing ${this.systemStats.agents} AI agents across ${this.departments.length} departments. System efficiency at ${this.systemStats.efficiency}%, uptime ${this.systemStats.uptime}%. All departments operational.`;
+                    this.speakText(response, 'daena');
+                },
+                
+                handleDepartmentCommand(command) {
+                    const deptNames = {
+                        'engineering': 'engineering', 'sales': 'sales', 'marketing': 'marketing',
+                        'finance': 'finance', 'hr': 'hr', 'human resources': 'hr',
+                        'customer': 'customer', 'legal': 'legal', 'product': 'product'
+                    };
+                    
+                    let targetDept = null;
+                    Object.keys(deptNames).forEach(key => {
+                        if (command.includes(key)) {
+                            targetDept = this.departments.find(d => d.id === deptNames[key]);
+                        }
+                    });
+                    
+                    if (targetDept) {
+                        this.speakText(`Entering ${targetDept.fullName} department room with ${targetDept.agents} active agents.`, 'daena');
+                        setTimeout(() => this.enterDepartmentRoom(targetDept), 1000);
+                    } else {
+                        this.speakText("Please specify which department: engineering, sales, marketing, finance, HR, customer success, legal, or product.", 'daena');
+                    }
+                },
+                
+                handleMeetingCommand() {
+                    this.speakText("Opening meeting rooms and strategic planning sessions.", 'daena');
+                    setTimeout(() => this.openMeetings(), 1000);
+                },
+                
+                handleAnalyticsCommand() {
+                    this.speakText("Displaying comprehensive system analytics and performance dashboard.", 'daena');
+                    setTimeout(() => this.openAnalytics(), 1000);
+                },
+                
+                handleGreeting() {
+                    const greetings = [
+                        "Good to see you. I'm online and ready to assist with executive operations.",
+                        "At your service. All systems operational and departments functioning at optimal efficiency.",
+                        "Hello. I'm managing company operations. How may I assist you today?",
+                        "Ready for your commands. All departments are active and awaiting instructions."
+                    ];
+                    this.speakText(greetings[Math.floor(Math.random() * greetings.length)], 'daena');
+                },
+                
+                handleGeneralQuery(query) {
+                    const response = `Processing query: "${query}". I'm analyzing available data and coordinating with department agents for optimal response.`;
+                    this.speakText(response, 'daena');
+                },
+                
+
+                
+                // Enhanced department room entry
+                enterDepartmentRoom(dept) {
+                    this.currentDepartment = dept;
+                    this.departmentRoomOpen = true;
+                    this.selectedAgents = [];
+                    
+                    // Add entry message
+                    this.addDepartmentMessage('system', `You have entered the ${dept.fullName} room. ${dept.agentsList.length} agents are available for conversation.`);
+                },
+                
+                closeDepartmentRoom() {
+                    this.departmentRoomOpen = false;
+                    this.currentDepartment = null;
+                    this.departmentVoiceActive = false;
+                    this.selectedAgents = [];
+                },
+                
+                // Open Daena's Office
+                openDaenaOffice() {
+                    window.location.href = '/daena-office';
+                },
+                
+                // Get department agents HTML
+                getDepartmentAgentsHTML() {
+                    if (!this.currentDepartment) return '';
+                    
+                    return this.currentDepartment.agentsList.map(agent => `
+                        <div class="agent-card rounded-lg p-3 cursor-pointer group" onclick="selectAgent('${agent.name}')">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-cyber-purple to-royal-blue rounded-full flex items-center justify-center">
+                                        <i class="fas fa-robot text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-white text-sm">${agent.name}</div>
+                                        <div class="text-xs text-gray-400">${agent.speciality}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <div class="text-xs font-bold ${agent.efficiency >= 90 ? 'text-organic-green' : agent.efficiency >= 80 ? 'text-sunbeam' : 'text-fire-orange'}">${agent.efficiency}%</div>
+                                    <div class="w-2 h-2 rounded-full ${agent.status === 'active' ? 'bg-organic-green animate-pulse' : 'bg-gray-500'}"></div>
+                                </div>
+                            </div>
+                            <div class="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="w-full px-3 py-1 text-xs bg-royal-blue/20 text-royal-blue rounded hover:bg-royal-blue/30">
+                                    Chat with ${agent.name}
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+                
+                // Department messaging
+                sendDepartmentMessage() {
+                    if (!this.departmentMessage.trim() || !this.currentDepartment) return;
+                    
+                    const message = this.departmentMessage.trim();
+                    this.departmentMessage = '';
+                    
+                    // Add user message
+                    this.addDepartmentMessage('user', message);
+                    
+                    // Simulate agent response
+                    setTimeout(() => {
+                        const response = this.generateAgentResponse(message);
+                        this.addDepartmentMessage('agent', response);
+                        this.speakText(response, 'agent');
+                    }, 1000);
+                    
+                    // Simulate Daena oversight
+                    setTimeout(() => {
+                        const daenaResponse = this.generateDaenaResponse(message);
+                        this.addDepartmentMessage('daena', daenaResponse);
+                        this.speakText(daenaResponse, 'daena');
+                    }, 2500);
+                },
+                
+                addDepartmentMessage(type, content) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    let messageHTML = '';
+                    
+                    if (type === 'user') {
+                        messageHTML = `
+                            <div class="flex items-start space-x-3 mb-3 justify-end">
+                                <div class="flex-1 max-w-xs">
+                                    <div class="bg-cyber-purple/30 rounded-lg p-3 border border-cyber-purple/50">
+                                        <div class="text-sm text-white">${content}</div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1 text-right">${timestamp}</div>
+                                </div>
+                                <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                </div>
+                            </div>
+                        `;
+                    } else if (type === 'agent') {
+                        messageHTML = `
+                            <div class="flex items-start space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-cyber-purple to-royal-blue rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot text-white text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="bg-royal-blue/20 rounded-lg p-3 border border-royal-blue/30">
+                                        <div class="font-semibold text-cyber-purple mb-1 text-sm">${this.currentDepartment.name} Agent</div>
+                                        <div class="text-sm text-white">${content}</div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">${timestamp}</div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (type === 'daena') {
+                        messageHTML = `
+                            <div class="flex items-start space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-sunbeam to-neon-cyan rounded-full flex items-center justify-center text-lg">🧠</div>
+                                <div class="flex-1">
+                                    <div class="bg-sunbeam/20 rounded-lg p-3 border border-sunbeam/30">
+                                        <div class="font-semibold text-sunbeam mb-1 text-sm">Daena VP - Executive Oversight</div>
+                                        <div class="text-sm text-white">${content}</div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">${timestamp}</div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (type === 'system') {
+                        messageHTML = `
+                            <div class="text-center mb-3">
+                                <div class="inline-block bg-gray-600/20 rounded-lg px-3 py-2 border border-gray-600/30">
+                                    <div class="text-xs text-gray-400">${content}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    this.departmentChatHTML += messageHTML;
+                    
+                    // Scroll to bottom
+                    setTimeout(() => {
+                        const chatContainer = document.getElementById('departmentChatMessages');
+                        if (chatContainer) {
+                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                        }
+                    }, 100);
+                },
+                
+                generateAgentResponse(message) {
+                    if (!this.currentDepartment) return '';
+                    
+
+            
+                    const responses = {
+                        engineering: [
+                            `I'm analyzing the technical requirements for "${message}". Based on our current architecture, I recommend implementing this using microservices with containerized deployment.`,
+                            `From an engineering perspective, "${message}" aligns with our development roadmap. I can coordinate with the DevOps team to ensure scalable implementation.`,
+                            `Technical assessment complete: "${message}" is feasible with an estimated development time of 2-3 sprints. I'm coordinating with our Architecture AI for optimal design patterns.`
+                        ],
+                        sales: [
+                            `Excellent opportunity! Regarding "${message}", I see strong market potential with an estimated 40% conversion rate based on our current pipeline analysis.`,
+                            `I've identified 15 qualified prospects who would benefit from "${message}". Our Deal Closer AI can facilitate immediate follow-up with personalized proposals.`,
+                            `Revenue impact analysis: "${message}" could generate $200K+ in Q1. I'm preparing targeted outreach campaigns with our CRM Manager.`
+                        ],
+                        marketing: [
+                            `Great content opportunity! "${message}" can be leveraged across 5 marketing channels with our Social Media AI creating engaging campaigns.`,
+                            `Brand perspective: "${message}" aligns perfectly with our brand voice. I'm coordinating with Content Creator for a comprehensive content strategy.`,
+                            `SEO optimization potential: "${message}" targets high-value keywords. Our SEO Optimizer estimates 35% increase in organic traffic.`
+                        ]
+                    };
+                    
+                    const deptResponses = responses[this.currentDepartment.id] || [
+                        `I understand your request about "${message}". Let me coordinate with my team to provide the best solution for the ${this.currentDepartment.name} department.`,
+                        `Analyzing "${message}" from a ${this.currentDepartment.name} perspective. I'll ensure this aligns with our department objectives and KPIs.`,
+                        `Processing "${message}" through our ${this.currentDepartment.name} workflows. I'll coordinate with Daena VP for strategic alignment.`
+                    ];
+                    
+                    return deptResponses[Math.floor(Math.random() * deptResponses.length)];
+                },
+                
+                generateDaenaResponse(message) {
+                    const responses = [
+                        `As your AI VP, I'm monitoring this conversation in the ${this.currentDepartment?.name} department. The proposed approach for "${message}" aligns with our Q1 strategic objectives. I recommend proceeding with agent coordination.`,
+                        `Executive oversight: The discussion about "${message}" demonstrates excellent cross-functional thinking. I'm tracking performance metrics and will ensure resource allocation supports this initiative.`,
+                        `Strategic assessment: "${message}" presents opportunities for department synergy. I'm coordinating with other department heads to maximize company-wide impact and efficiency.`,
+                        `VP Analysis: The ${this.currentDepartment?.name} team's approach to "${message}" shows 94% alignment with our company goals. I'm facilitating inter-department communication for optimal execution.`
+                    ];
+                    
+                    return responses[Math.floor(Math.random() * responses.length)];
+                },
+                
+                startGroupChat() {
+                    this.addDepartmentMessage('system', `Group chat started with all ${this.currentDepartment.agentsList.length} ${this.currentDepartment.name} agents and Daena VP`);
+                    
+                    setTimeout(() => {
+                        const message = `Welcome to the ${this.currentDepartment.fullName} group chat! I'm facilitating this session with ${this.currentDepartment.agentsList.length} specialized agents. We're operating at ${this.currentDepartment.performance}% efficiency. How can we assist you today?`;
+                        this.addDepartmentMessage('daena', message);
+                        this.speakText(message, 'daena');
+                    }, 500);
+                },
+                
+                // Enhanced sidebar functions
+                closeSidebar() {
+                    this.sidebarOpen = false;
+                },
+                
+                // Fixed meetings functionality
+                openMeetings() {
+                    this.sidebarTitle = '📅 Meeting Rooms & Strategic Sessions';
+                    this.sidebarContent = `
+                        <div class="space-y-4">
+                            <div class="bg-gradient-to-r from-organic-green/20 to-neon-cyan/20 rounded-lg p-3 border border-organic-green/30">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <i class="fas fa-microphone text-organic-green text-lg"></i>
+                                    <span class="font-bold text-white text-sm">Voice & Video Ready</span>
+                                </div>
+                                <p class="text-xs text-gray-300">All meeting rooms support voice chat with agents and Daena VP.</p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-white mb-3">Available Meeting Rooms</h3>
+                                <div class="space-y-2">
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors"
+                                         onclick="window.location.href='/strategic-meetings'">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-lg">🏛️</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">Strategic Meetings</div>
+                                                    <div class="text-xs text-gray-400">Executive planning sessions</div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-arrow-right text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors"
+                                         onclick="window.location.href='/cmp-voting'">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="text-lg">🗳️</div>
+                                                <div>
+                                                    <div class="font-semibold text-white text-sm">CMP Voting</div>
+                                                    <div class="text-xs text-gray-400">Decision making sessions</div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-arrow-right text-gray-400"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    ${this.departments.map(dept => `
+                                        <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors"
+                                             onclick="enterDepartmentFromSidebar('${dept.id}')">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="text-lg">${dept.icon}</div>
+                                                    <div>
+                                                        <div class="font-semibold text-white text-sm">${dept.fullName}</div>
+                                                        <div class="text-xs text-gray-400">${dept.agents} agents available</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center space-x-1">
+                                                    <i class="fas fa-microphone text-organic-green text-xs"></i>
+                                                    <i class="fas fa-comments text-royal-blue text-xs"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    this.sidebarOpen = true;
+                },
+                
+                // Fixed analytics functionality
+                openAnalytics() {
+                    this.sidebarTitle = '📊 System Analytics & Performance';
+                    this.sidebarContent = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="text-center p-3 bg-organic-green/10 border border-organic-green/30 rounded-lg">
+                                    <div class="text-lg font-bold text-organic-green">${this.systemStats.efficiency}%</div>
+                                    <div class="text-xs text-gray-400">Efficiency</div>
+                                </div>
+                                <div class="text-center p-3 bg-royal-blue/10 border border-royal-blue/30 rounded-lg">
+                                    <div class="text-lg font-bold text-royal-blue">${this.systemStats.agents}</div>
+                                    <div class="text-xs text-gray-400">Agents</div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-white mb-3">Department Performance</h3>
+                                <div class="space-y-2">
+                                    ${this.departments.map(dept => `
+                                        <div class="flex items-center justify-between p-2 bg-midnight/40 rounded-lg">
+                                            <div class="flex items-center space-x-2">
+                                                <div class="text-sm">${dept.icon}</div>
+                                                <div>
+                                                    <div class="font-medium text-white text-xs">${dept.name}</div>
+                                                    <div class="text-xs text-gray-400">${dept.agents} agents • ${dept.projects} projects</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="font-bold text-xs ${dept.performance >= 95 ? 'text-organic-green' : 
+                                                                         dept.performance >= 85 ? 'text-sunbeam' : 'text-fire-orange'}">${dept.performance}%</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button onclick="window.location.href='/task-timeline'" 
+                                        class="w-full p-3 bg-royal-blue/20 hover:bg-royal-blue/30 rounded-lg transition-colors text-sm">
+                                    <i class="fas fa-tasks mr-2"></i>View Task Timeline
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    this.sidebarOpen = true;
+                },
+                
+                // Fixed files functionality
+                openFiles() {
+                    this.sidebarTitle = '📁 File Management & Knowledge Base';
+                    this.sidebarContent = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="uploadFile()" 
+                                        class="p-3 bg-organic-green/20 hover:bg-organic-green/30 rounded-lg transition-colors text-sm">
+                                    <i class="fas fa-upload text-organic-green mr-2"></i>Upload
+                                </button>
+                                <button onclick="downloadFiles()" 
+                                        class="p-3 bg-royal-blue/20 hover:bg-royal-blue/30 rounded-lg transition-colors text-sm">
+                                    <i class="fas fa-download text-royal-blue mr-2"></i>Download
+                                </button>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-white mb-3">Recent Files</h3>
+                                <div class="space-y-2">
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="text-lg">📊</div>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-white text-sm">Q1_Performance_Report.pdf</div>
+                                                <div class="text-xs text-gray-400">2.3 MB • Updated 1 hour ago</div>
+                                            </div>
+                                            <i class="fas fa-download text-gray-400 hover:text-white text-sm"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="text-lg">📋</div>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-white text-sm">Strategic_Plan_2024.docx</div>
+                                                <div class="text-xs text-gray-400">1.8 MB • Updated 3 hours ago</div>
+                                            </div>
+                                            <i class="fas fa-download text-gray-400 hover:text-white text-sm"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="text-lg">💡</div>
+                                            <div class="flex-1">
+                                                <div class="font-medium text-white text-sm">Innovation_Ideas.xlsx</div>
+                                                <div class="text-xs text-gray-400">945 KB • Updated yesterday</div>
+                                            </div>
+                                            <i class="fas fa-download text-gray-400 hover:text-white text-sm"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-white mb-3">Knowledge Base</h3>
+                                <div class="space-y-2">
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors">
+                                        <div class="font-medium text-white text-sm">📚 Company Handbook</div>
+                                        <div class="text-xs text-gray-400">Complete guide to policies and procedures</div>
+                                    </div>
+                                    <div class="bg-midnight/40 rounded-lg p-3 cursor-pointer hover:bg-midnight/60 transition-colors">
+                                        <div class="font-medium text-white text-sm">🔧 Technical Documentation</div>
+                                        <div class="text-xs text-gray-400">API docs, system architecture, and more</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    this.sidebarOpen = true;
+                },
+                
+                highlightDepartment(deptId) {
+                    const line = document.getElementById(`connection-${deptId}`);
+                    if (line) {
+                        line.setAttribute('stroke', '#ffd700');
+                        line.setAttribute('stroke-width', '3');
+                        line.setAttribute('opacity', '1');
+                    }
+                },
+                
+                clearHighlights() {
+                    const lines = document.querySelectorAll('[id^="connection-"]');
+                    lines.forEach(line => {
+                        line.setAttribute('stroke', `url(#gradient-${line.id.replace('connection-', '')})`);
+                        line.setAttribute('stroke-width', '2');
+                        line.setAttribute('opacity', '0.4');
+                    });
+                },
+                
+                // Real-time updates
+                startRealTimeUpdates() {
+                    setInterval(() => {
+                        // Update system stats
+                        this.systemStats.efficiency = Math.max(90, Math.min(99, this.systemStats.efficiency + (Math.random() - 0.5) * 2));
+                        
+                        // Update department performance
+                        this.departments.forEach(dept => {
+                            dept.performance = Math.max(80, Math.min(99, dept.performance + (Math.random() - 0.5) * 3));
+                        });
+                    }, 5000);
+                },
+                
+                async loadSystemData() {
+                    try {
+                        const response = await fetch('/api/v1/system/metrics');
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.systemStats = { ...this.systemStats, ...data };
+                        }
+                    } catch (error) {
+                        console.error('Failed to load system data:', error);
+                    }
+                },
+                
+                // Button feedback function
+                showButtonFeedback(buttonType) {
+                    // Create visual feedback for button clicks
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed top-4 right-4 z-50 px-4 py-2 rounded-lg text-white text-sm transition-all duration-300';
+                    
+                    switch(buttonType) {
+                        case 'meetings':
+                            notification.className += ' bg-royal-blue/90 border border-royal-blue/50';
+                            notification.innerHTML = '<i class="fas fa-calendar-alt mr-2"></i>Opening Meetings Center...';
+                            break;
+                        case 'analytics':
+                            notification.className += ' bg-cyber-purple/90 border border-cyber-purple/50';
+                            notification.innerHTML = '<i class="fas fa-chart-bar mr-2"></i>Loading Analytics Dashboard...';
+                            break;
+                        case 'files':
+                            notification.className += ' bg-organic-green/90 border border-organic-green/50';
+                            notification.innerHTML = '<i class="fas fa-folder mr-2"></i>Opening File Management...';
+                            break;
+                        case 'voice':
+                            notification.className += ' bg-green-500/90 border border-green-500/50';
+                            notification.innerHTML = '<i class="fas fa-microphone mr-2"></i>Voice Mode Toggled!';
+                            break;
+                        case 'founder':
+                            notification.className += ' bg-amber-500/90 border border-amber-500/50';
+                            notification.innerHTML = '<i class="fas fa-crown mr-2"></i>Opening Founder Panel...';
+                            break;
+                        case 'council':
+                            notification.className += ' bg-cyber-purple/90 border border-cyber-purple/50';
+                            notification.innerHTML = '<i class="fas fa-users-cog mr-2"></i>Opening Council Dashboard...';
+                            break;
+                        case 'debate':
+                            notification.className += ' bg-sunbeam/90 border border-sunbeam/50';
+                            notification.innerHTML = '<i class="fas fa-comments mr-2"></i>Opening Council Debate...';
+                            break;
+                        case 'synthesis':
+                            notification.className += ' bg-organic-green/90 border border-organic-green/50';
+                            notification.innerHTML = '<i class="fas fa-lightbulb mr-2"></i>Opening Council Synthesis...';
+                            break;
+                        default:
+                            notification.className += ' bg-midnight/90 border border-neural-blue/50';
+                            notification.innerHTML = '<i class="fas fa-check mr-2"></i>Action Executed';
+                    }
+                    
+                    document.body.appendChild(notification);
+                    
+                    // Animate in
+                    requestAnimationFrame(() => {
+                        notification.style.transform = 'translateX(0)';
+                        notification.style.opacity = '1';
+                    });
+                    
+                    // Remove after 2 seconds
+                    setTimeout(() => {
+                        notification.style.transform = 'translateX(100%)';
+                        notification.style.opacity = '0';
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 300);
+                    }, 2000);
+                },
+                
+                // Navigation function
+                navigateToPage(url) {
+                    console.log('Navigating to:', url);
+                    window.location.href = url;
+                }
+            }
+        }
+        
+        // Global functions for external access
+        function selectAgent(agentName) {
+            const dashboard = document.querySelector('[x-data]').__x.$data;
+            dashboard.addDepartmentMessage('system', `${agentName} joined the conversation`);
+            
+            setTimeout(() => {
+                const message = `Hello! I'm ${agentName}. How can I assist you with ${dashboard.currentDepartment?.name} matters today?`;
+                dashboard.addDepartmentMessage('agent', message);
+                dashboard.speakText(message, 'agent');
+            }, 500);
+        }
+        
+        function enterDepartmentFromSidebar(deptId) {
+            const dashboard = document.querySelector('[x-data]').__x.$data;
+            const dept = dashboard.departments.find(d => d.id === deptId);
+            if (dept) {
+                dashboard.closeSidebar();
+                dashboard.enterDepartmentRoom(dept);
+            }
+        }
+        
+        // Global button feedback function
+        function showButtonFeedback(buttonType) {
+            // Create visual feedback for button clicks
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 z-50 px-4 py-2 rounded-lg text-white text-sm transition-all duration-300';
+            
+            switch(buttonType) {
+                case 'meetings':
+                    notification.className += ' bg-royal-blue/90 border border-royal-blue/50';
+                    notification.innerHTML = '<i class="fas fa-calendar-alt mr-2"></i>Opening Meetings Center...';
+                    break;
+                case 'analytics':
+                    notification.className += ' bg-cyber-purple/90 border border-cyber-purple/50';
+                    notification.innerHTML = '<i class="fas fa-chart-bar mr-2"></i>Loading Analytics Dashboard...';
+                    break;
+                case 'files':
+                    notification.className += ' bg-organic-green/90 border border-organic-green/50';
+                    notification.innerHTML = '<i class="fas fa-folder mr-2"></i>Opening File Management...';
+                    break;
+                case 'voice':
+                    notification.className += ' bg-green-500/90 border border-green-500/50';
+                    notification.innerHTML = '<i class="fas fa-microphone mr-2"></i>Voice Mode Toggled!';
+                    break;
+                case 'founder':
+                    notification.className += ' bg-amber-500/90 border border-amber-500/50';
+                    notification.innerHTML = '<i class="fas fa-crown mr-2"></i>Opening Founder Panel...';
+                    break;
+                case 'council':
+                    notification.className += ' bg-cyber-purple/90 border border-cyber-purple/50';
+                    notification.innerHTML = '<i class="fas fa-users-cog mr-2"></i>Opening Council Dashboard...';
+                    break;
+                case 'debate':
+                    notification.className += ' bg-sunbeam/90 border border-sunbeam/50';
+                    notification.innerHTML = '<i class="fas fa-comments mr-2"></i>Opening Council Debate...';
+                    break;
+                case 'synthesis':
+                    notification.className += ' bg-organic-green/90 border border-organic-green/50';
+                    notification.innerHTML = '<i class="fas fa-lightbulb mr-2"></i>Opening Council Synthesis...';
+                    break;
+                default:
+                    notification.className += ' bg-midnight/90 border border-neural-blue/50';
+                    notification.innerHTML = '<i class="fas fa-check mr-2"></i>Action Executed';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+                notification.style.opacity = '1';
+            });
+            
+            // Remove after 2 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 2000);
+        }
+
+        // Global navigation function
+        function navigateToPage(url) {
+            console.log('Navigating to:', url);
+            window.location.href = url;
+        }
+
+        // Navigation functions for header buttons
+        function openMeetings() {
+            window.location.href = '/strategic-meetings';
+        }
+        
+        function openAnalytics() {
+            window.location.href = '/analytics';
+        }
+        
+        function openFiles() {
+            window.location.href = '/files';
+        }
+        
+        function openSynthesis() {
+            window.location.href = '/synthesis';
+        }
+        
+        function openConferenceRoom() {
+            window.location.href = '/conference-room';
+        }
+        
+        function openVoicePanel() {
+            window.location.href = '/voice-panel';
+        }
+        
+        // File operations
+        function uploadFile() {
+            // Create file upload interface
+            const uploadInterface = document.createElement('div');
+            uploadInterface.className = 'fixed inset-0 bg-midnight/95 backdrop-blur-md z-50 flex items-center justify-center';
+            uploadInterface.innerHTML = `
+                <div class="bg-deep-space/90 border border-organic-green/30 rounded-xl p-6 w-96 max-w-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-organic-green to-neon-cyan rounded-lg flex items-center justify-center">
+                                📤
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">Upload Files</h3>
+                                <p class="text-xs text-gray-400">Add files to your knowledge base</p>
+                            </div>
+                        </div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="border-2 border-dashed border-organic-green/30 rounded-lg p-8 text-center hover:border-organic-green/50 transition-colors">
+                            <div class="text-4xl mb-2">📎</div>
+                            <p class="text-white font-medium mb-2">Drop files here or click to browse</p>
+                            <p class="text-xs text-gray-400">Supports: PDF, DOC, XLS, PPT, images</p>
+                            <input type="file" multiple class="hidden" id="fileInput" onchange="handleFileSelection(this)">
+                            <button onclick="document.getElementById('fileInput').click()" 
+                                    class="mt-3 px-4 py-2 bg-organic-green/20 text-organic-green hover:bg-organic-green/30 rounded-lg transition-colors">
+                                Browse Files
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="alert('📁 Files uploaded to: D:\\\\Ideas\\\\Daena\\\\Knowledge\\\\'); this.closest('.fixed').remove();" 
+                                    class="px-4 py-2 bg-organic-green hover:bg-organic-green/80 text-white rounded-lg transition-colors">
+                                Upload to Knowledge Base
+                            </button>
+                            <button onclick="this.closest('.fixed').remove()" 
+                                    class="px-4 py-2 bg-midnight/60 text-gray-300 hover:bg-midnight/80 rounded-lg transition-colors">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(uploadInterface);
+        }
+        
+        function downloadFiles() {
+            // Create download interface
+            const downloadInterface = document.createElement('div');
+            downloadInterface.className = 'fixed inset-0 bg-midnight/95 backdrop-blur-md z-50 flex items-center justify-center';
+            downloadInterface.innerHTML = `
+                <div class="bg-deep-space/90 border border-royal-blue/30 rounded-xl p-6 w-96 max-w-full">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-royal-blue to-cyber-purple rounded-lg flex items-center justify-center">
+                                📥
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">Download Files</h3>
+                                <p class="text-xs text-gray-400">Export your company data</p>
+                            </div>
+                        </div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <button onclick="alert('📊 Downloading Q1 Performance Report...'); this.closest('.fixed').remove();" 
+                                class="w-full text-left p-3 bg-midnight/40 hover:bg-midnight/60 rounded-lg transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-lg">📊</span>
+                                <div>
+                                    <div class="font-medium text-white text-sm">Q1 Performance Report</div>
+                                    <div class="text-xs text-gray-400">2.4 MB • PDF</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="alert('💰 Downloading Financial Analysis...'); this.closest('.fixed').remove();" 
+                                class="w-full text-left p-3 bg-midnight/40 hover:bg-midnight/60 rounded-lg transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-lg">💰</span>
+                                <div>
+                                    <div class="font-medium text-white text-sm">Financial Analysis Q1</div>
+                                    <div class="text-xs text-gray-400">1.8 MB • Excel</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="alert('📋 Downloading all company reports...'); this.closest('.fixed').remove();" 
+                                class="w-full px-4 py-2 bg-royal-blue hover:bg-royal-blue/80 text-white rounded-lg transition-colors">
+                            Download All Reports
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(downloadInterface);
+        }
+        
+        function handleFileSelection(input) {
+            const files = Array.from(input.files);
+            if (files.length > 0) {
+                alert(`✅ Selected ${files.length} file(s):\\n\\n${files.map(f => f.name).join('\\n')}\\n\\nReady to upload!`);
+            }
+        }
+        
+        // Initialize enhanced features on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const dashboard = document.querySelector('[x-data]');
+                if (dashboard && dashboard.__x) {
+                    dashboard.__x.$data.drawHoneycombConnections();
+                }
+            }, 500);
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            setTimeout(() => {
+                const dashboard = document.querySelector('[x-data]');
+                if (dashboard && dashboard.__x) {
+                    dashboard.__x.$data.drawHoneycombConnections();
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html> 

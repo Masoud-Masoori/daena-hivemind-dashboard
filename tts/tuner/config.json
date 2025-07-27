@@ -1,0 +1,8 @@
+{
+  "tuning": {
+    "mic_gain": 1.2,
+    "noise_floor": -35,
+    "expected_wake": "daena",
+    "samples_recorded": false
+  }
+}

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents | MAS-AI Agent Management</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'royal-blue': '#6366f1',
+                        'electric-pink': '#ec4899',
+                        'fire-orange': '#f97316'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'cosmic-drift': 'cosmic-drift 20s ease infinite',
+                        'agent-hover': 'agent-hover 0.3s ease-out'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 
+                                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4)',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.6)',
+                                transform: 'scale(1.02)'
+                            }
+                        },
+                        'cosmic-drift': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        'agent-hover': {
+                            '0%': { transform: 'scale(1) translateY(0)' },
+                            '100%': { transform: 'scale(1.05) translateY(-4px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Enhanced cosmic background */
+        .cosmic-background {
+            background: radial-gradient(circle at 20% 80%, #2d1b69 0%, #1a1a3e 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 80% 20%, #1a1a3e 0%, #2d1b69 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 40% 40%, #0a0a1e 0%, #1a1a3e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 20s ease infinite;
+        }
+        
+        /* Agent card styles */
+        .agent-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.2));
+            border-color: rgba(99, 102, 241, 0.5);
+            animation: agent-hover 0.3s ease-out forwards;
+        }
+        
+        /* Status indicators */
+        .status-active { background: #10b981; }
+        .status-idle { background: #fbbf24; }
+        .status-offline { background: #6b7280; }
+        .status-error { background: #ef4444; }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen overflow-hidden">
+    
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center text-xl font-bold shadow-lg shadow-cyan-500/30"
+                     title="👥 AI Agent Management">
+                    👥
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        AI AGENT MANAGEMENT
+                    </div>
+                    <p class="text-xs text-blue-200/80">MAS-AI Agent Control Center</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/strategic-meetings'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-calendar-alt mr-2"></i>Meetings
+                </button>
+                <button onclick="window.location.href='/task-timeline'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-tasks mr-2"></i>Timeline
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="agentManagement()" x-init="initializePage()" class="relative w-full h-screen pt-16">
+        
+        <div class="max-w-7xl mx-auto p-6 h-full overflow-y-auto">
+            
+            <!-- Agent Statistics Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                
+                <div class="agent-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">🟢</div>
+                    <h3 class="text-2xl font-bold text-organic-green" x-text="stats.active">25</h3>
+                    <p class="text-sm text-gray-400">Active Agents</p>
+                </div>
+                
+                <div class="agent-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">🔧</div>
+                    <h3 class="text-2xl font-bold text-cyber-purple" x-text="stats.departments">8</h3>
+                    <p class="text-sm text-gray-400">Departments</p>
+                </div>
+                
+                <div class="agent-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">⚡</div>
+                    <h3 class="text-2xl font-bold text-sunbeam" x-text="stats.efficiency + '%'">94%</h3>
+                    <p class="text-sm text-gray-400">Efficiency</p>
+                </div>
+                
+                <div class="agent-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-2">📊</div>
+                    <h3 class="text-2xl font-bold text-neon-cyan" x-text="stats.tasks">127</h3>
+                    <p class="text-sm text-gray-400">Active Tasks</p>
+                </div>
+                
+            </div>
+            
+            <!-- Department Filters -->
+            <div class="mb-6">
+                <div class="flex flex-wrap gap-3">
+                    <button @click="filterDepartment('all')" 
+                            :class="selectedDepartment === 'all' ? 'bg-sunbeam text-midnight' : 'bg-midnight/40 text-white hover:bg-midnight/60'"
+                            class="px-4 py-2 rounded-lg transition-colors text-sm font-medium">
+                        All Departments
+                    </button>
+                    <template x-for="dept in departments" :key="dept.id">
+                        <button @click="filterDepartment(dept.id)" 
+                                :class="selectedDepartment === dept.id ? 'bg-sunbeam text-midnight' : 'bg-midnight/40 text-white hover:bg-midnight/60'"
+                                class="px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+                                x-text="dept.name"></button>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Agents Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <template x-for="agent in filteredAgents" :key="agent.id">
+                    <div class="agent-card rounded-xl p-6 cursor-pointer" @click="selectAgent(agent)">
+                        <!-- Agent Header -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-cyber-purple to-royal-blue rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot text-white text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-sm" x-text="agent.name"></h3>
+                                    <p class="text-xs text-gray-400" x-text="agent.department"></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div :class="'w-3 h-3 rounded-full status-' + agent.status"></div>
+                                <span class="text-xs text-gray-400 capitalize" x-text="agent.status"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Agent Role -->
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-300" x-text="agent.role"></p>
+                        </div>
+                        
+                        <!-- Performance Metrics -->
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Performance</span>
+                                <span :class="agent.performance >= 90 ? 'text-organic-green' : agent.performance >= 80 ? 'text-sunbeam' : 'text-fire-orange'" 
+                                      class="font-bold" x-text="agent.performance + '%'"></span>
+                            </div>
+                            <div class="w-full bg-midnight/60 rounded-full h-2">
+                                <div :style="'width: ' + agent.performance + '%'" 
+                                     :class="agent.performance >= 90 ? 'bg-organic-green' : agent.performance >= 80 ? 'bg-sunbeam' : 'bg-fire-orange'"
+                                     class="h-2 rounded-full transition-all duration-300"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Current Task -->
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-400 mb-1">Current Task:</p>
+                            <p class="text-xs text-white" x-text="agent.currentTask || 'Idle'"></p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <button @click.stop="chatWithAgent(agent)" 
+                                    class="flex-1 px-3 py-2 bg-royal-blue/20 text-royal-blue hover:bg-royal-blue/30 rounded-lg text-xs font-medium transition-colors">
+                                <i class="fas fa-comments mr-1"></i>Chat
+                            </button>
+                            <button @click.stop="configureAgent(agent)" 
+                                    class="flex-1 px-3 py-2 bg-cyber-purple/20 text-cyber-purple hover:bg-cyber-purple/30 rounded-lg text-xs font-medium transition-colors">
+                                <i class="fas fa-cog mr-1"></i>Config
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+        </div>
+        
+        <!-- Agent Detail Modal -->
+        <div x-show="selectedAgent" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-midnight/80 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+             @click.self="selectedAgent = null">
+            
+            <div class="agent-card rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                <template x-if="selectedAgent">
+                    <div>
+                        <!-- Modal Header -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-cyber-purple to-royal-blue rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white" x-text="selectedAgent.name"></h2>
+                                    <p class="text-gray-400" x-text="selectedAgent.role"></p>
+                                    <p class="text-sm text-gray-500" x-text="selectedAgent.department + ' Department'"></p>
+                                </div>
+                            </div>
+                            <button @click="selectedAgent = null" 
+                                    class="text-gray-400 hover:text-white text-2xl">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Agent Details -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <h3 class="font-semibold text-white mb-3">Performance Metrics</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Overall Performance</span>
+                                        <span class="text-organic-green font-bold" x-text="selectedAgent.performance + '%'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Tasks Completed</span>
+                                        <span class="text-sunbeam font-bold" x-text="selectedAgent.tasksCompleted || '0'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Success Rate</span>
+                                        <span class="text-cyber-purple font-bold" x-text="selectedAgent.successRate || '0%'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="font-semibold text-white mb-3">Capabilities</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="capability in selectedAgent.capabilities || []" :key="capability">
+                                        <span class="px-2 py-1 bg-royal-blue/20 text-royal-blue rounded-full text-xs" x-text="capability"></span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-4">
+                            <button @click="chatWithAgent(selectedAgent)" 
+                                    class="px-6 py-3 bg-gradient-to-r from-royal-blue to-cyber-purple text-white rounded-lg font-bold hover:from-royal-blue/80 hover:to-cyber-purple/80 transition-all">
+                                <i class="fas fa-comments mr-2"></i>Start Chat
+                            </button>
+                            <button @click="assignTask(selectedAgent)" 
+                                    class="px-6 py-3 bg-gradient-to-r from-organic-green to-neon-cyan text-midnight rounded-lg font-bold hover:from-organic-green/80 hover:to-neon-cyan/80 transition-all">
+                                <i class="fas fa-tasks mr-2"></i>Assign Task
+                            </button>
+                            <button @click="configureAgent(selectedAgent)" 
+                                    class="px-6 py-3 bg-gradient-to-r from-sunbeam to-fire-orange text-midnight rounded-lg font-bold hover:from-sunbeam/80 hover:to-fire-orange/80 transition-all">
+                                <i class="fas fa-cog mr-2"></i>Configure
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function agentManagement() {
+            return {
+                selectedAgent: null,
+                selectedDepartment: 'all',
+                
+                stats: {
+                    active: 25,
+                    departments: 8,
+                    efficiency: 94,
+                    tasks: 127
+                },
+                
+                departments: [
+                    { id: 'engineering', name: 'Engineering' },
+                    { id: 'sales', name: 'Sales' },
+                    { id: 'marketing', name: 'Marketing' },
+                    { id: 'finance', name: 'Finance' },
+                    { id: 'hr', name: 'HR' },
+                    { id: 'customer', name: 'Customer' },
+                    { id: 'product', name: 'Product' },
+                    { id: 'legal', name: 'Legal' }
+                ],
+                
+                agents: [
+                    { id: 1, name: 'CodeMaster AI', role: 'Full-stack Developer', department: 'Engineering', status: 'active', performance: 96, currentTask: 'Building API endpoints', capabilities: ['Python', 'React', 'Database Design'], tasksCompleted: 45, successRate: '98%' },
+                    { id: 2, name: 'Sales Optimizer', role: 'Lead Generation', department: 'Sales', status: 'active', performance: 94, currentTask: 'Analyzing prospect data', capabilities: ['CRM Management', 'Lead Scoring', 'Pipeline Analysis'], tasksCompleted: 67, successRate: '94%' },
+                    { id: 3, name: 'Content Creator', role: 'Content Marketing', department: 'Marketing', status: 'active', performance: 91, currentTask: 'Writing blog articles', capabilities: ['Content Writing', 'SEO', 'Social Media'], tasksCompleted: 34, successRate: '91%' },
+                    { id: 4, name: 'Budget Analyzer', role: 'Financial Planning', department: 'Finance', status: 'active', performance: 98, currentTask: 'Q4 budget review', capabilities: ['Financial Analysis', 'Forecasting', 'Risk Assessment'], tasksCompleted: 23, successRate: '99%' },
+                    { id: 5, name: 'Recruiter AI', role: 'Talent Acquisition', department: 'HR', status: 'idle', performance: 87, currentTask: null, capabilities: ['Resume Screening', 'Interview Scheduling', 'Candidate Assessment'], tasksCompleted: 56, successRate: '89%' },
+                    { id: 6, name: 'Support Bot', role: 'Customer Support', department: 'Customer', status: 'active', performance: 93, currentTask: 'Handling support tickets', capabilities: ['Issue Resolution', 'Customer Communication', 'Knowledge Base'], tasksCompleted: 123, successRate: '96%' }
+                ],
+                
+                initializePage() {
+                    // Initialize any required data or connections
+                },
+                
+                get filteredAgents() {
+                    if (this.selectedDepartment === 'all') {
+                        return this.agents;
+                    }
+                    return this.agents.filter(agent => 
+                        agent.department.toLowerCase() === this.selectedDepartment.toLowerCase()
+                    );
+                },
+                
+                filterDepartment(deptId) {
+                    this.selectedDepartment = deptId;
+                },
+                
+                selectAgent(agent) {
+                    this.selectedAgent = agent;
+                },
+                
+                chatWithAgent(agent) {
+                    // Create chat interface
+                    const chatWindow = document.createElement('div');
+                    chatWindow.className = 'fixed inset-0 bg-midnight/95 backdrop-blur-md z-50 flex items-center justify-center';
+                    chatWindow.innerHTML = `
+                        <div class="bg-deep-space/90 border border-royal-blue/30 rounded-xl p-6 w-96 max-w-full">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-royal-blue to-cyber-purple rounded-lg flex items-center justify-center">
+                                        🤖
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white">${agent.name}</h3>
+                                        <p class="text-xs text-gray-400">${agent.department} • ${agent.role}</p>
+                                    </div>
+                                </div>
+                                <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="bg-midnight/40 rounded-lg p-3">
+                                    <div class="flex items-center space-x-2 mb-2">
+                                        <div class="w-6 h-6 bg-royal-blue rounded-full flex items-center justify-center text-xs">🤖</div>
+                                        <span class="font-medium text-white text-sm">${agent.name}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-200">Hello! I'm ${agent.name}, your ${agent.role}. How can I assist you today?</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Type your message..." 
+                                       class="flex-1 bg-midnight/60 border border-royal-blue/30 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-400 focus:outline-none focus:border-royal-blue">
+                                <button class="px-4 py-2 bg-royal-blue hover:bg-royal-blue/80 rounded-lg text-white transition-colors">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="mt-4 text-center">
+                                <button onclick="window.location.href='/'" class="px-4 py-2 bg-cyber-purple/20 text-cyber-purple hover:bg-cyber-purple/30 rounded-lg text-sm transition-colors">
+                                    Continue in Dashboard Chat
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(chatWindow);
+                    this.selectedAgent = null;
+                },
+                
+                configureAgent(agent) {
+                    // Create configuration interface
+                    const configWindow = document.createElement('div');
+                    configWindow.className = 'fixed inset-0 bg-midnight/95 backdrop-blur-md z-50 flex items-center justify-center';
+                    configWindow.innerHTML = `
+                        <div class="bg-deep-space/90 border border-cyber-purple/30 rounded-xl p-6 w-[500px] max-w-full">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-cyber-purple to-electric-pink rounded-lg flex items-center justify-center">
+                                        ⚙️
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white">${agent.name} Configuration</h3>
+                                        <p class="text-xs text-gray-400">Agent Settings & Preferences</p>
+                                    </div>
+                                </div>
+                                <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Agent Status</label>
+                                    <select class="w-full bg-midnight/60 border border-cyber-purple/30 rounded-lg px-3 py-2 text-white">
+                                        <option value="active" ${agent.status === 'active' ? 'selected' : ''}>Active</option>
+                                        <option value="idle" ${agent.status === 'idle' ? 'selected' : ''}>Idle</option>
+                                        <option value="maintenance" ${agent.status === 'maintenance' ? 'selected' : ''}>Maintenance</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Performance Target</label>
+                                    <input type="range" min="80" max="100" value="${agent.performance}" 
+                                           class="w-full accent-cyber-purple">
+                                    <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                        <span>80%</span>
+                                        <span>Current: ${agent.performance}%</span>
+                                        <span>100%</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Specialization</label>
+                                    <input type="text" value="${agent.role}" 
+                                           class="w-full bg-midnight/60 border border-cyber-purple/30 rounded-lg px-3 py-2 text-white">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Current Assignment</label>
+                                    <textarea rows="2" class="w-full bg-midnight/60 border border-cyber-purple/30 rounded-lg px-3 py-2 text-white">${agent.currentTask || 'No current task assigned'}</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3 mt-6">
+                                <button onclick="alert('✅ Configuration saved for ${agent.name}'); this.closest('.fixed').remove();" 
+                                        class="flex-1 px-4 py-2 bg-cyber-purple hover:bg-cyber-purple/80 text-white rounded-lg transition-colors">
+                                    Save Changes
+                                </button>
+                                <button onclick="this.closest('.fixed').remove()" 
+                                        class="px-4 py-2 bg-midnight/60 text-gray-300 hover:bg-midnight/80 rounded-lg transition-colors">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(configWindow);
+                    this.selectedAgent = null;
+                },
+                
+                assignTask(agent) {
+                    // Create task assignment interface
+                    const taskWindow = document.createElement('div');
+                    taskWindow.className = 'fixed inset-0 bg-midnight/95 backdrop-blur-md z-50 flex items-center justify-center';
+                    taskWindow.innerHTML = `
+                        <div class="bg-deep-space/90 border border-organic-green/30 rounded-xl p-6 w-[450px] max-w-full">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-organic-green to-neon-cyan rounded-lg flex items-center justify-center">
+                                        📋
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white">Assign Task to ${agent.name}</h3>
+                                        <p class="text-xs text-gray-400">Task Management & Prioritization</p>
+                                    </div>
+                                </div>
+                                <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Task Title</label>
+                                    <input type="text" id="taskTitle" placeholder="Enter task title..." 
+                                           class="w-full bg-midnight/60 border border-organic-green/30 rounded-lg px-3 py-2 text-white placeholder-gray-400">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Task Description</label>
+                                    <textarea id="taskDesc" rows="3" placeholder="Describe the task in detail..." 
+                                              class="w-full bg-midnight/60 border border-organic-green/30 rounded-lg px-3 py-2 text-white placeholder-gray-400"></textarea>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+                                        <select id="taskPriority" class="w-full bg-midnight/60 border border-organic-green/30 rounded-lg px-3 py-2 text-white">
+                                            <option value="low">Low</option>
+                                            <option value="medium" selected>Medium</option>
+                                            <option value="high">High</option>
+                                            <option value="urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Deadline</label>
+                                        <input type="date" id="taskDeadline" 
+                                               class="w-full bg-midnight/60 border border-organic-green/30 rounded-lg px-3 py-2 text-white">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3 mt-6">
+                                <button onclick="
+                                    const title = document.getElementById('taskTitle').value;
+                                    const desc = document.getElementById('taskDesc').value;
+                                    const priority = document.getElementById('taskPriority').value;
+                                    const deadline = document.getElementById('taskDeadline').value;
+                                    
+                                    if (title.trim()) {
+                                        alert('✅ Task assigned to ${agent.name}:\\n\\nTitle: ' + title + '\\nPriority: ' + priority + (deadline ? '\\nDeadline: ' + deadline : ''));
+                                        this.closest('.fixed').remove();
+                                    } else {
+                                        alert('Please enter a task title');
+                                    }
+                                " 
+                                        class="flex-1 px-4 py-2 bg-organic-green hover:bg-organic-green/80 text-white rounded-lg transition-colors">
+                                    Assign Task
+                                </button>
+                                <button onclick="this.closest('.fixed').remove()" 
+                                        class="px-4 py-2 bg-midnight/60 text-gray-300 hover:bg-midnight/80 rounded-lg transition-colors">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(taskWindow);
+                    this.selectedAgent = null;
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

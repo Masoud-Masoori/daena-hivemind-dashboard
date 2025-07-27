@@ -1,0 +1,56 @@
+{
+    "environment": {
+        "mode": "hybrid",
+        "debug": true,
+        "log_level": "INFO",
+        "data_dir": "data",
+        "cache_dir": "cache",
+        "logs_dir": "logs"
+    },
+    "api": {
+        "host": "0.0.0.0",
+        "port": 8000,
+        "cors_origins": ["*"],
+        "rate_limit": 100,
+        "timeout": 30
+    },
+    "database": {
+        "type": "sqlite",
+        "path": "data/daena.db",
+        "backup_interval": 3600
+    },
+    "security": {
+        "encryption_key": "your-encryption-key",
+        "jwt_secret": "your-jwt-secret",
+        "token_expiry": 3600,
+        "max_login_attempts": 5
+    },
+    "cloud": {
+        "provider": "gcp",
+        "project_id": "your-gcp-project",
+        "region": "us-central1",
+        "credentials_path": "config/gcloud-credentials.json"
+    },
+    "models": {
+        "local_path": "E:/Daena/models",
+        "cache_dir": "cache/models",
+        "sync_interval": 3600
+    },
+    "monitoring": {
+        "enabled": true,
+        "metrics_interval": 60,
+        "alert_threshold": 0.8,
+        "notification_email": "admin@daena.com"
+    },
+    "backup": {
+        "enabled": true,
+        "schedule": "0 0 * * *",
+        "retention_days": 30,
+        "backup_dir": "backups"
+    },
+    "logging": {
+        "file_rotation": "1 day",
+        "max_size": "100MB",
+        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    }
+} 

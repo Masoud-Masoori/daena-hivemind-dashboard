@@ -1,0 +1,14 @@
+[
+  {
+    "agent": "daena",
+    "priority": "critical",
+    "reason": "orchestrator + LLM resolver",
+    "confidence_score": 0.98
+  },
+  {
+    "agent": "scraper001",
+    "priority": "medium",
+    "reason": "support task",
+    "confidence_score": 0.72
+  }
+]

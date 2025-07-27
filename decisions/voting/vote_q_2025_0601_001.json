@@ -1,0 +1,15 @@
+{
+  "question_id": "q_2025_0601_001",
+  "inputs": "What is the best way to fine-tune a multilingual TTS model?",
+  "llm_outputs": {
+    "deepseek-r2": "Use language-specific datasets with low learning rate.",
+    "qwen2.5": "Combine multilingual embeddings with gradient checkpointing.",
+    "yi-6b": "Focus on high-resource language anchors and contrastive tuning."
+  },
+  "confidence_scores": {
+    "deepseek-r2": 0.88,
+    "qwen2.5": 0.91,
+    "yi-6b": 0.76
+  },
+  "winner": "qwen2.5"
+}

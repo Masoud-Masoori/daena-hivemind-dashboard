@@ -1,0 +1,12 @@
+{
+  "research_scout": {
+    "goal": "collect emerging trends",
+    "duration_minutes": 180,
+    "tools": ["web", "langchain"]
+  },
+  "task_router": {
+    "goal": "assign tasks to correct departments",
+    "duration_minutes": 360,
+    "tools": ["cmp_router", "a2a"]
+  }
+}

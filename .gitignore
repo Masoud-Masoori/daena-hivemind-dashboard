@@ -1,0 +1,118 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+venv_daena_audio/
+venv_daena_main_py310/
+venv_mas_ai_py310/
+
+# Environment variables
+.env
+.env.local
+.env.production
+config_template.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+daena.db
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Cache
+cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Models and large files
+models/
+*.bin
+*.safetensors
+*.gguf
+*.ggml
+*.pt
+*.pth
+*.onnx
+
+# Audio files
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Azure
+.azure/
+
+# Secrets and API keys
+api_codes.txt
+hidden_config.json
+pod_voice_config.json
+voice_config.json
+
+# Build artifacts
+*.zip
+*.tar.gz
+*.exe
+*.msi
+
+# Rust
+target/
+Cargo.lock
+
+# Node.js (if any frontend components)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+.dockerignore
+
+# Backup files
+backups/
+*.bak
+*.backup

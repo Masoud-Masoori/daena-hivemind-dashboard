@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2025-05-31T17:20:00",
+    "question_id": "q_2025_0531_004",
+    "winner": "deepseek-r2",
+    "reason": "Accurate numeric reasoning",
+    "conflicts": ["qwen2.5", "yi-6b"]
+  },
+  {
+    "timestamp": "2025-06-01T12:10:00",
+    "question_id": "q_2025_0601_001",
+    "winner": "qwen2.5",
+    "reason": "Multilingual training strategy",
+    "conflicts": ["deepseek-r2", "yi-6b"]
+  }
+]

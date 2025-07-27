@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Meetings | MAS-AI Executive Planning</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0a0a1e',
+                        'deep-space': '#1a1a3e',
+                        'cosmic-purple': '#2d1b69',
+                        'neon-cyan': '#00ffff',
+                        'sunbeam': '#ffd700',
+                        'cyber-purple': '#8b5cf6',
+                        'organic-green': '#10b981',
+                        'royal-blue': '#6366f1',
+                        'electric-pink': '#ec4899',
+                        'fire-orange': '#f97316'
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'cosmic-drift': 'cosmic-drift 20s ease infinite',
+                        'particle': 'particle 25s infinite linear'
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 
+                                boxShadow: '0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4)',
+                                transform: 'scale(1)'
+                            },
+                            '100%': { 
+                                boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.6)',
+                                transform: 'scale(1.02)'
+                            }
+                        },
+                        'cosmic-drift': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        'particle': {
+                            '0%': { 
+                                transform: 'translateY(100vh) translateX(0) rotate(0deg)', 
+                                opacity: '0'
+                            },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { 
+                                transform: 'translateY(-100vh) translateX(200px) rotate(360deg)', 
+                                opacity: '0'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Enhanced cosmic background */
+        .cosmic-background {
+            background: radial-gradient(circle at 20% 80%, #2d1b69 0%, #1a1a3e 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 80% 20%, #1a1a3e 0%, #2d1b69 25%, #0a0a1e 50%),
+                        radial-gradient(circle at 40% 40%, #0a0a1e 0%, #1a1a3e 50%);
+            background-size: 400% 400%;
+            animation: cosmic-drift 20s ease infinite;
+        }
+        
+        /* Particle system */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .particle-small {
+            width: 2px;
+            height: 2px;
+            background: rgba(99, 102, 241, 0.8);
+        }
+        
+        .particle-medium {
+            width: 4px;
+            height: 4px;
+            background: rgba(139, 92, 246, 0.6);
+        }
+        
+        .particle-large {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Meeting card styles */
+        .meeting-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .meeting-card:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.2));
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="cosmic-background text-white min-h-screen overflow-hidden">
+    
+    <!-- Particle system -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="particles"></div>
+    
+    <!-- Enhanced Header with Consistent Blue Theme -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-blue-900/95 via-indigo-900/95 to-blue-800/95 backdrop-blur-md border-b-2 border-blue-400/30 z-50 shadow-lg shadow-blue-500/20">
+        <div class="flex items-center justify-between px-8 h-full">
+            <!-- Company Identity & Brand -->
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-lg flex items-center justify-center text-xl font-bold hover:scale-110 transition-transform shadow-lg shadow-blue-500/30"
+                     title="🏛️ Strategic Meetings">
+                    🏛️
+                </div>
+                <div>
+                    <div class="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                        STRATEGIC MEETINGS
+                    </div>
+                    <p class="text-xs text-blue-200/80">Executive Planning & Decision Center</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="window.location.href='/'" 
+                        class="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg transition-colors text-sm border border-blue-400/30 text-blue-200 hover:text-white">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="window.location.href='/daena-office'" 
+                        class="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-colors text-sm border border-purple-400/30 text-purple-200 hover:text-white">
+                    <i class="fas fa-brain mr-2"></i>Daena Office
+                </button>
+                <button onclick="window.location.href='/cmp-voting'" 
+                        class="px-3 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 rounded-lg transition-colors text-sm border border-indigo-400/30 text-indigo-200 hover:text-white">
+                    <i class="fas fa-vote-yea mr-2"></i>CMP Voting
+                </button>
+                <button onclick="window.location.href='/agents'" 
+                        class="px-3 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 rounded-lg transition-colors text-sm border border-cyan-400/30 text-cyan-200 hover:text-white">
+                    <i class="fas fa-users mr-2"></i>Agents
+                </button>
+                <button onclick="window.location.href='/founder-panel'" 
+                        class="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-lg transition-colors text-sm border border-amber-400/30 text-amber-200 hover:text-white">
+                    <i class="fas fa-crown mr-2"></i>Founder
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div x-data="strategicMeetings()" x-init="initializePage()" class="relative w-full h-screen pt-16">
+        
+        <div class="max-w-7xl mx-auto p-6 h-full overflow-y-auto">
+            
+            <!-- Executive Dashboard Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Active Meetings -->
+                <div class="meeting-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">
+                            <i class="fas fa-video text-organic-green mr-2"></i>
+                            Active Meetings
+                        </h3>
+                        <span class="text-2xl font-bold text-organic-green" x-text="activeCount">2</span>
+                    </div>
+                    <div class="space-y-3" x-html="getActiveMeetingsHTML()">
+                        <!-- Active meetings will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Scheduled Meetings -->
+                <div class="meeting-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">
+                            <i class="fas fa-calendar text-cyber-purple mr-2"></i>
+                            Scheduled Today
+                        </h3>
+                        <span class="text-2xl font-bold text-cyber-purple" x-text="scheduledCount">4</span>
+                    </div>
+                    <div class="space-y-3" x-html="getScheduledMeetingsHTML()">
+                        <!-- Scheduled meetings will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Meeting Analytics -->
+                <div class="meeting-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-white">
+                            <i class="fas fa-chart-line text-sunbeam mr-2"></i>
+                            Meeting Analytics
+                        </h3>
+                        <span class="text-2xl font-bold text-sunbeam">94%</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Completion Rate</span>
+                            <span class="text-organic-green font-bold">94%</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">On-Time Start</span>
+                            <span class="text-sunbeam font-bold">89%</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Participant Engagement</span>
+                            <span class="text-cyber-purple font-bold">91%</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Meeting Types Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                
+                <div class="meeting-card rounded-xl p-6 cursor-pointer" @click="startMeeting('executive')">
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">👑</div>
+                        <h4 class="font-bold text-white mb-2">Executive Board</h4>
+                        <p class="text-sm text-gray-400 mb-3">High-level strategic decisions</p>
+                        <button class="w-full px-4 py-2 bg-gradient-to-r from-sunbeam to-fire-orange text-midnight rounded-lg font-bold text-sm">
+                            Start Meeting
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="meeting-card rounded-xl p-6 cursor-pointer" @click="startMeeting('department')">
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">🏢</div>
+                        <h4 class="font-bold text-white mb-2">Department Sync</h4>
+                        <p class="text-sm text-gray-400 mb-3">Cross-department coordination</p>
+                        <button class="w-full px-4 py-2 bg-gradient-to-r from-royal-blue to-cyber-purple text-white rounded-lg font-bold text-sm">
+                            Start Meeting
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="meeting-card rounded-xl p-6 cursor-pointer" @click="startMeeting('planning')">
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">📊</div>
+                        <h4 class="font-bold text-white mb-2">Strategic Planning</h4>
+                        <p class="text-sm text-gray-400 mb-3">Long-term strategy sessions</p>
+                        <button class="w-full px-4 py-2 bg-gradient-to-r from-organic-green to-neon-cyan text-midnight rounded-lg font-bold text-sm">
+                            Start Meeting
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="meeting-card rounded-xl p-6 cursor-pointer" @click="startMeeting('emergency')">
+                    <div class="text-center">
+                        <div class="text-4xl mb-3">🚨</div>
+                        <h4 class="font-bold text-white mb-2">Emergency Session</h4>
+                        <p class="text-sm text-gray-400 mb-3">Urgent decision making</p>
+                        <button class="w-full px-4 py-2 bg-gradient-to-r from-electric-pink to-fire-orange text-white rounded-lg font-bold text-sm">
+                            Start Meeting
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Recent Meetings -->
+            <div class="meeting-card rounded-xl p-6">
+                <h3 class="text-xl font-bold text-white mb-6">
+                    <i class="fas fa-history text-cyber-purple mr-2"></i>
+                    Recent Strategic Sessions
+                </h3>
+                
+                <div class="space-y-4" x-html="getRecentMeetingsHTML()">
+                    <!-- Recent meetings will be populated here -->
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script>
+        function strategicMeetings() {
+            return {
+                activeCount: 2,
+                scheduledCount: 4,
+                
+                meetings: {
+                    active: [
+                        { id: 1, title: 'Q4 Strategy Review', participants: 8, duration: '1h 23m', type: 'executive' },
+                        { id: 2, title: 'Engineering Roadmap', participants: 12, duration: '45m', type: 'department' }
+                    ],
+                    scheduled: [
+                        { id: 3, title: 'Board Meeting', time: '14:00', participants: 6, type: 'executive' },
+                        { id: 4, title: 'Product Planning', time: '15:30', participants: 9, type: 'planning' },
+                        { id: 5, title: 'Sales Review', time: '16:00', participants: 7, type: 'department' },
+                        { id: 6, title: 'Innovation Workshop', time: '17:00', participants: 15, type: 'planning' }
+                    ],
+                    recent: [
+                        { title: 'Market Expansion Strategy', date: '2 hours ago', outcome: 'Approved', participants: 8 },
+                        { title: 'Q3 Performance Review', date: 'Yesterday', outcome: 'Action Items Assigned', participants: 12 },
+                        { title: 'Budget Allocation 2024', date: '2 days ago', outcome: 'Approved with Changes', participants: 6 },
+                        { title: 'Technology Roadmap', date: '3 days ago', outcome: 'Under Review', participants: 10 }
+                    ]
+                },
+                
+                initializePage() {
+                    this.createParticles();
+                },
+                
+                createParticles() {
+                    const container = document.getElementById('particles');
+                    const particleTypes = ['particle-small', 'particle-medium', 'particle-large'];
+                    
+                    for (let i = 0; i < 50; i++) {
+                        const particle = document.createElement('div');
+                        const type = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+                        
+                        particle.className = `particle ${type} animate-particle`;
+                        particle.style.left = Math.random() * 100 + '%';
+                        particle.style.animationDelay = Math.random() * 25 + 's';
+                        particle.style.animationDuration = (20 + Math.random() * 10) + 's';
+                        
+                        container.appendChild(particle);
+                    }
+                },
+                
+                getActiveMeetingsHTML() {
+                    return this.meetings.active.map(meeting => `
+                        <div class="bg-midnight/40 rounded-lg p-3 border border-organic-green/30">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-white text-sm">${meeting.title}</h4>
+                                <div class="w-2 h-2 bg-organic-green rounded-full animate-pulse"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>${meeting.participants} participants</span>
+                                <span>${meeting.duration}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+                
+                getScheduledMeetingsHTML() {
+                    return this.meetings.scheduled.map(meeting => `
+                        <div class="bg-midnight/40 rounded-lg p-3 border border-cyber-purple/30">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-white text-sm">${meeting.title}</h4>
+                                <span class="text-xs text-cyber-purple font-bold">${meeting.time}</span>
+                            </div>
+                            <div class="text-xs text-gray-400">${meeting.participants} participants</div>
+                        </div>
+                    `).join('');
+                },
+                
+                getRecentMeetingsHTML() {
+                    return this.meetings.recent.map(meeting => `
+                        <div class="bg-midnight/40 rounded-lg p-4 border border-royal-blue/30">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-white">${meeting.title}</h4>
+                                <span class="text-sm text-gray-400">${meeting.date}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300">${meeting.participants} participants</span>
+                                <span class="text-sm px-2 py-1 rounded-full ${this.getOutcomeColor(meeting.outcome)}">${meeting.outcome}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                },
+                
+                getOutcomeColor(outcome) {
+                    if (outcome.includes('Approved')) return 'bg-organic-green/20 text-organic-green';
+                    if (outcome.includes('Review')) return 'bg-sunbeam/20 text-sunbeam';
+                    if (outcome.includes('Assigned')) return 'bg-cyber-purple/20 text-cyber-purple';
+                    return 'bg-royal-blue/20 text-royal-blue';
+                },
+                
+                startMeeting(type) {
+                    // Meeting start logic here
+                    switch(type) {
+                        case 'executive':
+                            window.location.href = '/founder-panel';
+                            break;
+                        case 'department':
+                            // Open department selector
+                            this.showDepartmentSelector();
+                            break;
+                        case 'planning':
+                            window.location.href = '/task-timeline';
+                            break;
+                        case 'emergency':
+                            this.startEmergencySession();
+                            break;
+                        default:
+                            alert(`Starting ${type} meeting with voice and video support!`);
+                    }
+                },
+                
+                showDepartmentSelector() {
+                    const deptChoice = prompt("Which department meeting?\n1. Engineering\n2. Sales\n3. Marketing\n4. Finance\n5. HR\n6. Customer\n7. Product\n8. Legal\n\nEnter number (1-8):");
+                    
+                    const deptMap = {
+                        '1': 'engineering', '2': 'sales', '3': 'marketing', '4': 'finance',
+                        '5': 'hr', '6': 'customer', '7': 'product', '8': 'legal'
+                    };
+                    
+                    if (deptMap[deptChoice]) {
+                        // Navigate to main dashboard and enter department room
+                        localStorage.setItem('enterDepartment', deptMap[deptChoice]);
+                        window.location.href = '/';
+                    }
+                },
+                
+                startEmergencySession() {
+                    const confirmed = confirm("Start Emergency Decision Session?\n\nThis will:\n• Alert all department heads\n• Activate Daena VP priority mode\n• Open CMP voting for urgent decisions");
+                    
+                    if (confirmed) {
+                        // Navigate to CMP voting for emergency decision
+                        window.location.href = '/cmp-voting';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

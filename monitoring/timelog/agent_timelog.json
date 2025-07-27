@@ -1,0 +1,12 @@
+{
+  "daena": {
+    "active_since": "2025-06-01T08:00:00",
+    "logged_time_minutes": 113,
+    "overdue": false
+  },
+  "voice001": {
+    "active_since": "2025-06-01T13:00:00",
+    "logged_time_minutes": 47,
+    "overdue": false
+  }
+}

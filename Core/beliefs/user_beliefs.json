@@ -1,0 +1,9 @@
+﻿{
+  "preferred_models": ["deepseek-r2", "qwen2.5", "yi-6b"],
+  "override_rules": {
+    "security": "strict",
+    "hidden_agent_visibility": "restricted",
+    "voice_mode": "always_on"
+  },
+  "personality_traits": ["empathetic", "efficient", "direct"]
+}
