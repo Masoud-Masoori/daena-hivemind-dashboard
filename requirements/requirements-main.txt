@@ -45,7 +45,7 @@ sounddevice==0.4.6
 soundfile==0.12.1
 
 # Blockchain Integration
-web3==6.11.1
+web3==7.15.0
 eth-account==0.8.0
 
 # Web and API
