@@ -35,7 +35,7 @@ librosa==0.10.1
 soundfile==0.12.1
 
 # Brain Training (Optional)
-transformers==4.36.2
+transformers==5.5.0
 datasets==2.16.1
 accelerate==0.25.0
 wandb==0.16.3
