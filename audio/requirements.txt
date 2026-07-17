@@ -10,7 +10,7 @@ librosa==0.10.1
 
 # TTS and voice synthesis
 TTS==0.22.0
-torch==2.1.0
+torch==2.13.0
 torchaudio==2.1.0
 
 # Audio file handling
