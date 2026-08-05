@@ -38,7 +38,7 @@ psutil==5.9.6
 
 # Security and authentication
 bcrypt==4.1.2
-cryptography>=41.0.0,<42.0.0
+cryptography>=50.0.0,<51.0.0
 
 # Utilities and data handling
 python-dateutil==2.8.2
