@@ -10,7 +10,7 @@ librosa==0.10.1
 pydub==0.25.1
 
 # Web and API (compatible versions)
-anyio==4.8.0
+anyio==4.14.2
 httpx==0.28.1
 websockets==13.0.0
 requests==2.31.0
