@@ -39,7 +39,7 @@ transformers==4.36.2
 datasets==2.16.1
 accelerate==0.25.0
 wandb==0.16.3
-sentence-transformers==2.2.2
+sentence-transformers==5.6.0
 
 # Monitoring & Logging
 structlog==23.2.0
