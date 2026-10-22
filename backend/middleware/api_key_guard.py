@@ -1,4 +1,5 @@
-﻿from fastapi import Request, HTTPException
+﻿import os
+from fastapi import Request, HTTPException
 from starlette.middleware.base import BaseHTTPMiddleware
 
 # Fallback settings if config module is not available
@@ -15,8 +16,8 @@ except ImportError:
         TEST_API_KEY = settings.TEST_API_KEY
     except ImportError:
         # Fallback settings
-        API_KEY = "***REMOVED***"
-        TEST_API_KEY = "test-api-key"
+        API_KEY = os.environ.get("SECRET_KEY", "")
+        TEST_API_KEY = os.environ.get("TEST_API_KEY", "")
 
 class APIKeyGuard(BaseHTTPMiddleware):
     def __init__(self, app):

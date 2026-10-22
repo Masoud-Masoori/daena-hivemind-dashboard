@@ -20,7 +20,7 @@ class EmailBuilderAgent:
     def __init__(self):
         # Azure OpenAI Configuration
         self.api_type = "azure"
-        self.api_key = "***REMOVED***"
+        self.api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
         self.api_base = "https://masou-mdksrl1q-eastus2.openai.azure.com/"
         self.api_version = "2024-02-15"
         self.deployment_name = "daena"

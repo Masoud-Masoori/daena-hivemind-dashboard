@@ -164,8 +164,8 @@ function Set-EnvironmentVariables {
     }
     
     # Security Configuration
-    $env:SECRET_KEY = "***REMOVED***"
-    $env:JWT_SECRET = "daena-jwt-secret-2024"
+    if (-not $env:SECRET_KEY) { $env:SECRET_KEY = [guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N") }
+    if (-not $env:JWT_SECRET) { $env:JWT_SECRET = [guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N") }
     
     # Logging Configuration
     $env:LOG_LEVEL = "INFO"

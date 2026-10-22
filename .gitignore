@@ -116,3 +116,8 @@ yarn-error.log*
 backups/
 *.bak
 *.backup
+# Credentials never belong in git
+*.env
+!*.env.example
+api codes.txt
+blockchain/keys/
