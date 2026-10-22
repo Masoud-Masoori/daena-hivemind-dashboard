@@ -27,7 +27,7 @@ bcrypt==4.0.1
 cryptography==41.0.7
 
 # Utilities
-python-multipart==0.0.6
+python-multipart==0.0.31
 email-validator==1.1.3
 python-dateutil==2.8.2
 pytz==2023.3
